@@ -1,6 +1,7 @@
 export const courses = [
   {
-    id: "data-analytics",
+    id: "1",
+    slug:"data-analytics-and-ml",
     title: "Data Analytics & ML",
     image: "/assets/images/data-analytics.jpg",
     badge: "Trending",
@@ -13,7 +14,8 @@ export const courses = [
     ],
   },
   {
-    id: "fullstack",
+    id: "2",
+    slug:"full-stack-developer",
     title: "Full Stack Development",
     image: "/assets/images/webdev.jpg",
     badge: "Bestseller",
@@ -26,7 +28,8 @@ export const courses = [
     ],
   },
   {
-    id: "ai-tools",
+    id: "3",
+    slug:"ai-tools-and-genai",
     title: "AI Tools & GenAI",
     image: "/assets/images/ai.avif",
     badge: "New",
@@ -39,7 +42,8 @@ export const courses = [
     ],
   },
   {
-    id: "cybersecurity",
+    id: "4",
+    slug:"cybersecurity",
     title: "Cybersecurity",
     image: "/assets/images/cybersecurity.avif",
     badge: "Trending",
@@ -52,7 +56,8 @@ export const courses = [
     ],
   },
   {
-    id: "soft-skills-and-readiness",
+    id: "5",
+    slug:"soft-skills-and-readiness",
     title: "Soft Skills & Readiness",
     image: "/assets/images/soft-skill.jpg",
     badge: "Bestseller",
@@ -65,7 +70,8 @@ export const courses = [
     ],
   },
   {
-    id: "digital-marketing",
+    id: "6",
+    slug:"digital-marketing",
     title: "Digital Marketing",
     image: "/assets/images/digital-marketing.jpg",
     badge: "New",

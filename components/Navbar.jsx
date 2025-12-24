@@ -41,7 +41,7 @@ export default function Navbar() {
           ))}
           {/* Call-to-Action Button */}
           <button className="ml-4 py-2 px-6 text-white font-semibold bg-indigo-600 rounded-full shadow-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out transform hover:-translate-y-0.5">
-            <Link href={"register"}>Get Started</Link>
+            <Link href={"/register"}>Get Started</Link>
           </button>
         </div>
 
