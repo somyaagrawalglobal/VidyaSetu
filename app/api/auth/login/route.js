@@ -4,6 +4,8 @@ import User from '@/models/User';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { z } from 'zod';
+import { updateUserSession } from '@/lib/session';
+
 
 const loginSchema = z.object({
     email: z.string().email(),
@@ -71,6 +73,9 @@ export async function POST(req) {
             process.env.JWT_SECRET,
             { expiresIn: '7d' }
         );
+
+        // Enforce Single Device: Update Active Token
+        await updateUserSession(user._id, token);
 
         const response = NextResponse.json(
             { message: 'Login successful' },

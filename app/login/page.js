@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Mail, Lock, ArrowRight, Loader2 } from "lucide-react";
+import { useAuth } from '@/components/AuthProvider';
 
 const InputField = ({ id, name, type, placeholder, icon: Icon, required = false, value, onChange }) => (
     <div className="relative">
@@ -26,6 +27,7 @@ const InputField = ({ id, name, type, placeholder, icon: Icon, required = false,
 
 export default function Login() {
     const router = useRouter();
+    const { refresh } = useAuth();
 
     const primaryColor = 'indigo-600';
     const secondaryColor = 'purple-600';
@@ -61,8 +63,14 @@ export default function Login() {
                 throw new Error(data.message || 'Login failed');
             }
 
+            // Refresh Auth Context to update Navbar immediately
+            await refresh();
+
+            // Small delay to ensure state propagates
+            await new Promise(resolve => setTimeout(resolve, 100));
+
             // Redirect on success
-            router.push('/'); // Or /dashboard
+            router.push('/');
 
         } catch (err) {
             setError(err.message);

@@ -89,7 +89,6 @@ export default function Navbar() {
                     <User size={16} />
                     My Profile
                   </Link>
-                  {/* Add Dashboard link for Students/Admins? */}
                   <Link
                     href="/dashboard"
                     className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"

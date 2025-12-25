@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { jwtVerify } from 'jose';
 import dbConnect from '@/lib/db';
 import User from '@/models/User';
+import { validateSession } from '@/lib/session';
+
 
 export async function GET(req) {
     try {
@@ -19,8 +21,19 @@ export async function GET(req) {
         // Verify Token
         const { payload } = await jwtVerify(token, secret);
 
+        // Single Device Check: Validate Session against DB/Cache
+        // If the token in the cookie != activeToken in DB, reject.
+        const isValidSession = await validateSession(payload.userId, token);
+        if (!isValidSession) {
+            return NextResponse.json(
+                { message: 'Session expired or logged in on another device' },
+                { status: 401 }
+            );
+        }
+
         // Optional: Fetch fresh user data from DB to ensure they aren't banned/deleted since token issue
         await dbConnect();
+
         const user = await User.findById(payload.userId).select('-passwordHash');
 
         if (!user) {

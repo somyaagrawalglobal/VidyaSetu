@@ -40,6 +40,11 @@ const UserSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
+    // Session / Token Management
+    activeToken: {
+        type: String,
+        default: null,
+    },
     isVerified: {
         type: Boolean,
         default: false,
