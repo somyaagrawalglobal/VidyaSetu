@@ -3,7 +3,8 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { User, Mail, Phone, Lock, ArrowRight, Loader2 } from "lucide-react";
+import { Mail, Lock, ArrowRight, Loader2 } from "lucide-react";
+import { useAuth } from '@/components/AuthProvider';
 
 const InputField = ({ id, name, type, placeholder, icon: Icon, required = false, value, onChange }) => (
     <div className="relative">
@@ -20,29 +21,23 @@ const InputField = ({ id, name, type, placeholder, icon: Icon, required = false,
             onChange={onChange}
             className="w-full pl-12 pr-5 py-3 rounded-xl bg-slate-50 border border-gray-200 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/50 outline-none transition text-slate-800"
             required={required}
-            minLength={type === 'password' ? 6 : undefined}
         />
     </div>
 );
 
-export default function Register() {
+export default function Login() {
     const router = useRouter();
+    const { refresh } = useAuth();
 
-    // Consistent brand color variables
     const primaryColor = 'indigo-600';
     const secondaryColor = 'purple-600';
     const gradientTextClass = "bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600";
 
     const [formData, setFormData] = useState({
-        firstName: '',
-        lastName: '',
         email: '',
-        mobileNumber: '',
         password: '',
-        confirmPassword: '',
     });
     const [error, setError] = useState('');
-    const [success, setSuccess] = useState('');
     const [loading, setLoading] = useState(false);
 
     const handleChange = (e) => {
@@ -53,38 +48,29 @@ export default function Register() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
-        setSuccess('');
         setLoading(true);
 
-        // Basic Client Validation
-        if (formData.password !== formData.confirmPassword) {
-            setError('Passwords do not match');
-            setLoading(false);
-            return;
-        }
-
         try {
-            const res = await fetch('/api/auth/register', {
+            const res = await fetch('/api/auth/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    firstName: formData.firstName,
-                    lastName: formData.lastName,
-                    email: formData.email,
-                    mobileNumber: formData.mobileNumber,
-                    password: formData.password,
-                }),
+                body: JSON.stringify(formData),
             });
 
             const data = await res.json();
 
             if (!res.ok) {
-                throw new Error(data.message || 'Registration failed');
+                throw new Error(data.message || 'Login failed');
             }
 
-            setSuccess(data.message);
-            // Clear passwords but maybe keep email to help them verify?
-            setFormData(prev => ({ ...prev, password: '', confirmPassword: '' }));
+            // Refresh Auth Context to update Navbar immediately
+            await refresh();
+
+            // Small delay to ensure state propagates
+            await new Promise(resolve => setTimeout(resolve, 100));
+
+            // Redirect on success
+            router.push('/');
 
         } catch (err) {
             setError(err.message);
@@ -95,21 +81,17 @@ export default function Register() {
 
     return (
         <div className="min-h-screen pt-25 flex items-center justify-center bg-slate-50 p-6">
-
-            {/* Registration Card Container */}
             <div
                 className="w-full max-w-md bg-white p-8 md:p-12 rounded-3xl shadow-2xl shadow-purple-300/50 border border-gray-100"
                 data-aos="zoom-in"
                 data-aos-duration="800"
             >
-
-                {/* Header */}
                 <div className="text-center mb-10">
                     <h2 className="text-4xl font-extrabold text-slate-900 mb-2">
-                        Join <span className={gradientTextClass}>Vidya-Setu</span>
+                        Welcome <span className={gradientTextClass}>Back</span>
                     </h2>
                     <p className="text-slate-500">
-                        Create your account to start your career journey.
+                        Sign in to continue your journey.
                     </p>
                 </div>
 
@@ -119,38 +101,7 @@ export default function Register() {
                     </div>
                 )}
 
-                {success && (
-                    <div className="bg-green-50 border-l-4 border-green-500 p-4 mb-4 rounded-r">
-                        <p className="text-sm text-green-700">{success}</p>
-                    </div>
-                )}
-
-                {/* Form */}
                 <form onSubmit={handleSubmit} className="space-y-4">
-
-                    <div className="grid grid-cols-2 gap-2">
-                        <InputField
-                            id="firstName"
-                            name="firstName"
-                            type="text"
-                            placeholder="First Name"
-                            icon={User}
-                            required={true}
-                            value={formData.firstName}
-                            onChange={handleChange}
-                        />
-                        <InputField
-                            id="lastName"
-                            name="lastName"
-                            type="text"
-                            placeholder="Last Name"
-                            icon={User}
-                            required={true}
-                            value={formData.lastName}
-                            onChange={handleChange}
-                        />
-                    </div>
-
                     <InputField
                         id="email"
                         name="email"
@@ -162,60 +113,43 @@ export default function Register() {
                         onChange={handleChange}
                     />
 
-                    <InputField
-                        id="mobileNumber"
-                        name="mobileNumber"
-                        type="tel"
-                        placeholder="Mobile Number"
-                        icon={Phone}
-                        required={true}
-                        value={formData.mobileNumber}
-                        onChange={handleChange}
-                    />
+                    <div className="space-y-1">
+                        <InputField
+                            id="password"
+                            name="password"
+                            type="password"
+                            placeholder="Password"
+                            icon={Lock}
+                            required={true}
+                            value={formData.password}
+                            onChange={handleChange}
+                        />
+                        <div className="flex justify-end">
+                            <Link href="/forgot-password" className="text-sm text-indigo-600 hover:text-indigo-800 font-medium">
+                                Forgot Password?
+                            </Link>
+                        </div>
+                    </div>
 
-                    <InputField
-                        id="password"
-                        name="password"
-                        type="password"
-                        placeholder="Password"
-                        icon={Lock}
-                        required={true}
-                        value={formData.password}
-                        onChange={handleChange}
-                    />
-
-                    <InputField
-                        id="confirmPassword"
-                        name="confirmPassword"
-                        type="password"
-                        placeholder="Confirm Password"
-                        icon={Lock}
-                        required={true}
-                        value={formData.confirmPassword}
-                        onChange={handleChange}
-                    />
-
-                    {/* Submit Button */}
                     <button
                         type="submit"
                         disabled={loading}
                         className={`w-full flex items-center justify-center gap-2 bg-gradient-to-r from-${primaryColor} to-${secondaryColor} text-white font-extrabold text-lg py-3.5 mt-6 rounded-xl shadow-lg shadow-purple-600/30 hover:shadow-xl hover:shadow-purple-600/50 transition transform hover:scale-[1.005] disabled:opacity-70`}
                     >
-                        {loading ? <Loader2 className="animate-spin" /> : 'Create Account'}
+                        {loading ? <Loader2 className="animate-spin" /> : 'Sign In'}
                         {!loading && <ArrowRight className="w-5 h-5 ml-1" />}
                     </button>
 
                 </form>
 
-                {/* Footer Link (Existing User) */}
                 <div className="mt-8 pt-6 border-t border-gray-100 text-center">
                     <p className="text-sm text-slate-600">
-                        Already a user?
+                        Don't have an account?
                         <Link
-                            href="/login"
+                            href="/register"
                             className={`ml-1 font-bold text-${primaryColor} hover:underline transition`}
                         >
-                            Sign In
+                            Sign Up
                         </Link>
                     </p>
                 </div>
