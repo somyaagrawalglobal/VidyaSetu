@@ -28,7 +28,7 @@ export default function Footer() {
           {/* 1. Brand & Tagline */}
           <div className="col-span-2 md:col-span-2">
             <Link href="/" className="text-3xl font-extrabold text-white mb-4 block tracking-tight">
-              Vidya<span className="text-indigo-400">-Setu</span>
+              Com<span className="text-indigo-400">-ED</span>
             </Link>
             <p className="text-base leading-relaxed max-w-sm">
               Bridging the gap between education and employability. Master real skills, land real jobs.

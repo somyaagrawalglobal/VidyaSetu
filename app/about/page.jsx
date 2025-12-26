@@ -13,13 +13,13 @@ export default function About() {
         <main className="text-slate-800">
 
             {/* 1. Header - Clean & Focused */}
-            <section className={`pt-36 relative overflow-hidden bg-gradient-to-b from-white to-indigo-50/50 border-b border-indigo-100`}>
+            <section className={`pt-36 pb-16 relative overflow-hidden bg-gradient-to-b from-white to-indigo-50/50 border-b border-indigo-100`}>
                 <div className="max-w-7xl mx-auto px-4 text-center">
-                    <p className={`text-xl font-semibold mb-3 text-${primaryColor}`} data-aos="fade-down">
+                    <p className={`text-lg font-semibold mb-3 text-${primaryColor}`} data-aos="fade-down">
                         Our Story, Our Purpose
                     </p>
-                    <h1 className="text-5xl md:text-7xl font-extrabold text-slate-900 mb-6" data-aos="fade-down" data-aos-delay="100">
-                        The Vidya-<span className={gradientTextClass}>Setu</span> Difference
+                    <h1 className="text-2xl md:text-5xl font-bold text-slate-900 mb-6" data-aos="fade-down" data-aos-delay="100">
+                        The Com-<span className={gradientTextClass}>ED</span> Difference
                     </h1>
                     <p className="mt-4 text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed" data-aos="fade-up" data-aos-delay="200">
                         Empowering the next generation with real skills for real careers. We are committed to building the bridge between academic potential and industry success.
@@ -28,7 +28,7 @@ export default function About() {
             </section>
 
             {/* 2. Vision & Mission - Dedicated Section with Clean Blocks */}
-            <section className="py-28 bg-slate-50">
+            <section className="py-12 bg-slate-50">
                 <div className="max-w-7xl mx-auto px-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
 
@@ -87,10 +87,10 @@ export default function About() {
                             </h2>
 
                             <h3 className="text-2xl font-bold mb-4 text-slate-800">
-                                Somya Agrawal
+                                Founder Name
                             </h3>
                             <p className={`text-sm font-semibold mb-6 text-${primaryColor} uppercase tracking-widest`}>
-                                Founder & CEO, Vidya-Setu
+                                Founder & CEO, Company
                             </p>
 
                             <p className="text-slate-600 mb-6 leading-relaxed text-lg border-l-4 border-indigo-200 pl-4">
@@ -117,8 +117,8 @@ export default function About() {
                         <div className="md:w-1/2 md:order-1" data-aos="fade-right">
                             <div className="relative w-full h-[550px] rounded-2xl overflow-hidden shadow-2xl border-4 border-white transform hover:scale-[1.01] transition duration-500">
                                 <Image
-                                    src="/assets/images/founder-profile2.jpg"
-                                    alt="Somya Agrawal, Founder of Vidya-Setu"
+                                    src="/assets/images/hero-img.jpeg"
+                                    alt="Founder of Company"
                                     fill
                                     style={{ objectFit: 'cover' }}
                                     className="object-top filter grayscale hover:grayscale-0 transition duration-700"

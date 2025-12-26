@@ -1,6 +1,7 @@
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import AOSInitializer from "@/components/AOSInitializer";
+import { AuthProvider } from "@/components/AuthProvider";
 import "./globals.css";
 
 export const metadata = {
@@ -11,11 +12,13 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className="bg-slate-50 text-slate-800 overflow-x-hidden">
-        <Navbar/>
-        <AOSInitializer />
-        {children}
-        <Footer/>
+      <body className="bg-slate-50 text-slate-800 overflow-x-hidden" >
+        <AuthProvider>
+          <Navbar />
+          <AOSInitializer />
+          {children}
+          <Footer />
+        </AuthProvider>
       </body>
     </html>
   );

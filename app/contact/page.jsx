@@ -12,12 +12,12 @@ export default function ContactPage() {
         <main className="bg-slate-50 text-slate-800">
 
             {/* Header */}
-            <section className="pt-36 relative overflow-hidden bg-white border-b border-gray-100">
+            <section className="pt-36 pb-16 relative overflow-hidden bg-white border-b border-gray-100">
                 <div className="max-w-7xl mx-auto px-4 text-center">
                     <p className={`text-lg font-semibold mb-3 text-${primaryColor}`} data-aos="fade-down">
                         We're Here To Listen
                     </p>
-                    <h1 className="text-5xl md:text-7xl font-extrabold text-slate-900 mb-6" data-aos="fade-down" data-aos-delay="100">
+                    <h1 className="text-2xl md:text-5xl font-bold text-slate-900 mb-6" data-aos="fade-down" data-aos-delay="100">
                         Get in <span className={gradientTextClass}>Touch</span>
                     </h1>
                     <p className="mt-4 text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed" data-aos="fade-up" data-aos-delay="200">

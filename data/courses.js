@@ -5,7 +5,13 @@ export const courses = [
     title: "Data Analytics & ML",
     image: "/assets/images/data-analytics.jpg",
     badge: "Trending",
+    price: "₹599",
+    lecturer: "Somya Agrawal",
+    startingdate: "15 Jan 2026",
+    level:"Intermediate",
+    src:"FmWtXufnZj8",
     duration: "24 Weeks",
+    discount:"30% OFF",
     description:
       "Master Python, SQL, and Machine Learning. Transition into one of India's fastest-growing tech roles.",
     points: [
@@ -19,7 +25,13 @@ export const courses = [
     title: "Full Stack Development",
     image: "/assets/images/webdev.jpg",
     badge: "Bestseller",
+    price: "₹999",
+    lecturer: "ABC XYZ",
+    startingdate: "19 Jan 2026",
+    level:"Beginner",
+    src:"aAvDI1qae-U",
     duration: "12 Weeks",
+    discount:"50% OFF",
     description:
       "End-to-end MERN stack development. Build scalable applications and manage cloud deployments.",
     points: [
@@ -33,7 +45,13 @@ export const courses = [
     title: "AI Tools & GenAI",
     image: "/assets/images/ai.avif",
     badge: "New",
+    price: "₹799",
+    lecturer: "XYZ ABC",
+    src:"lOj_VWpx2rk",
+    startingdate: "28 Jan 2026",
+    level:"Beginner",
     duration: "20 Weeks",
+    discount:"30% OFF",
     description:
       "Master ChatGPT, Midjourney, and Prompt Engineering to 10x productivity.",
     points: [
@@ -47,7 +65,13 @@ export const courses = [
     title: "Cybersecurity",
     image: "/assets/images/cybersecurity.avif",
     badge: "Trending",
+    price: "₹599",
+    lecturer: "Somya Agrawal",
+    startingdate: "07 Feb 2026",
+    level:"Intermediate",
+    src:"gFdpNvakRhU",
     duration: "18 Weeks",
+    discount:"40% OFF",
     description:
       "Protect digital infrastructure.Learn ethical hacking, network security, and threat analysis.",
     points: [
@@ -61,7 +85,13 @@ export const courses = [
     title: "Soft Skills & Readiness",
     image: "/assets/images/soft-skill.jpg",
     badge: "Bestseller",
+    price: 0,
+    lecturer: "Somya Agrawal",
+    src:"AxPOuPe-ON0",
+    startingdate: "03 Feb 2026",
+    level:"Beginner",
     duration: "12 Weeks",
+    discount:"30% OFF",
     description:
       "Professional etiquette,communication, and interview prep to excel in the corporate world.",
     points: [
@@ -75,7 +105,13 @@ export const courses = [
     title: "Digital Marketing",
     image: "/assets/images/digital-marketing.jpg",
     badge: "New",
+    price: "₹399",
+    lecturer: "ABC XYZ",
+    startingdate: "10 March 2026",
+    level:"Intermediate",
+    src:"lO9NE8QFdGA",
     duration: "24 Weeks",
+    discount:"50% OFF",
     description:
       "Master SEO, SEM, and Content Strategy. Run live ad campaigns and analyze real-time ROI.",
     points: [

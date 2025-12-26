@@ -1,79 +1,133 @@
 import Image from "next/image";
 import Link from "next/link";
-import { CheckCircle, ArrowRight } from "lucide-react";
+// Using specific Lucide icons for a cleaner look
+import { ArrowRight, Clock, BookOpen, User } from "lucide-react"; 
 
 export default function CourseCard({ course }) {
-  // Define standard colors for reusability (matches the original palette)
-  const primaryColor = 'indigo-600';
-  const secondaryColor = 'violet-500';
+    // Helper function to format price
+    const formatPrice = (price) => {
+        if (price === 0) return 'Free';
+        if (typeof price === 'number') return `$${price}`;
+        return price || 'Price Varies';
+    };
 
-  const getBadgeStyle = (badge) => {
-    switch (badge) {
-      case 'Trending':
-        return `bg-indigo-50 text-green-600 border-indigo-300`;
-      case 'Bestseller':
-        return `bg-violet-50 text-violet-700 border-violet-300`;
-      case 'New':
-        return `bg-pink-50 text-pink-700 border-pink-300`;
-      default:
-        return `bg-gray-50 text-gray-700 border-gray-300`;
-    }
-  };
+    // Helper function to get the topic badge content based on course category
+    const getTopicBadge = (category) => {
+        return course.category || 'Web Development';
+    };
 
-  return (
-    <div 
-        // 1. Added h-full to ensure the card stretches to the height of the grid cell
-        className="bg-white rounded-3xl overflow-hidden shadow-xl transition duration-500 flex flex-col group border border-gray-100 transform hover:-translate-y-1 hover:shadow-2xl hover:border-indigo-200 h-full"
-    >
-      {/* Image & Badge */}
-      <div className="h-48 relative overflow-hidden">
-        <Image
-          src={course.image}
-          alt={course.title}
-          fill
-          style={{ objectFit: 'cover' }}
-          className="transition-transform duration-700 group-hover:scale-105 opacity-95"
-          sizes="(max-width: 768px) 100vw, 33vw"
-        />
-        {course.badge && (
-          <span 
-            className={`absolute top-4 right-4 backdrop-blur-sm shadow-md px-4 py-1.5 rounded-full text-xs font-extrabold tracking-wider uppercase border ${getBadgeStyle(course.badge)}`}
-          >
-            {course.badge}
-          </span>
-        )}
-      </div>
+    // Custom logic for the "50% OFF" badge (using a strong sale color)
+    const discountBadge = course.discount || "50% OFF";
 
-      {/* Content */}
-      {/* 2. Content wrapper uses flex-col flex-1 to stretch vertically */}
-      <div className="p-8 flex flex-col flex-1">
-        <h3 className="text-3xl font-extrabold text-slate-900 mb-3">{course.title}</h3>
-        
-        {/* 3. Description uses flex-1 and min-h-[4rem] to consume variable space and push the bottom elements down */}
-        <p className="text-slate-600 text-base mb-6 flex-1 leading-relaxed min-h-[4rem]">
-          {course.description}
-        </p>
+    // Data mapping for consistency
+    const videoCount = course.videoCount || "3 videos";
+    const duration = course.duration || "1h";
+    const lecturer = course.lecturer || "Dr. Angela Yu";
+    const price = formatPrice(course.price); 
+    const originalPrice = course.originalPrice ? formatPrice(course.originalPrice) : null;
 
-        {/* Features (Points) */}
-        <ul className="space-y-3 mb-8 text-sm pt-4 border-t border-gray-100">
-          {/* Using 'course.features' (standard prop name) with optional chaining. 
-             If your data uses 'points', change this line to: {course.points?.map((point, i) => ( */}
-          {course.points?.map((point, i) => (
-            <li key={i} className="flex items-center text-slate-700 font-medium">
-              <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0 mr-2" />
-              {point}
-            </li>
-          ))}
-        </ul>
 
-        {/* CTA Button (Remains correctly placed at the bottom due to flex-1 above) */}
-        <Link
-          href={`/courses/${course.slug}`}
-          className={`w-full flex justify-center items-center gap-2 bg-gradient-to-r from-indigo-600 to-violet-500 text-white py-3 rounded-full font-bold shadow-lg shadow-indigo-600/30 hover:shadow-xl transition transform hover:scale-[1.01]`}
+    return (
+        <div 
+            // 1. Base Card Structure: Smoother rounded corners, elevated appearance, stronger shadow.
+            className="bg-white rounded-2xl overflow-hidden shadow-2xl shadow-gray-200/80 transition duration-500 flex flex-col group border border-gray-100 transform hover:-translate-y-1.5 hover:shadow-indigo-500/30 h-full max-w-sm mx-auto"
         >
-          Apply Now <ArrowRight className="w-5 h-5 ml-1" />
-        </Link>
-      </div>
-    </div>
-  );
+            {/* --- 1. Top Graphic Header Section (Premium Image Background with Gradient & Blur) --- */}
+            <div className={`relative h-44 flex items-center justify-center overflow-hidden`}>
+                
+                {/* Course Image as Background */}
+                <Image
+                    src={course.image}
+                    alt={course.title}
+                    fill
+                    style={{ objectFit: 'cover' }}
+                    // Increased transition time and subtle blur for depth
+                    className="transition-all duration-700 group-hover:scale-110 filter "
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    priority={true} 
+                />
+
+                {/* Modern Gradient Overlay: Deep blue to light violet for a tech feel */}
+                <div className="absolute inset-0 "></div>
+                
+                {/* Optional: Placeholder Icon for the visual center */}
+
+                {/* Custom Discount Badge (Top right corner, high-contrast, sharp) */}
+                {discountBadge && (
+                    <div 
+                        // Using magenta/pink for a vibrant sale tag
+                        className={`absolute top-0 right-0 py-2 px-6 bg-pink-600 text-white font-black text-sm uppercase transform translate-y-4 translate-x-4 rotate-45 shadow-lg z-20`}
+                        style={{ minWidth: '100px', textAlign: 'center' }}
+                    >
+                        {discountBadge}
+                    </div>
+                )}
+            </div>
+
+            {/* --- 2. Content Body Section (Clean, well-spaced) --- */}
+            <div className="p-6 flex flex-col flex-1">
+                
+                {/* Topic Badge (Softer corners, lighter background) */}
+                <div className="mb-3">
+                    <span className="inline-block px-4 py-1 text-xs font-semibold text-indigo-700 bg-indigo-50 rounded-lg">
+                        {getTopicBadge(course.category)}
+                    </span>
+                </div>
+                
+                {/* Title (Modern font weight and line height) */}
+                <h3 className="text-lg font-bold text-slate-900 leading-snug line-clamp-2 min-h-[2rem]"> 
+                    {course.title}
+                </h3>
+                
+                {/* Description/Slogan (More subtle) */}
+                <p className="text-slate-500 text-sm mb-4 line-clamp-2 min-h-[2.5rem]"> 
+                    {course.description}
+                </p>
+
+                {/* Lecturer/Author with icon */}
+                <p className="text-xs font-semibold text-gray-600 mb-2 border-b border-gray-100 pb-2">
+                    <User className="w-3.5 h-3.5 inline-block mr-1 text-indigo-400"/> By <span className="text-cyan-600">{lecturer}</span>
+                </p>
+                
+                {/* Meta Data Line (Icon-driven, compact layout) */}
+                <div className="flex items-center space-x-5 text-sm text-gray-600 mb-2 py-1">
+                    {/* Videos */}
+                    <div className="flex items-center">
+                        <BookOpen className="w-4 h-4 mr-1 text-indigo-500" />
+                        <span className="font-medium">{videoCount}</span>
+                    </div>
+                    {/* Duration */}
+                    <div className="flex items-center">
+                        <Clock className="w-4 h-4 mr-1 text-indigo-500" />
+                        <span className="font-medium">{duration}</span>
+                    </div>
+                </div>
+
+                {/* --- 3. Footer/CTA Area (Separated by a hairline) --- */}
+                <div className="flex justify-between items-center pt-2 border-t border-gray-200">
+                    
+                    {/* Price Display: Prominent, green/sale price, with optional original price strike-through */}
+                    <div className="flex flex-col items-start">
+                        {originalPrice && (
+                            <span className="text-xs text-gray-400 line-through">
+                                {originalPrice}
+                            </span>
+                        )}
+                        <span className="text-2xl font-black text-green-600">
+                            {price}
+                        </span>
+                    </div>
+                    
+                    {/* Primary CTA Button: Full rounded edges, stronger hover lift */}
+                    <Link
+                        href={`/courses/${course.slug}`}
+                        className={`inline-flex items-center bg-blue-600 text-white font-bold py-3 px-5 rounded-full transition duration-300 hover:bg-blue-700 hover:scale-[1.02]`}
+                    >
+                        Enroll Now <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                    </Link>
+                </div>
+
+            </div>
+        </div>
+    );
 }
