@@ -44,7 +44,8 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex justify-between items-center">
         {/* Logo Section */}
         <Link href="/" className="text-3xl font-extrabold tracking-tight transition-transform duration-300 hover:scale-[1.02]">
-          Vidya<span className="text-indigo-600">-Setu</span>
+          {/* Vidya<span className="text-indigo-600">-Setu</span> */}
+          COM<span className="text-indigo-600">-ED</span>
         </Link>
 
         {/* Desktop Navigation Links */}
