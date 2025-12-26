@@ -20,7 +20,7 @@ export default function CourseCard({ course }) {
 
     return (
         <div
-            className="bg-white rounded-[2rem] overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-500 flex flex-col group border border-slate-100/80 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(79,70,229,0.12)] h-full"
+            className="bg-white rounded-[1rem] overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-500 flex flex-col group border border-slate-100/80 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(79,70,229,0.12)] h-full"
         >
             {/* --- 1. Top Graphic Section --- */}
             <div className="relative h-56 flex items-center justify-center overflow-hidden">

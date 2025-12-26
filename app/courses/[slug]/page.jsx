@@ -227,6 +227,20 @@ export default function CourseDetails({ params }) {
                             </div>
                         </div>
 
+                        {/* Requirements */}
+                        <div className="space-y-4">
+                            <h2 className="text-2xl font-bold text-gray-900">Requirements</h2>
+                            <ul className="list-disc list-inside space-y-2 text-gray-700 text-sm ml-1">
+                                {course.requirements && course.requirements.length > 0 ? (
+                                    course.requirements.map((req, idx) => (
+                                        <li key={idx}>{req}</li>
+                                    ))
+                                ) : (
+                                    <li>No specific requirements. Basic computer knowledge is sufficient.</li>
+                                )}
+                            </ul>
+                        </div>
+
                         {/* Course Content */}
                         <div>
                             <h2 className="text-2xl font-bold text-gray-900 mb-6">Course Content</h2>
@@ -350,18 +364,29 @@ export default function CourseDetails({ params }) {
 
                                 <div className="space-y-3 text-sm text-gray-600 font-medium">
                                     <h4 className="font-bold text-gray-900 mb-2">This course includes:</h4>
-                                    <div className="flex items-center gap-3">
-                                        <Clock className="w-4 h-4 text-indigo-500" />
-                                        <span>Lifetime access</span>
-                                    </div>
-                                    <div className="flex items-center gap-3">
-                                        <Globe className="w-4 h-4 text-indigo-500" />
-                                        <span>Access on mobile and TV</span>
-                                    </div>
-                                    <div className="flex items-center gap-3">
-                                        <Award className="w-4 h-4 text-indigo-500" />
-                                        <span>Certificate of completion</span>
-                                    </div>
+                                    {course.provides && course.provides.length > 0 ? (
+                                        course.provides.map((item, idx) => (
+                                            <div key={idx} className="flex items-center gap-3">
+                                                <CheckCircle2 className="w-4 h-4 text-indigo-500" />
+                                                <span>{item}</span>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <>
+                                            <div className="flex items-center gap-3">
+                                                <Clock className="w-4 h-4 text-indigo-500" />
+                                                <span>Lifetime access</span>
+                                            </div>
+                                            <div className="flex items-center gap-3">
+                                                <Globe className="w-4 h-4 text-indigo-500" />
+                                                <span>Access on mobile and TV</span>
+                                            </div>
+                                            <div className="flex items-center gap-3">
+                                                <Award className="w-4 h-4 text-indigo-500" />
+                                                <span>Certificate of completion</span>
+                                            </div>
+                                        </>
+                                    )}
                                 </div>
 
                                 <div className="mt-6 flex justify-between gap-4">

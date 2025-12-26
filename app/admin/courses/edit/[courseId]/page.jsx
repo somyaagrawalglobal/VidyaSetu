@@ -36,6 +36,7 @@ export default function EditCoursePage({ params }) {
         modules: [],
         learningOutcomes: [],
         requirements: [],
+        provides: [],
         published: false,
     });
 
@@ -282,6 +283,12 @@ export default function EditCoursePage({ params }) {
                                     items={formData.requirements || []}
                                     onChange={(items) => setFormData(prev => ({ ...prev, requirements: items }))}
                                     placeholder="Add requirement..."
+                                />
+                                <ListInput
+                                    label="This course includes"
+                                    items={formData.provides || []}
+                                    onChange={(items) => setFormData(prev => ({ ...prev, provides: items }))}
+                                    placeholder="Add inclusion (e.g. Lifetime access)..."
                                 />
                             </div>
                         </div>
