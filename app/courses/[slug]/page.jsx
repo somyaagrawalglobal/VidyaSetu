@@ -1,201 +1,386 @@
-import CourseSlugButton from "@/components/CourseSlugButton";
-import { courses } from "@/data/courses";
-// Assuming the VideoModal component is correctly imported and located at "@/components/VideoModal"
-import VideoModal from "@/components/VideoModal"; 
-import { notFound } from "next/navigation";
-import { Clock, CheckCircle, Calendar, User, List, Layers3, Zap, PlayCircle } from "lucide-react";
+'use client';
 
-// The component remains an async Server Component, assuming 'VideoModal' is a client component ('use client') handling its internal state.
-export default async function CourseDetailPage({ params }) {
-    const { slug } = await params;
+import { useState, useEffect, use } from 'react';
+import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+import {
+    Lock,
+    PlayCircle,
+    CheckCircle2,
+    Clock,
+    Award,
+    Globe,
+    AlertCircle,
+    BarChart,
+    User,
+    Share2,
+    Heart
+} from 'lucide-react';
 
-    const course = courses.find((course) => course.slug === slug);
+import VideoPlayerModal from '@/components/VideoPlayerModal';
 
-    if (!course) {
-        notFound();
-    }
+const loadRazorpay = () => {
+    return new Promise((resolve) => {
+        const script = document.createElement('script');
+        script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+        script.onload = () => resolve(true);
+        script.onerror = () => resolve(false);
+        document.body.appendChild(script);
+    });
+};
 
-    // --- Data Placeholders (Using actual course properties where possible) ---
-    // Note: If course.lecturer, course.startingdate, etc., are empty, the placeholders are used.
-    const lecturer = course.lecturer || "Dr. Somya Agrawal";
-    const startDate = course.startingdate || "October 1, 2025";
-    const duration = course.duration || "N/A";
-    const level = course.level || "Intermediate";
-    const price = course.price || "999";
-    
-    const topics = course.topics || [
-        "Phase 1: Foundational Theory",
-        "Phase 2: Project Simulation (OJT)",
-        "Phase 3: Career Launchpad",
-    ];
-    // We assume 'course.videoSrc' holds the YouTube ID for the VideoModal
-    const videoId = course.videoSrc || "dQw4w9WgXcQ"; 
-    // --------------------------------------------------------
+export default function CourseDetails({ params }) {
+    const { slug } = use(params);
+    const router = useRouter();
+    const [course, setCourse] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [isEnrolled, setIsEnrolled] = useState(false);
+    const [isAdmin, setIsAdmin] = useState(false);
+    const [activeModule, setActiveModule] = useState(0);
+    const [previewModal, setPreviewModal] = useState({ isOpen: false, videoId: '', title: '' });
 
-    // --- Helper Component for displaying a single detail ---
-    const DetailItem = ({ icon: Icon, title, value }) => (
-        <div className="flex items-start space-x-3 p-4 bg-white rounded-lg border border-gray-100 shadow-sm transition hover:shadow-md">
-            <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-indigo-600 flex-shrink-0 mt-0.5" />
-            <div>
-                <p className="text-xs sm:text-sm font-medium text-gray-500">{title}</p>
-                <p className="text-base sm:text-lg font-bold text-gray-800">{value}</p>
-            </div>
+    const openPreview = (videoId, title) => {
+        setPreviewModal({ isOpen: true, videoId, title });
+    };
+
+    useEffect(() => {
+        const fetchCourse = async () => {
+            try {
+                const res = await fetch(`/api/courses/${slug}`);
+                const data = await res.json();
+                if (data.success) {
+                    setCourse(data.course);
+                    setIsEnrolled(data.isEnrolled);
+                    setIsAdmin(data.isAdmin);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchCourse();
+    }, [slug]);
+
+    const handleBuyNow = async () => {
+        const res = await loadRazorpay();
+        if (!res) {
+            alert('Razorpay SDK failed to load. Are you online?');
+            return;
+        }
+
+        try {
+            const orderRes = await fetch('/api/payments/create-order', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ courseId: course._id }),
+            });
+            const orderData = await orderRes.json();
+
+            if (!orderData.success) {
+                if (orderData.message === 'Already enrolled') {
+                    alert('You are already enrolled!');
+                    router.push(`/courses/${slug}/watch`);
+                    return;
+                }
+                if (orderData.message === 'Unauthorized') {
+                    router.push('/login');
+                    return;
+                }
+                throw new Error(orderData.message);
+            }
+
+            const options = {
+                key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+                amount: orderData.order.amount,
+                currency: orderData.order.currency,
+                name: "VidyaSetu",
+                description: `Purchase ${course.title}`,
+                order_id: orderData.order.id,
+                handler: async function (response) {
+                    const verifyRes = await fetch('/api/payments/verify', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            razorpay_order_id: response.razorpay_order_id,
+                            razorpay_payment_id: response.razorpay_payment_id,
+                            razorpay_signature: response.razorpay_signature,
+                        }),
+                    });
+
+                    const verifyData = await verifyRes.json();
+                    if (verifyData.success) {
+                        alert('Payment Successful!');
+                        setIsEnrolled(true);
+                        router.push(`/courses/${slug}/watch`);
+                    } else {
+                        alert('Payment Verification Failed');
+                    }
+                },
+                theme: { color: "#4F46E5" },
+            };
+            const paymentObject = new window.Razorpay(options);
+            paymentObject.open();
+
+        } catch (error) {
+            alert('Payment failed: ' + error.message);
+        }
+    };
+
+    if (loading) return (
+        <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
         </div>
     );
-    // --------------------------------------------------------
 
-    // --- Helper Component for list sections ---
-    const SectionBlock = ({ title, children, icon: Icon }) => (
-        <div className="space-y-4">
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 border-b pb-2 flex items-center gap-2">
-                <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-indigo-600" />
-                {title}
-            </h2>
-            {children}
+    if (!course) return (
+        <div className="min-h-screen bg-slate-50 pt-24 text-center">
+            <h1 className="text-2xl font-bold text-gray-800">Course not found</h1>
+            <p className="text-gray-600 mt-2">The course you are looking for does not exist or has been removed.</p>
         </div>
     );
-    // --------------------------------------------------------
 
     return (
-        <div className="bg-white min-h-screen">
-            
-            {/* 1. HERO HEADER SECTION (Course Title & Key Meta Data) */}
-            <header className="relative pt-24 sm:pt-32 pb-8 sm:pb-16 bg-gray-50 overflow-hidden border-b border-indigo-200/50">
-                <div className="absolute inset-0 w-full h-full bg-cover bg-center opacity-20 blur-sm" style={{ backgroundImage: `url(${course.image})` }}></div>
-                
-                <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-                    {/* Responsive Title */}
-                    <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 leading-tight mb-3 sm:mb-4">
-                        {course.title}
-                    </h1>
-                    {/* Responsive Description */}
-                    <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mb-8 sm:mb-10">
-                        {course.description}
-                    </p>
+        <div className="min-h-screen bg-white font-sans">
+            {/* Dark Hero Section */}
+            <div className="bg-slate-900 text-white pt-24 pb-12 relative overflow-hidden">
+                {/* Decorative background blur */}
+                <div className="absolute top-0 right-0 -mt-20 -mr-20 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl"></div>
+                <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl"></div>
 
-                    {/* Key Meta Data Grid */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <DetailItem icon={User} title="Taught By" value={lecturer} />
-                        <DetailItem icon={Clock} title="Course Duration" value={duration} />
-                        <DetailItem icon={Calendar} title="Next Start Date" value={startDate} />
-                        <DetailItem icon={Layers3} title="Level" value={level} />
+                <div className="container mx-auto px-4 max-w-7xl relative z-10">
+                    <div className="grid lg:grid-cols-3 gap-8 lg:gap-12">
+                        {/* Left Column: Course Info */}
+                        <div className="lg:col-span-2 space-y-6">
+
+                            {/* Breadcrumbs / Category */}
+                            <div className="flex items-center gap-2 text-indigo-300 text-sm font-medium tracking-wide">
+                                <span className="uppercase text-xs font-bold bg-indigo-500/20 px-2 py-1 rounded border border-indigo-500/30">
+                                    {course.category}
+                                </span>
+                                <span>&gt;</span>
+                                <span className="truncate">{course.title}</span>
+                            </div>
+
+                            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight">
+                                {course.title}
+                            </h1>
+
+                            <p className="text-lg text-slate-300 leading-relaxed max-w-3xl">
+                                {course.description}
+                            </p>
+
+                            <div className="flex flex-wrap items-center gap-6 text-sm text-slate-300 mt-6">
+                                <div className="flex items-center gap-1">
+                                    <span className="bg-yellow-100 text-yellow-800 text-xs px-2 py-0.5 rounded font-bold">4.8</span>
+                                    <div className="flex text-yellow-400">★★★★★</div>
+                                    <span className="text-indigo-300 ml-1 underline underline-offset-2">(1,240 ratings)</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <User className="w-4 h-4 text-indigo-400" />
+                                    <span>Created by <span className="text-white font-medium underline decoration-indigo-500 underline-offset-4">{course.instructor?.firstName} {course.instructor?.lastName}</span></span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <AlertCircle className="w-4 h-4 text-white" />
+                                    <span>Last updated {new Date(course.updatedAt).toLocaleDateString()}</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <Globe className="w-4 h-4 text-white" />
+                                    <span>{course.language || 'English'}</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </header>
+            </div>
 
+            {/* Main Content Area */}
+            <div className="container mx-auto px-4 max-w-7xl relative">
+                <div className="grid lg:grid-cols-3 gap-8 lg:gap-12 pb-20">
 
-            {/* 2. MAIN BODY: TWO-COLUMN LAYOUT */}
-            <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
-                {/* Main Content Grid: Switches from 1 column on mobile/tablet to 3 columns on large screens */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-12">
-                    
-                    {/* LEFT COLUMN (2/3 width) - Content */}
-                    <div className="lg:col-span-2 space-y-10 sm:space-y-12">
-                        
-                        {/* 2.1 ABOUT THE COURSE */}
-                        <SectionBlock title="About This Course" icon={Layers3}>
-                            <p className="text-base sm:text-lg text-gray-700 leading-relaxed">
-                                {course.longDescription || course.description}
-                            </p>
-                            <p className="text-sm sm:text-md text-gray-600 italic mt-4">
-                                This pipeline moves beyond theory, focusing heavily on hands-on project execution and industry best practices to ensure job readiness from day one.
-                            </p>
-                        </SectionBlock>
+                    {/* Left Column: Details */}
+                    <div className="lg:col-span-2 pt-10 space-y-12">
 
-                        {/* 2.2 WHY CHOOSE IT */}
-                        <SectionBlock title={`Why Choose ${course.title}?`} icon={Zap}>
-                            <ul className="space-y-3 text-gray-700 text-sm sm:text-base">
-                                <li className="flex items-start">
-                                    <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mr-3 mt-1" />
-                                    <span>**Guaranteed OJT:** Direct placement into a live project simulation with one of our industry partners.</span>
-                                </li>
-                                <li className="flex items-start">
-                                    <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mr-3 mt-1" />
-                                    <span>**Industry Mentors:** Weekly 1:1 sessions with domain experts currently working in high-growth companies.</span>
-                                </li>
-                                <li className="flex items-start">
-                                    <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mr-3 mt-1" />
-                                    <span>**Portfolio Focus:** Graduate with a job-ready portfolio of 4-6 completed, professional-grade projects.</span>
-                                </li>
-                            </ul>
-                        </SectionBlock>
-                        
-                        {/* 2.3 COURSE BENEFITS / WHAT YOU WILL LEARN */}
-                        <SectionBlock title="Key Learning Outcomes" icon={CheckCircle}>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                {course.points && course.points.map((point, i) => (
-                                    <div key={i} className="flex items-start space-x-2 text-gray-700">
-                                        <span className="text-indigo-600 font-extrabold text-lg">›</span>
-                                        <span className="text-sm sm:text-base">{point}</span>
+                        {/* What you'll learn */}
+                        <div className="bg-white border border-gray-200 p-6 rounded-2xl shadow-sm">
+                            <h2 className="text-2xl font-bold text-gray-900 mb-4">What you'll learn</h2>
+                            <div className="grid sm:grid-cols-2 gap-3">
+                                {course.learningOutcomes && course.learningOutcomes.length > 0 ? (
+                                    course.learningOutcomes.map((outcome, idx) => (
+                                        <div key={idx} className="flex gap-2">
+                                            <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                                            <span className="text-gray-700 text-sm">{outcome}</span>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <>
+                                        <div className="flex gap-2">
+                                            <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                                            <span className="text-gray-700 text-sm">Master the core concepts of {course.category}</span>
+                                        </div>
+                                        <div className="flex gap-2">
+                                            <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                                            <span className="text-gray-700 text-sm">Build real-world projects</span>
+                                        </div>
+                                    </>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Course Content */}
+                        <div>
+                            <h2 className="text-2xl font-bold text-gray-900 mb-6">Course Content</h2>
+                            <div className="flex items-center justify-between text-sm text-gray-600 mb-4">
+                                <span>{course.modules.length} sections • {course.modules.reduce((acc, m) => acc + m.lessons.length, 0)} lectures</span>
+                            </div>
+
+                            <div className="border border-gray-200 rounded-xl overflow-hidden divide-y divide-gray-200">
+                                {course.modules.map((module, mIndex) => (
+                                    <div key={mIndex} className="bg-white">
+                                        <button
+                                            onClick={() => setActiveModule(activeModule === mIndex ? -1 : mIndex)}
+                                            className="w-full flex items-center justify-between px-6 py-4 bg-gray-50/50 hover:bg-gray-50 transition-colors"
+                                        >
+                                            <div className="flex items-center gap-3 font-semibold text-gray-900">
+                                                <span className={`transform transition-transform ${activeModule === mIndex ? 'rotate-180' : ''}`}>▼</span>
+                                                {module.title}
+                                            </div>
+                                            <span className="text-sm text-gray-500">{module.lessons.length} lectures</span>
+                                        </button>
+
+                                        {activeModule === mIndex && (
+                                            <div className="divide-y divide-gray-100 bg-white">
+                                                {module.lessons.map((lesson, lIndex) => (
+                                                    <div
+                                                        key={lIndex}
+                                                        className={`px-6 py-3 flex items-center justify-between group transition-colors ${lesson.isFree ? 'cursor-pointer hover:bg-indigo-50/30' : ''}`}
+                                                        onClick={() => {
+                                                            if (lesson.isFree && !isEnrolled) {
+                                                                openPreview(lesson.videoId, lesson.title);
+                                                            }
+                                                        }}
+                                                    >
+                                                        <div className="flex items-center gap-3 text-sm text-gray-700">
+                                                            <PlayCircle className={`w-4 h-4 ${lesson.isFree ? 'text-indigo-500' : 'text-gray-400'}`} />
+                                                            <span className={lesson.isFree ? 'text-indigo-900 font-medium' : ''}>{lesson.title}</span>
+                                                        </div>
+                                                        <div className="flex items-center gap-3">
+                                                            {lesson.isFree && (
+                                                                <span className="text-xs font-semibold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded">Preview</span>
+                                                            )}
+                                                            <span className="text-xs text-gray-400">
+                                                                {lesson.duration > 0 ? `${Math.floor(lesson.duration / 60)}:00` : '10:00'}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
                                     </div>
                                 ))}
                             </div>
-                        </SectionBlock>
-                    </div>
+                        </div>
 
-                    {/* RIGHT COLUMN (1/3 width) - Sidebar: Sticky Enrollment/Video Block */}
-                    <div className="lg:col-span-1 space-y-8 sm:space-y-10">
-                        
-                        {/* Enrollment Card with Video and CTA (Sticky on desktop) */}
-                        <div className="bg-white p-6 rounded-xl lg:top-8 space-y-4">
-                            
-                            {/* Video Preview */}
-                            <div>
-                                <h3 className="text-xl font-bold text-gray-800 mb-3 flex items-center gap-2">
-                                    <PlayCircle className="w-5 h-5 text-indigo-600" />
-                                    Course Preview
-                                </h3>
-                                {/* VideoModal is now used here */}
-                                <VideoModal videoId={course.src}/>
-
-                                <p className="text-sm text-gray-500 text-center mt-3">
-                                    Watch this video to understand course flow & outcomes.
-                                </p>
+                        {/* Instructor Bio */}
+                        <div>
+                            <h2 className="text-2xl font-bold text-gray-900 mb-4">Instructor</h2>
+                            <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex gap-6">
+                                <div className="h-20 w-20 bg-slate-200 rounded-full flex-shrink-0 flex items-center justify-center text-slate-400">
+                                    <User size={40} />
+                                </div>
+                                <div>
+                                    <h3 className="text-lg font-bold text-indigo-600 underline underline-offset-2 decoration-2 decoration-indigo-100">
+                                        {course.instructor?.firstName} {course.instructor?.lastName}
+                                    </h3>
+                                    <p className="text-slate-500 text-sm mb-4">{course.instructor?.headline || 'Senior Developer & Instructor'}</p>
+                                    <p className="text-gray-600 text-sm leading-relaxed">
+                                        {course.instructor?.bio || 'Passionate educator with over 10 years of experience in the industry. Dedicated to helping students achieve their career goals through practical, hands-on learning.'}
+                                    </p>
+                                </div>
                             </div>
-                            
-                            {/* Price & CTA Section */}
-                            
                         </div>
-                        
-                        {/* TOPICS COVERED */}
-                        <SectionBlock title="Topics Covered" icon={List}>
-                            <ol className="space-y-3 pl-0 list-none">
-                                {topics.map((topic, i) => (
-                                    <li key={i} className="flex items-start text-gray-700 border-b border-gray-100 pb-2">
-                                        <span className="text-indigo-600 font-bold mr-3">{i + 1}.</span>
-                                        <span className="text-sm font-medium">{topic}</span>
-                                    </li>
-                                ))}
-                            </ol>
-                        </SectionBlock>
 
-                        {/* Additional Info Box */}
-                        <div className="p-6 bg-gray-100 rounded-xl border border-gray-200 shadow-inner">
-                            <p className="font-semibold text-gray-800 mb-2 flex items-center gap-2">
-                                <Clock className="w-4 h-4 text-gray-500" />
-                                Time Commitment
-                            </p>
-                            <p className="text-sm text-gray-600">
-                                Requires approximately 10-15 hours per week of dedicated study and project work.
-                            </p>
+                    </div>
+
+                    {/* Right Column: Sticky Sidebar */}
+                    <div className="lg:col-span-1 relative">
+                        <div className="lg:absolute lg:top-[-180px] lg:right-0 w-full bg-white rounded-2xl shadow-xl shadow-slate-200 border border-gray-100 overflow-hidden sticky top-24">
+                            {/* Video/Thumbnail Area */}
+                            <div
+                                className="relative h-48 w-full group cursor-pointer overflow-hidden"
+                                onClick={() => course.modules?.[0]?.lessons?.[0]?.videoId && openPreview(course.modules[0].lessons[0].videoId, "Course Preview")}
+                            >
+                                <Image src={course.thumbnail} alt={course.title} fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
+                                <div className="absolute inset-0 bg-black/40 flex items-center justify-center group-hover:bg-black/50 transition-colors">
+                                    <div className="w-16 h-16 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform">
+                                        <PlayCircle className="w-8 h-8 text-white fill-current" />
+                                    </div>
+                                </div>
+                                <div className="absolute bottom-4 left-0 w-full text-center text-white font-semibold text-sm drop-shadow-md">Preview this course</div>
+                            </div>
+
+                            <div className="p-6">
+                                <div className="flex items-baseline gap-2 mb-4">
+                                    <span className="text-3xl font-black text-gray-900">₹{course.price.toLocaleString('en-IN')}</span>
+                                    {course.originalPrice > course.price && (
+                                        <>
+                                            <span className="text-lg text-gray-400 line-through font-medium">₹{course.originalPrice.toLocaleString('en-IN')}</span>
+                                            <span className="text-sm font-bold text-red-500 ml-auto">{Math.round(((course.originalPrice - course.price) / course.originalPrice) * 100)}% OFF</span>
+                                        </>
+                                    )}
+                                </div>
+
+                                {isEnrolled || isAdmin ? (
+                                    <button
+                                        onClick={() => router.push(`/courses/${slug}/watch`)}
+                                        className="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-lg font-bold py-3.5 rounded-xl mb-3 shadow-lg shadow-emerald-200 transition-all transform active:scale-95"
+                                    >
+                                        Go to Course
+                                    </button>
+                                ) : (
+                                    <button
+                                        onClick={handleBuyNow}
+                                        className="w-full bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-bold py-3.5 rounded-xl mb-3 shadow-lg shadow-indigo-200 transition-all transform active:scale-95"
+                                    >
+                                        Buy Now
+                                    </button>
+                                )}
+
+                                <p className="text-center text-xs text-gray-500 mb-6">30-Day Money-Back Guarantee</p>
+
+                                <div className="space-y-3 text-sm text-gray-600 font-medium">
+                                    <h4 className="font-bold text-gray-900 mb-2">This course includes:</h4>
+                                    <div className="flex items-center gap-3">
+                                        <Clock className="w-4 h-4 text-indigo-500" />
+                                        <span>Lifetime access</span>
+                                    </div>
+                                    <div className="flex items-center gap-3">
+                                        <Globe className="w-4 h-4 text-indigo-500" />
+                                        <span>Access on mobile and TV</span>
+                                    </div>
+                                    <div className="flex items-center gap-3">
+                                        <Award className="w-4 h-4 text-indigo-500" />
+                                        <span>Certificate of completion</span>
+                                    </div>
+                                </div>
+
+                                <div className="mt-6 flex justify-between gap-4">
+                                    <button className="flex-1 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 border border-gray-200 rounded-lg transition-colors">Share</button>
+                                    <button className="flex-1 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 border border-gray-200 rounded-lg transition-colors">Gift Course</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </main>
 
-            {/* Fixed/Sticky Mobile CTA Footer (Kept the original logic and structure) */}
-            <div className="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 p-4 shadow-2xl lg:hidden z-50">
-                <div className="flex justify-between items-center max-w-lg mx-auto">
-                    <div>
-                        <p className="text-xs text-gray-500">Starting At</p>
-                        <p className="text-xl font-extrabold text-indigo-700">${price}</p>
-                    </div>
-                    <div className="w-2/3">
-                        <CourseSlugButton course={course} />
-                    </div>
                 </div>
             </div>
-            
+
+            <VideoPlayerModal
+                isOpen={previewModal.isOpen}
+                onClose={() => setPreviewModal(prev => ({ ...prev, isOpen: false }))}
+                videoId={previewModal.videoId}
+                title={previewModal.title}
+            />
         </div>
     );
 }

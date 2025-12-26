@@ -1,0 +1,98 @@
+import mongoose from 'mongoose';
+
+const LessonSchema = new mongoose.Schema({
+    title: {
+        type: String,
+        required: [true, 'Lesson title is required'],
+        trim: true,
+    },
+    videoId: {
+        type: String, // YouTube Video ID
+        required: [true, 'Video ID is required'],
+    },
+    duration: {
+        type: Number, // In seconds
+        default: 0,
+    },
+    isFree: {
+        type: Boolean,
+        default: false, // Provide free preview
+    },
+});
+
+const ModuleSchema = new mongoose.Schema({
+    title: {
+        type: String,
+        required: [true, 'Module title is required'],
+        trim: true,
+    },
+    lessons: [LessonSchema],
+});
+
+const CourseSchema = new mongoose.Schema({
+    title: {
+        type: String,
+        required: [true, 'Course title is required'],
+        trim: true,
+    },
+    slug: {
+        type: String,
+        required: true,
+        unique: true,
+        lowercase: true,
+        trim: true,
+    },
+    description: {
+        type: String,
+        required: [true, 'Description is required'],
+    },
+    price: {
+        type: Number,
+        required: [true, 'Price is required'],
+        min: 0,
+    },
+    thumbnail: {
+        type: String, // URL to image
+        required: [true, 'Thumbnail is required'],
+    },
+    category: {
+        type: String,
+        required: [true, 'Category is required'],
+        trim: true,
+    },
+    level: {
+        type: String,
+        default: 'All Levels',
+        enum: ['All Levels', 'Beginner', 'Intermediate', 'Expert'],
+    },
+    language: {
+        type: String,
+        default: 'English',
+    },
+    originalPrice: {
+        type: Number,
+        default: 0,
+    },
+    learningOutcomes: [{
+        type: String,
+        trim: true,
+    }],
+    requirements: [{
+        type: String,
+        trim: true,
+    }],
+    instructor: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+    },
+    modules: [ModuleSchema],
+    published: {
+        type: Boolean,
+        default: false,
+    },
+}, {
+    timestamps: true,
+});
+
+export default mongoose.models.Course || mongoose.model('Course', CourseSchema);
