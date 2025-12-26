@@ -12,7 +12,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className="bg-slate-50 text-slate-800 overflow-x-hidden" >
+      <body className="bg-slate-50 text-slate-800 overflow-x-hidden">
         <AuthProvider>
           <Navbar />
           <AOSInitializer />
