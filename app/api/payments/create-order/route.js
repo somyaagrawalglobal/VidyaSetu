@@ -30,6 +30,19 @@ export async function POST(request) {
             return NextResponse.json({ success: false, message: 'Already enrolled' }, { status: 400 });
         }
 
+        // If course is free, create completed order immediately
+        if (course.price === 0) {
+            const order = await Order.create({
+                user: user._id,
+                course: course._id,
+                amount: 0,
+                currency: "INR",
+                status: 'completed',
+                razorpayOrderId: 'FREE_ENROLLMENT'
+            });
+            return NextResponse.json({ success: true, message: 'Enrolled successfully', isFree: true });
+        }
+
         const options = {
             amount: course.price * 100, // Amount in paise
             currency: "INR",
@@ -52,7 +65,7 @@ export async function POST(request) {
             status: 'pending'
         });
 
-        return NextResponse.json({ success: true, order: razorpayOrder, dbOrderId: order._id });
+        return NextResponse.json({ success: true, order: razorpayOrder, dbOrderId: order._id, isFree: false });
     } catch (error) {
         return NextResponse.json({ success: false, error: error.message }, { status: 500 });
     }

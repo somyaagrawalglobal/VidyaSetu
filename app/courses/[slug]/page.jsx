@@ -63,6 +63,28 @@ export default function CourseDetails({ params }) {
     }, [slug]);
 
     const handleBuyNow = async () => {
+        if (course.price === 0) {
+            try {
+                const res = await fetch('/api/payments/create-order', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ courseId: course._id }),
+                });
+                const data = await res.json();
+                if (data.success) {
+                    alert('Enrolled successfully!');
+                    setIsEnrolled(true);
+                    router.push(`/courses/${slug}/watch`);
+                } else {
+                    if (data.message === 'Unauthorized') router.push('/login');
+                    else throw new Error(data.message);
+                }
+            } catch (error) {
+                alert('Enrollment failed: ' + error.message);
+            }
+            return;
+        }
+
         const res = await loadRazorpay();
         if (!res) {
             alert('Razorpay SDK failed to load. Are you online?');
@@ -127,6 +149,11 @@ export default function CourseDetails({ params }) {
         }
     };
 
+    const handleShare = () => {
+        navigator.clipboard.writeText(window.location.href);
+        alert('Course link copied to clipboard!');
+    };
+
     if (loading) return (
         <div className="min-h-screen bg-slate-50 flex items-center justify-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
@@ -143,7 +170,7 @@ export default function CourseDetails({ params }) {
     return (
         <div className="min-h-screen bg-white font-sans">
             {/* Dark Hero Section */}
-            <div className="bg-slate-900 text-white pt-24 pb-12 relative overflow-hidden">
+            <div className="bg-slate-900 text-white pt-38 pb-12 relative overflow-hidden">
                 {/* Decorative background blur */}
                 <div className="absolute top-0 right-0 -mt-20 -mr-20 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl"></div>
                 <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl"></div>
@@ -335,7 +362,9 @@ export default function CourseDetails({ params }) {
 
                             <div className="p-6">
                                 <div className="flex items-baseline gap-2 mb-4">
-                                    <span className="text-3xl font-black text-gray-900">₹{course.price.toLocaleString('en-IN')}</span>
+                                    <span className="text-3xl font-black text-gray-900">
+                                        {course.price === 0 ? 'Free' : `₹${course.price.toLocaleString('en-IN')}`}
+                                    </span>
                                     {course.originalPrice > course.price && (
                                         <>
                                             <span className="text-lg text-gray-400 line-through font-medium">₹{course.originalPrice.toLocaleString('en-IN')}</span>
@@ -356,7 +385,7 @@ export default function CourseDetails({ params }) {
                                         onClick={handleBuyNow}
                                         className="w-full bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-bold py-3.5 rounded-xl mb-3 shadow-lg shadow-indigo-200 transition-all transform active:scale-95"
                                     >
-                                        Buy Now
+                                        {course.price === 0 ? 'Enroll Now' : 'Buy Now'}
                                     </button>
                                 )}
 
@@ -390,8 +419,18 @@ export default function CourseDetails({ params }) {
                                 </div>
 
                                 <div className="mt-6 flex justify-between gap-4">
-                                    <button className="flex-1 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 border border-gray-200 rounded-lg transition-colors">Share</button>
-                                    <button className="flex-1 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 border border-gray-200 rounded-lg transition-colors">Gift Course</button>
+                                    <button
+                                        onClick={handleShare}
+                                        className="flex-1 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 border border-gray-200 rounded-lg transition-colors"
+                                    >
+                                        Share
+                                    </button>
+                                    <button
+                                        onClick={() => alert('Gift Course feature coming soon!')}
+                                        className="flex-1 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 border border-gray-200 rounded-lg transition-colors"
+                                    >
+                                        Gift Course
+                                    </button>
                                 </div>
                             </div>
                         </div>

@@ -1,8 +1,10 @@
 'use client';
 
 import { useState, useEffect, use } from 'react';
-import VideoPlayer from '@/components/VideoPlayer';
-import { PlayCircle, Lock } from 'lucide-react';
+import { Lock } from 'lucide-react';
+import WatchHeader from '@/components/watch/WatchHeader';
+import WatchSidebar from '@/components/watch/WatchSidebar';
+import WatchContent from '@/components/watch/WatchContent';
 
 export default function WatchCoursePage({ params }) {
     const { slug } = use(params);
@@ -10,6 +12,7 @@ export default function WatchCoursePage({ params }) {
     const [loading, setLoading] = useState(true);
     const [activeLesson, setActiveLesson] = useState(null);
     const [error, setError] = useState(null);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
     useEffect(() => {
         const fetchCourse = async () => {
@@ -39,53 +42,48 @@ export default function WatchCoursePage({ params }) {
         fetchCourse();
     }, [slug]);
 
-    if (loading) return <div className="text-center p-10">Loading player...</div>;
-    if (error) return <div className="text-center p-10 text-red-600 font-bold">{error}</div>;
+    if (loading) return (
+        <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center space-y-4">
+            <div className="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin" />
+            <p className="text-slate-400 font-bold animate-pulse text-sm uppercase tracking-widest">Preparing your classroom...</p>
+        </div>
+    );
+
+    if (error) return (
+        <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center p-6 text-center">
+            <div className="w-20 h-20 bg-red-500/10 rounded-full flex items-center justify-center mb-6">
+                <Lock className="w-10 h-10 text-red-500" />
+            </div>
+            <h1 className="text-2xl font-black text-white mb-2">Access Denied</h1>
+            <p className="text-slate-400 max-w-md mb-8">{error}</p>
+            <button
+                onClick={() => window.history.back()}
+                className="bg-white text-slate-900 px-8 py-3 rounded-xl font-bold hover:bg-slate-100 transition-all uppercase text-xs tracking-widest"
+            >
+                Go Back
+            </button>
+        </div>
+    );
 
     return (
-        <div className="flex h-screen bg-gray-900 text-white">
-            {/* Sidebar with lessons */}
-            <div className="w-80 border-r border-gray-800 flex flex-col overflow-hidden bg-gray-900">
-                <div className="p-4 border-b border-gray-800">
-                    <h2 className="font-bold text-lg truncate">{course.title}</h2>
-                </div>
-                <div className="flex-1 overflow-y-auto">
-                    {course.modules.map((module, mIndex) => (
-                        <div key={mIndex}>
-                            <div className="px-4 py-2 bg-gray-800 text-xs font-semibold text-gray-400 uppercase">
-                                {module.title}
-                            </div>
-                            {module.lessons.map((lesson, lIndex) => (
-                                <button
-                                    key={lIndex}
-                                    onClick={() => setActiveLesson(lesson)}
-                                    className={`w-full text-left px-4 py-3 text-sm flex items-center gap-3 hover:bg-gray-800 transition ${activeLesson?._id === lesson._id ? 'bg-indigo-900 text-indigo-100' : 'text-gray-300'}`}
-                                >
-                                    <PlayCircle className="w-4 h-4 flex-shrink-0" />
-                                    <span className="truncate">{lesson.title}</span>
-                                </button>
-                            ))}
-                        </div>
-                    ))}
-                </div>
-            </div>
+        <div className="h-screen flex flex-col bg-white overflow-hidden font-sans">
+            <WatchHeader
+                courseTitle={course.title}
+                slug={slug}
+                progress={35} // Hardcoded for now, potential future enhancement
+            />
 
-            {/* Main Video Area */}
-            <div className="flex-1 flex flex-col">
-                <div className="flex-1 flex items-center justify-center p-8 bg-black">
-                    <div className="w-full max-w-4xl">
-                        {activeLesson ? (
-                            <div>
-                                <VideoPlayer videoId={activeLesson.videoId} />
-                                <div className="mt-4">
-                                    <h1 className="text-2xl font-bold">{activeLesson.title}</h1>
-                                </div>
-                            </div>
-                        ) : (
-                            <div className="text-center text-gray-500">Select a lesson to start watching</div>
-                        )}
-                    </div>
-                </div>
+            <div className="flex-1 flex overflow-hidden relative">
+                <WatchSidebar
+                    modules={course.modules}
+                    activeLesson={activeLesson}
+                    onLessonSelect={setActiveLesson}
+                />
+
+                <WatchContent
+                    activeLesson={activeLesson}
+                    course={course}
+                />
             </div>
         </div>
     );
