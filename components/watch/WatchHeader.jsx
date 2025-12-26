@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 export default function WatchHeader({ courseTitle, slug, progress }) {
     return (
-        <header className="h-16 bg-slate-900 border-b border-slate-800 flex items-center justify-between px-4 lg:px-6 sticky top-0 z-50">
+        <header className="h-16 bg-slate-900 border-b border-slate-800 flex items-center justify-between px-4 lg:px-6 sticky top-0 z-30">
             <div className="flex items-center gap-4 min-w-0">
                 <Link
                     href={`/courses/${slug}`}

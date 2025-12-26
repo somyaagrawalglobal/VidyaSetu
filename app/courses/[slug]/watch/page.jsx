@@ -66,11 +66,11 @@ export default function WatchCoursePage({ params }) {
     );
 
     return (
-        <div className="h-screen flex flex-col bg-white overflow-hidden font-sans">
+        <div className="min-h-screen flex flex-col bg-white overflow-hidden font-sans pt-20">
             <WatchHeader
                 courseTitle={course.title}
                 slug={slug}
-                progress={35} // Hardcoded for now, potential future enhancement
+                progress={0} // Hardcoded for now, potential future enhancement
             />
 
             <div className="flex-1 flex overflow-hidden relative">

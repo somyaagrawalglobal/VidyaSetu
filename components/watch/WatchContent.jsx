@@ -26,7 +26,7 @@ export default function WatchContent({ activeLesson, course }) {
     ];
 
     return (
-        <main className="flex-1 flex flex-col h-full overflow-hidden bg-white">
+        <main className="flex-1 flex flex-col min-h-full bg-white">
             {/* Video Player Section */}
             <div className="bg-black w-full shadow-2xl z-10">
                 <div className="max-w-[1200px] mx-auto">
@@ -35,7 +35,7 @@ export default function WatchContent({ activeLesson, course }) {
             </div>
 
             {/* Lesson Info & Tabs Section */}
-            <div className="flex-1 overflow-y-auto pt-6 px-4 lg:px-8 pb-12 scrollbar-thin scrollbar-thumb-slate-200">
+            <div className="flex-1 pt-6 px-4 lg:px-8 pb-12 scrollbar-thin scrollbar-thumb-slate-200">
                 <div className="max-w-[1000px] mx-auto">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-6 mb-6">
                         <div>
