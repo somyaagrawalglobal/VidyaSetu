@@ -41,7 +41,7 @@ export default function Navbar() {
 
   return (
     <nav className="fixed w-full z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100 shadow-lg">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex justify-between items-center">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex justify-between items-center">
         {/* Logo Section */}
         <Link href="/" className="text-3xl font-extrabold tracking-tight transition-transform duration-300 hover:scale-[1.02]">
           {/* Vidya<span className="text-indigo-600">-Setu</span> */}
@@ -54,7 +54,7 @@ export default function Navbar() {
             <Link
               key={item.name}
               href={item.href}
-              className="text-gray-700 font-medium text-lg relative group transition-colors duration-200 hover:text-indigo-600"
+              className="text-gray-700 font-medium text-md relative group transition-colors duration-200 hover:text-indigo-600"
             >
               {item.name}
               <span className="absolute bottom-[-4px] left-0 w-full h-[2px] bg-indigo-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>

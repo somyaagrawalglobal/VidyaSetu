@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { Eye, Target, CheckCircle, Award, Users, Lightbulb } from "lucide-react";
+import { Eye, Target, CheckCircle, Award, Users, Lightbulb, Sparkles } from "lucide-react";
 
 export default function About() {
     // Custom classes for consistent brand colors
@@ -13,17 +13,20 @@ export default function About() {
         <main className="text-slate-800">
 
             {/* 1. Header - Clean & Focused */}
-            <section className={`pt-36 pb-16 relative overflow-hidden bg-gradient-to-b from-white to-indigo-50/50 border-b border-indigo-100`}>
+            <section className={`pt-30 pb-16 relative overflow-hidden bg-gradient-to-b from-white to-indigo-50/50 border-b border-indigo-100`}>
                 <div className="max-w-7xl mx-auto px-4 text-center">
-                    <p className={`text-lg font-semibold mb-3 text-${primaryColor}`} data-aos="fade-down">
-                        Our Story, Our Purpose
-                    </p>
-                    <h1 className="text-2xl md:text-5xl font-bold text-slate-900 mb-6" data-aos="fade-down" data-aos-delay="100">
+
+                    <h1 className="text-2xl md:text-4xl font-bold text-slate-900 mb-4" data-aos="fade-down" data-aos-delay="100">
                         The Com-<span className={gradientTextClass}>ED</span> Difference
                     </h1>
-                    <p className="mt-4 text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed" data-aos="fade-up" data-aos-delay="200">
+                    <p className="my-4 text-md text-slate-600 max-w-3xl mx-auto leading-relaxed" data-aos="fade-up" data-aos-delay="200">
                         Empowering the next generation with real skills for real careers. We are committed to building the bridge between academic potential and industry success.
                     </p>
+
+                    <div className="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-white/80 backdrop-blur-md border border-indigo-100 shadow-sm mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+                        <Sparkles className="w-4 h-4 text-indigo-500" />
+                        <span className="text-xs font-bold text-slate-600 uppercase tracking-widest">Our Story, Our Purpose</span>
+                    </div>
                 </div>
             </section>
 
@@ -38,9 +41,9 @@ export default function About() {
                                 <Eye className="w-8 h-8" />
                             </div>
 
-                            <h2 className="text-3xl font-extrabold text-slate-900 mb-4">Our Vision</h2>
+                            <h2 className="text-3xl font-bold text-slate-900 mb-4">Our Vision</h2>
 
-                            <p className="text-slate-600 leading-relaxed text-lg">
+                            <p className="text-slate-600 leading-relaxed text-md">
                                 To build an outcome-driven ed-tech platform where learners do not
                                 just gain certificates, but **real skills, real experience,** and
                                 real career opportunities through structured learning and
@@ -54,9 +57,9 @@ export default function About() {
                                 <Target className="w-8 h-8" />
                             </div>
 
-                            <h2 className="text-3xl font-extrabold text-slate-900 mb-4">Our Mission</h2>
+                            <h2 className="text-3xl font-bold text-slate-900 mb-4">Our Mission</h2>
 
-                            <ul className="space-y-4 text-slate-600 text-lg">
+                            <ul className="space-y-4 text-slate-600 text-md">
                                 <li className="flex items-start">
                                     <CheckCircle className={`w-6 h-6 text-${primaryColor} flex-shrink-0 mr-3 mt-1`} />
                                     Bridge the critical gap between academic training and industry demands.
@@ -82,7 +85,7 @@ export default function About() {
 
                         {/* Content */}
                         <div className="md:w-1/2 md:order-2" data-aos="fade-left">
-                            <h2 className="text-4xl font-extrabold text-slate-900 mb-6">
+                            <h2 className="text-4xl font-bold text-slate-900 mb-6">
                                 Meet the <span className={gradientTextClass}>Founder</span>
                             </h2>
 
@@ -93,20 +96,20 @@ export default function About() {
                                 Founder & CEO, Company
                             </p>
 
-                            <p className="text-slate-600 mb-6 leading-relaxed text-lg border-l-4 border-indigo-200 pl-4">
+                            <p className="text-slate-600 mb-6 leading-relaxed text-md border-l-4 border-indigo-200 pl-4">
                                 Somya identified a critical gap: students were graduating with
                                 degrees but without immediate employability. The traditional model
                                 focused on certification, neglecting real-world capability.
                             </p>
 
-                            <p className="text-slate-600 mb-8 leading-relaxed text-lg">
+                            <p className="text-slate-600 mb-8 leading-relaxed text-md">
                                 Driven by a vision to change this, she founded Vidya-Setu.
                                 Her goal is to create a single, seamless ecosystem where learning meets
                                 practice, and verified practice leads directly to hiring.
                             </p>
 
                             <div className={`bg-gray-50 p-6 rounded-xl border border-gray-200 shadow-inner`}>
-                                <p className="italic text-slate-700 text-lg">
+                                <p className="italic text-slate-700 text-md">
                                     "We are building a future where your skills define your worth,
                                     not just your degree."
                                 </p>
@@ -134,7 +137,7 @@ export default function About() {
             {/* 4. Core Values - Modern Icon-Based Section */}
             <section className="py-24 bg-slate-50">
                 <div className="max-w-7xl mx-auto px-4 text-center" data-aos="fade-up">
-                    <h2 className="text-4xl font-extrabold text-slate-900 mb-12">Our Guiding Principles</h2>
+                    <h2 className="text-4xl font-bold text-slate-900 mb-12">Our Guiding Principles</h2>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 
@@ -184,7 +187,7 @@ const ValueCard = ({ Icon, title, description, color }) => {
             <div className={`w-16 h-16 ${iconClasses} rounded-full flex items-center justify-center mx-auto mb-6`}>
                 <Icon className="w-8 h-8" />
             </div>
-            <h3 className={`text-xl font-bold mb-3 ${textClasses}`}>{title}</h3>
+            <h3 className={`text-lg font-bold mb-3 ${textClasses}`}>{title}</h3>
             <p className="text-slate-600">{description}</p>
         </div>
     );

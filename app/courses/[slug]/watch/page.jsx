@@ -66,7 +66,7 @@ export default function WatchCoursePage({ params }) {
     );
 
     return (
-        <div className="min-h-screen flex flex-col bg-white overflow-hidden font-sans pt-20">
+        <div className="min-h-screen flex flex-col bg-white overflow-hidden font-sans pt-16">
             <WatchHeader
                 courseTitle={course.title}
                 slug={slug}

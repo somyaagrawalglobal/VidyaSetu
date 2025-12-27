@@ -30,7 +30,7 @@ export default function Home() {
 
                             {/* Main Heading: Reduced font size from 7xl to 6xl/5xl */}
                             <h1
-                                className="text-5xl md:text-6xl lg:text-5xl font-extrabold mb-6 leading-tight tracking-tight"
+                                className="text-5xl md:text-6xl lg:text-5xl font-bold mb-6 leading-tight tracking-tight"
                                 data-aos="fade-up"
                                 data-aos-delay="300"
                             >
@@ -42,13 +42,13 @@ export default function Home() {
 
                             {/* Subtext: Maintained size for clarity */}
                             <p
-                                className="text-lg text-slate-600 mb-10 max-w-lg"
+                                className="text-md text-slate-600 mb-10 max-w-lg"
                                 data-aos="fade-up"
                                 data-aos-delay="500"
                             >
                                 The gap between education and employment ends here. Master
                                 outcome-driven skills with guaranteed{" "}
-                                <strong className="text-slate-900 font-extrabold">On-the-Job Training</strong>.
+                                <strong className="text-slate-900 font-bold">On-the-Job Training</strong>.
                             </p>
 
                             {/* CTA Buttons */}
@@ -77,7 +77,7 @@ export default function Home() {
                         >
                             <div className="relative w-full max-w-lg aspect-[4/3] rounded-3xl shadow-2xl overflow-hidden ring-4 ring-indigo-50/50 hover:ring-indigo-100 transition-all duration-500">
                                 <Image
-                                    src="/assets/hero-img.jpeg"
+                                    src="/assets/images/hero-img.jpeg"
                                     alt="Students collaborating and learning in a modern environment"
                                     fill
                                     style={{ objectFit: 'cover' }}
@@ -89,8 +89,8 @@ export default function Home() {
                         </div>
                     </div>
                 </section>
-                
-                
+
+
 
 
                 {/* 2. BRIDGE SECTION (How It Works - Improved Timeline Visuals) */}
@@ -101,10 +101,10 @@ export default function Home() {
                             data-aos="fade-up"
                         >
                             {/* Heading: Reduced size from 5xl to 4xl */}
-                            <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-800">
+                            <h2 className="text-3xl sm:text-4xl font-bold text-gray-800">
                                 The <span className="text-indigo-600">Bridge Method</span>
                             </h2>
-                            <p className="text-lg text-slate-500 mt-3">Your structured timeline from novice to a career-ready professional.</p>
+                            <p className="text-md text-slate-500 mt-3">Your structured timeline from novice to a career-ready professional.</p>
                         </div>
 
                         <div className="grid md:grid-cols-3 gap-10 relative">
@@ -167,10 +167,10 @@ export default function Home() {
 
                         <div data-aos="fade-right" data-aos-delay="100">
                             {/* Heading: Reduced size from 4xl to 3xl */}
-                            <h2 className="text-3xl font-extrabold text-gray-800 mb-8">
+                            <h2 className="text-3xl font-bold text-gray-800 mb-8">
                                 Why Choose <span className="text-indigo-600">Com-ED?</span>
                             </h2>
-                            <ul className="space-y-6 text-lg text-slate-700"> {/* Reduced text size from xl to lg */}
+                            <ul className="space-y-6 text-md text-slate-700"> {/* Reduced text size from xl to lg */}
                                 {/* Individual list item animation */}
                                 <li className="flex items-start gap-3" data-aos="fade-up" data-aos-delay="200">
                                     <CheckCircle className="w-6 h-6 text-green-500 flex-shrink-0 mt-1" />
@@ -231,7 +231,7 @@ export default function Home() {
                                     <blockquote className="text-xl md:text-2xl font-semibold italic border-l-4 border-white pl-4">
                                         "Real experience is the currency of the modern job market. Vidya-Setu is the bridge to that value."
                                     </blockquote>
-                                    <p className="text-lg font-bold mt-4">Founder Name</p>
+                                    <p className="text-md font-bold mt-4">Founder Name</p>
                                     <p className="text-indigo-300">CEO & Founder, Company</p>
                                 </div>
                             </div>
@@ -247,10 +247,10 @@ export default function Home() {
                 >
                     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                         {/* Heading: Reduced size from 5xl to 4xl */}
-                        <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-800 mb-6" data-aos="fade-up">
+                        <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-6" data-aos="fade-up">
                             Ready to <span className="text-indigo-600">Level Up?</span>
                         </h2>
-                        <p className="text-lg text-slate-600 mb-10" data-aos="fade-up" data-aos-delay="100"> {/* Reduced text size from xl to lg */}
+                        <p className="text-md text-slate-600 mb-10" data-aos="fade-up" data-aos-delay="100"> {/* Reduced text size from xl to lg */}
                             Join the ecosystem where skills meet opportunity. Your future starts now.
                         </p>
 
