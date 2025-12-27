@@ -25,11 +25,31 @@ export async function GET(request) {
         const { searchParams } = new URL(request.url);
         const publishedOnly = searchParams.get('published') !== 'false';
 
-        const query = publishedOnly ? { published: true } : {};
+        const user = await authenticateApi(request);
+
+        let query = publishedOnly ? { published: true } : {};
+
+        // If not publishedOnly, it's likely an admin/instructor list view
+        if (!publishedOnly) {
+            if (!user) {
+                return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
+            }
+
+            const isAdmin = user.roles.includes('Admin');
+            const isInstructor = user.roles.includes('Instructor');
+
+            if (!isAdmin && isInstructor) {
+                // Instructors only see their own courses
+                query.instructor = user._id;
+            } else if (!isAdmin) {
+                // Students or others shouldn't see unpublished courses unless they are instructors
+                return NextResponse.json({ success: false, message: 'Forbidden' }, { status: 403 });
+            }
+        }
 
         const courses = await Course.find(query)
             .populate('instructor', 'firstName lastName headline bio')
-            .select('-modules.lessons.videoId') // Hide video IDs in list if needed, or keep them.
+            .select('-modules.lessons.videoId')
             .sort({ createdAt: -1 });
 
         return NextResponse.json({ success: true, courses });
@@ -40,9 +60,9 @@ export async function GET(request) {
 
 export async function POST(request) {
     try {
-        const user = await checkAuth(request, ['Admin']);
+        const user = await checkAuth(request, ['Admin', 'Instructor']);
         if (!user) {
-            return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
+            return NextResponse.json({ success: false, message: 'Unauthorized or Forbidden' }, { status: 403 });
         }
 
         const body = await request.json();

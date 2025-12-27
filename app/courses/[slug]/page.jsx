@@ -268,23 +268,6 @@ export default function CourseDetails({ params }) {
                             </ul>
                         </div>
 
-                        {/* This Course Includes */}
-                        {course.provides && course.provides.length > 0 && (
-                            <div className="space-y-4">
-                                <h2 className="text-2xl font-bold text-gray-900">This course includes</h2>
-                                <div className="grid sm:grid-cols-2 gap-4">
-                                    {course.provides.map((item, idx) => (
-                                        <div key={idx} className="flex items-center gap-3 text-gray-700">
-                                            <div className="p-1 bg-indigo-50 rounded-full">
-                                                <CheckCircle2 className="w-4 h-4 text-indigo-500" />
-                                            </div>
-                                            <span className="text-sm">{item}</span>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-
                         {/* Course Content */}
                         <div>
                             <h2 className="text-2xl font-bold text-gray-900 mb-6">Course Content</h2>

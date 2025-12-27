@@ -38,6 +38,7 @@ export default function Register() {
         lastName: '',
         email: '',
         mobileNumber: '',
+        role: 'Student',
         password: '',
         confirmPassword: '',
     });
@@ -73,6 +74,7 @@ export default function Register() {
                     email: formData.email,
                     mobileNumber: formData.mobileNumber,
                     password: formData.password,
+                    role: formData.role,
                 }),
             });
 
@@ -194,6 +196,38 @@ export default function Register() {
                         value={formData.confirmPassword}
                         onChange={handleChange}
                     />
+
+                    <div className="space-y-2">
+                        <label className="text-sm font-semibold text-slate-700 ml-1">I want to join as a:</label>
+                        <div className="grid grid-cols-2 gap-4">
+                            <button
+                                type="button"
+                                onClick={() => setFormData(prev => ({ ...prev, role: 'Student' }))}
+                                className={`py-3 px-4 rounded-xl border-2 transition-all font-bold text-sm flex items-center justify-center gap-2 ${formData.role === 'Student'
+                                    ? 'border-indigo-600 bg-indigo-50 text-indigo-600'
+                                    : 'border-gray-100 bg-slate-50 text-slate-500 hover:border-gray-200'
+                                    }`}
+                            >
+                                <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${formData.role === 'Student' ? 'border-indigo-600' : 'border-gray-300'}`}>
+                                    {formData.role === 'Student' && <div className="w-2 h-2 rounded-full bg-indigo-600"></div>}
+                                </div>
+                                Student
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => setFormData(prev => ({ ...prev, role: 'Instructor' }))}
+                                className={`py-3 px-4 rounded-xl border-2 transition-all font-bold text-sm flex items-center justify-center gap-2 ${formData.role === 'Instructor'
+                                    ? 'border-indigo-600 bg-indigo-50 text-indigo-600'
+                                    : 'border-gray-100 bg-slate-50 text-slate-500 hover:border-gray-200'
+                                    }`}
+                            >
+                                <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${formData.role === 'Instructor' ? 'border-indigo-600' : 'border-gray-300'}`}>
+                                    {formData.role === 'Instructor' && <div className="w-2 h-2 rounded-full bg-indigo-600"></div>}
+                                </div>
+                                Instructor
+                            </button>
+                        </div>
+                    </div>
 
                     {/* Submit Button */}
                     <button

@@ -73,11 +73,24 @@ export async function GET(request, { params }) {
 
 export async function PUT(request, { params }) {
     try {
-        const user = await checkAuth(request, ['Admin']);
+        const user = await checkAuth(request, ['Admin', 'Instructor']);
         if (!user) return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
 
         const { courseId } = await params;
         const body = await request.json();
+
+        // Ownership Check
+        const existingCourse = await Course.findById(courseId);
+        if (!existingCourse) {
+            return NextResponse.json({ success: false, message: 'Course not found' }, { status: 404 });
+        }
+
+        const isAdmin = user.roles.includes('Admin');
+        const isOwner = existingCourse.instructor.toString() === user._id.toString();
+
+        if (!isAdmin && !isOwner) {
+            return NextResponse.json({ success: false, message: 'Forbidden: You do not own this course' }, { status: 403 });
+        }
 
         const course = await Course.findByIdAndUpdate(courseId, body, { new: true, runValidators: true });
 
@@ -93,10 +106,24 @@ export async function PUT(request, { params }) {
 
 export async function DELETE(request, { params }) {
     try {
-        const user = await checkAuth(request, ['Admin']);
+        const user = await checkAuth(request, ['Admin', 'Instructor']);
         if (!user) return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
 
         const { courseId } = await params;
+
+        // Ownership Check
+        const existingCourse = await Course.findById(courseId);
+        if (!existingCourse) {
+            return NextResponse.json({ success: false, message: 'Course not found' }, { status: 404 });
+        }
+
+        const isAdmin = user.roles.includes('Admin');
+        const isOwner = existingCourse.instructor.toString() === user._id.toString();
+
+        if (!isAdmin && !isOwner) {
+            return NextResponse.json({ success: false, message: 'Forbidden: You do not own this course' }, { status: 403 });
+        }
+
         const course = await Course.findByIdAndDelete(courseId);
 
         if (!course) {

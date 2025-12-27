@@ -96,7 +96,8 @@ export default function Navbar() {
                     onClick={() => setProfileOpen(false)}
                   >
                     <User size={16} />
-                    Dashboard
+                    {user.roles.includes('Admin') ? 'Admin Dashboard' :
+                      user.roles.includes('Instructor') ? 'Instructor Console' : 'Student Dashboard'}
                   </Link>
 
                   <button
@@ -161,7 +162,8 @@ export default function Navbar() {
                 className="flex items-center gap-2 text-gray-700 font-medium text-lg py-2 hover:bg-indigo-50/50 px-3 rounded-lg transition-colors duration-200"
               >
                 <User size={18} />
-                Dashboard
+                {user.roles.includes('Admin') ? 'Admin Dashboard' :
+                  user.roles.includes('Instructor') ? 'Instructor Console' : 'Student Dashboard'}
               </Link>
               <button
                 onClick={handleLogout}
