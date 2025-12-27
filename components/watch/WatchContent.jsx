@@ -76,9 +76,15 @@ export default function WatchContent({ activeLesson, course, isCompleted, onTogg
                         {activeTab === 'overview' && (
                             <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
                                 <h3 className="text-xl font-bold text-slate-900 mb-4">About this lesson</h3>
-                                <p className="text-slate-600 leading-relaxed">
-                                    {course.description || "In this particular lesson, we delve into the core concepts and practical applications of the topic at hand. Follow along closely to master the foundational principles."}
-                                </p>
+                                <div className="text-slate-600 leading-relaxed space-y-4 mb-8">
+                                    {activeLesson.description ? (
+                                        activeLesson.description.split('\n').map((para, i) => (
+                                            <p key={i}>{para}</p>
+                                        ))
+                                    ) : (
+                                        <p className="italic text-slate-500">No specific description provided for this lesson.</p>
+                                    )}
+                                </div>
 
                                 <div className="mt-12 bg-indigo-900 rounded-3xl p-8 text-white relative overflow-hidden shadow-2xl shadow-indigo-200">
                                     <div className="relative z-10">
@@ -107,20 +113,33 @@ export default function WatchContent({ activeLesson, course, isCompleted, onTogg
                         {activeTab === 'resources' && (
                             <div className="space-y-4 animate-in fade-in slide-in-from-left-4 duration-300">
                                 <h3 className="text-xl font-bold text-slate-900 mb-4">Downloadable Assets</h3>
-                                {[1, 2].map(i => (
-                                    <div key={i} className="flex items-center justify-between p-4 border border-slate-100 rounded-2xl bg-slate-50/50 group hover:border-indigo-100 hover:bg-indigo-50/30 transition-all cursor-pointer">
-                                        <div className="flex items-center gap-4">
-                                            <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm text-indigo-500 font-bold border border-slate-100">
-                                                PDF
+                                {activeLesson.resources && activeLesson.resources.length > 0 ? (
+                                    activeLesson.resources.map((resource, index) => (
+                                        <a
+                                            key={index}
+                                            href={resource.url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="flex items-center justify-between p-4 border border-slate-100 rounded-2xl bg-slate-50/50 group hover:border-indigo-100 hover:bg-indigo-50/30 transition-all cursor-pointer no-underline"
+                                        >
+                                            <div className="flex items-center gap-4">
+                                                <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm text-indigo-500 font-bold border border-slate-100">
+                                                    <FileText className="w-5 h-5" />
+                                                </div>
+                                                <div>
+                                                    <p className="text-sm font-bold text-slate-800 m-0">{resource.title}</p>
+                                                    <p className="text-[11px] text-slate-400 font-medium m-0 uppercase tracking-wider">{resource.type || 'Resource'}</p>
+                                                </div>
                                             </div>
-                                            <div>
-                                                <p className="text-sm font-bold text-slate-800">Lesson Resources_{i}.pdf</p>
-                                                <p className="text-[11px] text-slate-400 font-medium">1.2 MB • Updated 2 days ago</p>
-                                            </div>
-                                        </div>
-                                        <Download className="w-5 h-5 text-slate-400 group-hover:text-indigo-600 transition-colors" />
+                                            <Download className="w-5 h-5 text-slate-400 group-hover:text-indigo-600 transition-colors" />
+                                        </a>
+                                    ))
+                                ) : (
+                                    <div className="py-12 text-center bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200">
+                                        <FileText className="w-12 h-12 text-slate-200 mx-auto mb-3" />
+                                        <p className="text-slate-500 font-medium">No resources available for this lesson.</p>
                                     </div>
-                                ))}
+                                )}
                             </div>
                         )}
                     </div>

@@ -49,6 +49,13 @@ export default function EditCoursePage({ params }) {
             const res = await fetch(`/api/courses/${courseId}`);
             const data = await res.json();
             if (data.success) {
+                console.log('[EDIT PAGE] Loaded course with', data.course.modules?.length, 'modules');
+                if (data.course.modules?.length > 0 && data.course.modules[0].lessons?.length > 0) {
+                    const firstLesson = data.course.modules[0].lessons[0];
+                    console.log('[EDIT PAGE] First lesson _id:', firstLesson._id);
+                    console.log('[EDIT PAGE] First lesson has description:', !!firstLesson.description);
+                    console.log('[EDIT PAGE] First lesson description value:', firstLesson.description);
+                }
                 setFormData(data.course);
             } else {
                 alert('Course not found');
@@ -81,13 +88,15 @@ export default function EditCoursePage({ params }) {
             title: 'New Lesson',
             videoId: '',
             duration: 0,
-            isFree: false
+            isFree: false,
+            description: '',
+            resources: []
         });
         setFormData({ ...formData, modules: newModules });
     };
 
     const updateLesson = (moduleIndex, lessonIndex, field, value) => {
-        const newModules = [...formData.modules];
+        const newModules = structuredClone(formData.modules);
         newModules[moduleIndex].lessons[lessonIndex][field] = value;
         setFormData({ ...formData, modules: newModules });
     };
@@ -95,7 +104,14 @@ export default function EditCoursePage({ params }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setSaving(true);
-        console.log("Submitting form data:", formData);
+        console.log("[FRONTEND] Submitting form data with modules:", formData.modules.length);
+        if (formData.modules.length > 0 && formData.modules[0].lessons.length > 0) {
+            console.log('[FRONTEND] First lesson sample:', {
+                title: formData.modules[0].lessons[0].title,
+                description: formData.modules[0].lessons[0].description,
+                resources: formData.modules[0].lessons[0].resources
+            });
+        }
 
         try {
             const res = await fetch(`/api/courses/${courseId}`, {
@@ -108,6 +124,12 @@ export default function EditCoursePage({ params }) {
             console.log("Response:", data);
 
             if (!res.ok) throw new Error(data.error || 'Failed to update course');
+
+            // IMPORTANT: Sync IDs and state back from server
+            if (data.course) {
+                console.log("Syncing state from server:", data.course);
+                setFormData(data.course);
+            }
 
             openModal({
                 title: 'Success',
@@ -354,24 +376,90 @@ export default function EditCoursePage({ params }) {
                                                 <Video className="w-4 h-4" />
                                             </div>
 
-                                            <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
-                                                <input
-                                                    type="text"
-                                                    placeholder="Lesson Title"
-                                                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-sm"
-                                                    value={lesson.title}
-                                                    onChange={(e) => updateLesson(mIndex, lIndex, 'title', e.target.value)}
+                                            <div className="flex-1 space-y-4 w-full">
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                    <input
+                                                        type="text"
+                                                        placeholder="Lesson Title"
+                                                        className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-sm font-semibold"
+                                                        value={lesson.title}
+                                                        onChange={(e) => updateLesson(mIndex, lIndex, 'title', e.target.value)}
+                                                    />
+                                                    <input
+                                                        type="text"
+                                                        placeholder="YouTube Video ID (e.g. dQw4w9WgXcQ)"
+                                                        className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-sm font-mono text-gray-600"
+                                                        value={lesson.videoId}
+                                                        onChange={(e) => updateLesson(mIndex, lIndex, 'videoId', e.target.value)}
+                                                    />
+                                                </div>
+
+                                                <textarea
+                                                    placeholder="Lesson Description (Optional)"
+                                                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-sm min-h-[80px]"
+                                                    value={lesson.description || ''}
+                                                    onChange={(e) => updateLesson(mIndex, lIndex, 'description', e.target.value)}
                                                 />
-                                                <input
-                                                    type="text"
-                                                    placeholder="YouTube Video ID (e.g. dQw4w9WgXcQ)"
-                                                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-sm font-mono text-gray-600"
-                                                    value={lesson.videoId}
-                                                    onChange={(e) => updateLesson(mIndex, lIndex, 'videoId', e.target.value)}
-                                                />
+
+                                                {/* Resources Sub-section */}
+                                                <div className="pl-4 border-l-2 border-indigo-50 space-y-3">
+                                                    <div className="flex items-center justify-between">
+                                                        <h5 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Resources (Notes, DPP, etc.)</h5>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => {
+                                                                const newModules = structuredClone(formData.modules);
+                                                                const resources = newModules[mIndex].lessons[lIndex].resources || [];
+                                                                newModules[mIndex].lessons[lIndex].resources = [...resources, { title: '', url: '', type: 'PDF' }];
+                                                                setFormData({ ...formData, modules: newModules });
+                                                            }}
+                                                            className="text-indigo-600 hover:text-indigo-700 text-[10px] font-bold uppercase tracking-wider"
+                                                        >
+                                                            + Add Resource
+                                                        </button>
+                                                    </div>
+
+                                                    {(lesson.resources || []).map((res, rIndex) => (
+                                                        <div key={rIndex} className="grid grid-cols-1 md:grid-cols-7 gap-3 items-center bg-slate-50/50 p-2 rounded-lg border border-slate-100">
+                                                            <input
+                                                                type="text"
+                                                                placeholder="Resource Name (e.g. Notes)"
+                                                                className="md:col-span-3 px-2 py-1.5 border border-gray-200 rounded-md text-xs"
+                                                                value={res.title}
+                                                                onChange={(e) => {
+                                                                    const newModules = structuredClone(formData.modules);
+                                                                    newModules[mIndex].lessons[lIndex].resources[rIndex].title = e.target.value;
+                                                                    setFormData({ ...formData, modules: newModules });
+                                                                }}
+                                                            />
+                                                            <input
+                                                                type="url"
+                                                                placeholder="Link/URL"
+                                                                className="md:col-span-3 px-2 py-1.5 border border-gray-200 rounded-md text-xs font-mono"
+                                                                value={res.url}
+                                                                onChange={(e) => {
+                                                                    const newModules = structuredClone(formData.modules);
+                                                                    newModules[mIndex].lessons[lIndex].resources[rIndex].url = e.target.value;
+                                                                    setFormData({ ...formData, modules: newModules });
+                                                                }}
+                                                            />
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => {
+                                                                    const newModules = structuredClone(formData.modules);
+                                                                    newModules[mIndex].lessons[lIndex].resources.splice(rIndex, 1);
+                                                                    setFormData({ ...formData, modules: newModules });
+                                                                }}
+                                                                className="text-red-400 hover:text-red-500 p-1 flex justify-center"
+                                                            >
+                                                                <Trash2 className="w-3.5 h-3.5" />
+                                                            </button>
+                                                        </div>
+                                                    ))}
+                                                </div>
                                             </div>
 
-                                            <div className="flex items-center gap-4 mt-2 md:mt-0 w-full md:w-auto justify-end">
+                                            <div className="flex items-center gap-4 mt-2 md:mt-0 w-full md:w-auto justify-end self-start">
                                                 <label className="flex items-center gap-2 cursor-pointer select-none">
                                                     <div className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${lesson.isFree ? 'bg-green-500 border-green-500' : 'border-gray-300 bg-white'}`}>
                                                         {lesson.isFree && <CheckCircle2 className="w-3 h-3 text-white" />}

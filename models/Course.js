@@ -1,34 +1,5 @@
 import mongoose from 'mongoose';
 
-const LessonSchema = new mongoose.Schema({
-    title: {
-        type: String,
-        required: [true, 'Lesson title is required'],
-        trim: true,
-    },
-    videoId: {
-        type: String, // YouTube Video ID
-        required: [true, 'Video ID is required'],
-    },
-    duration: {
-        type: Number, // In seconds
-        default: 0,
-    },
-    isFree: {
-        type: Boolean,
-        default: false, // Provide free preview
-    },
-});
-
-const ModuleSchema = new mongoose.Schema({
-    title: {
-        type: String,
-        required: [true, 'Module title is required'],
-        trim: true,
-    },
-    lessons: [LessonSchema],
-});
-
 const CourseSchema = new mongoose.Schema({
     title: {
         type: String,
@@ -90,7 +61,6 @@ const CourseSchema = new mongoose.Schema({
         ref: 'User',
         required: true,
     },
-    modules: [ModuleSchema],
     published: {
         type: Boolean,
         default: false,
