@@ -19,8 +19,8 @@ export async function GET(request) {
         // Extract course IDs
         const courseIds = orders.map(order => order.course);
 
-        // Fetch courses details
-        const courses = await Course.find({ _id: { $in: courseIds } })
+        // Fetch courses details (exclude soft-deleted)
+        const courses = await Course.find({ _id: { $in: courseIds }, isDeleted: { $ne: true } })
             .populate('instructor', 'firstName lastName')
             .select('-modules.lessons.videoId'); // Secure, don't send video IDs in list
 

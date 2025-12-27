@@ -244,13 +244,18 @@ export async function DELETE(request, { params }) {
             return NextResponse.json({ success: false, message: 'Forbidden: You do not own this course' }, { status: 403 });
         }
 
-        const course = await Course.findByIdAndDelete(courseId);
+        // Soft delete - set isDeleted flag and timestamp instead of removing
+        const course = await Course.findByIdAndUpdate(
+            courseId,
+            { isDeleted: true, deletedAt: new Date() },
+            { new: true }
+        );
 
         if (!course) {
             return NextResponse.json({ success: false, message: 'Course not found' }, { status: 404 });
         }
 
-        return NextResponse.json({ success: true, message: 'Course deleted' });
+        return NextResponse.json({ success: true, message: 'Course deleted successfully' });
     } catch (error) {
         return NextResponse.json({ success: false, error: error.message }, { status: 500 });
     }

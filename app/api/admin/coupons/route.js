@@ -11,7 +11,8 @@ export async function GET(req) {
         }
 
         await dbConnect();
-        const coupons = await Coupon.find().sort({ createdAt: -1 });
+        // Filter out soft-deleted coupons
+        const coupons = await Coupon.find({ isDeleted: { $ne: true } }).sort({ createdAt: -1 });
 
         return NextResponse.json({ success: true, coupons });
     } catch (error) {
@@ -47,10 +48,24 @@ export async function DELETE(req) {
         const { searchParams } = new URL(req.url);
         const id = searchParams.get('id');
 
-        await dbConnect();
-        await Coupon.findByIdAndDelete(id);
+        if (!id) {
+            return NextResponse.json({ success: false, message: 'Coupon ID is required' }, { status: 400 });
+        }
 
-        return NextResponse.json({ success: true, message: 'Coupon deleted' });
+        await dbConnect();
+
+        // Soft delete - set isDeleted flag and timestamp instead of removing
+        const coupon = await Coupon.findByIdAndUpdate(
+            id,
+            { isDeleted: true, deletedAt: new Date(), isActive: false },
+            { new: true }
+        );
+
+        if (!coupon) {
+            return NextResponse.json({ success: false, message: 'Coupon not found' }, { status: 404 });
+        }
+
+        return NextResponse.json({ success: true, message: 'Coupon deleted successfully' });
     } catch (error) {
         return NextResponse.json({ success: false, message: error.message }, { status: 500 });
     }

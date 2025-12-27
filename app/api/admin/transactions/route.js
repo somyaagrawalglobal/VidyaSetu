@@ -1,7 +1,9 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import Order from '@/models/Order';
+import User from '@/models/User';
 import { authenticateApi } from '@/lib/api-auth';
+import { sendPurchaseEmail } from '@/lib/email';
 
 export async function GET(req) {
     try {
@@ -35,14 +37,34 @@ export async function POST(req) {
         if (action === 'refund') {
             // Logic for triggering Razorpay Refund would go here
             // For now, we update the status locally
-            const order = await Order.findById(orderId);
+            const order = await Order.findById(orderId)
+                .populate('user', 'firstName lastName email')
+                .populate('course', 'title price');
+
             if (!order) return NextResponse.json({ success: false, message: 'Order not found' }, { status: 404 });
 
             order.status = 'refunded';
             order.refundStatus = 'completed';
             await order.save();
 
-            return NextResponse.json({ success: true, message: 'Refund processed successfully (Mock)' });
+            // Send refund email notification
+            try {
+                if (order.user && order.course) {
+                    await sendPurchaseEmail({
+                        to: order.user.email,
+                        userName: `${order.user.firstName} ${order.user.lastName}`,
+                        courseName: order.course.title,
+                        coursePrice: order.amount,
+                        orderId: order.razorpayOrderId,
+                        status: 'refunded'
+                    });
+                }
+            } catch (emailError) {
+                console.error('Failed to send refund email:', emailError);
+                // Don't fail the refund if email fails
+            }
+
+            return NextResponse.json({ success: true, message: 'Refund processed successfully' });
         }
 
         return NextResponse.json({ success: false, message: 'Invalid action' }, { status: 400 });

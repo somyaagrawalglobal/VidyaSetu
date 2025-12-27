@@ -99,6 +99,23 @@ export async function POST(request) {
             userDetails: userDetails || null
         });
 
+        // Send pending email notification
+        try {
+            if (user && user.email) {
+                const { sendPurchaseEmail } = await import('@/lib/email');
+                await sendPurchaseEmail({
+                    to: user.email,
+                    userName: `${user.firstName} ${user.lastName}`,
+                    courseName: course.title,
+                    coursePrice: finalAmount,
+                    orderId: razorpayOrder.id,
+                    status: 'pending'
+                });
+            }
+        } catch (emailError) {
+            console.error('Failed to send pending purchase email:', emailError);
+        }
+
         if (appliedCoupon) {
             appliedCoupon.currentUses += 1;
             await appliedCoupon.save();

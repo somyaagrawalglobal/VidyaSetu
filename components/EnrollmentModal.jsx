@@ -86,6 +86,7 @@ export default function EnrollmentModal({ isOpen, onClose, course, onEnrollSucce
                 if (data.isFree) {
                     onEnrollSuccess();
                     onClose();
+                    setLoading(false);
                 } else {
                     // Trigger Razorpay
                     const options = {
@@ -95,22 +96,35 @@ export default function EnrollmentModal({ isOpen, onClose, course, onEnrollSucce
                         name: "VidyaSetu",
                         description: `Purchase ${course.title}`,
                         order_id: data.order.id,
+                        image: `${window.location.origin}/assets/images/brand-logo.png`,
                         handler: async function (response) {
-                            const verifyRes = await fetch('/api/payments/verify', {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({
-                                    razorpay_order_id: response.razorpay_order_id,
-                                    razorpay_payment_id: response.razorpay_payment_id,
-                                    razorpay_signature: response.razorpay_signature,
-                                }),
-                            });
-                            const verifyData = await verifyRes.json();
-                            if (verifyData.success) {
-                                onEnrollSuccess();
-                                onClose();
-                            } else {
-                                alert('Payment verification failed');
+                            try {
+                                const verifyRes = await fetch('/api/payments/verify', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({
+                                        razorpay_order_id: response.razorpay_order_id,
+                                        razorpay_payment_id: response.razorpay_payment_id,
+                                        razorpay_signature: response.razorpay_signature,
+                                    }),
+                                });
+                                const verifyData = await verifyRes.json();
+                                if (verifyData.success) {
+                                    onEnrollSuccess();
+                                    onClose();
+                                } else {
+                                    alert('Payment verification failed');
+                                    setLoading(false);
+                                }
+                            } catch (err) {
+                                console.error(err);
+                                alert('Payment verification error');
+                                setLoading(false);
+                            }
+                        },
+                        modal: {
+                            ondismiss: function () {
+                                setLoading(false);
                             }
                         },
                         prefill: {
@@ -125,12 +139,15 @@ export default function EnrollmentModal({ isOpen, onClose, course, onEnrollSucce
                 }
             } else {
                 alert(data.message || 'Error creating order');
+                setLoading(false);
             }
         } catch (error) {
+            console.error(error);
             alert('Failed to process enrollment');
-        } finally {
             setLoading(false);
         }
+        // Note: We do NOT set loading(false) in finally block because we want it to stay true 
+        // while Razorpay modal is open. It's handled in ondismiss and handler.
     };
 
     if (!isOpen) return null;

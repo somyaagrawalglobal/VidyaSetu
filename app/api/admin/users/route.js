@@ -16,7 +16,8 @@ export async function GET(request) {
         if (!admin) return NextResponse.json({ success: false, message: 'Forbidden' }, { status: 403 });
 
         await dbConnect();
-        const users = await User.find({}).select('-passwordHash -activeToken').sort({ createdOn: -1 });
+        // Filter out soft-deleted users
+        const users = await User.find({ isDeleted: { $ne: true } }).select('-passwordHash -activeToken').sort({ createdOn: -1 });
 
         return NextResponse.json({ success: true, users });
     } catch (error) {
@@ -62,7 +63,13 @@ export async function DELETE(request) {
         }
 
         await dbConnect();
-        const user = await User.findByIdAndDelete(userId);
+
+        // Soft delete - set isDeleted flag and timestamp instead of removing
+        const user = await User.findByIdAndUpdate(
+            userId,
+            { isDeleted: true, deletedOn: new Date(), isActive: false },
+            { new: true }
+        ).select('-passwordHash');
 
         if (!user) {
             return NextResponse.json({ success: false, message: 'User not found' }, { status: 404 });

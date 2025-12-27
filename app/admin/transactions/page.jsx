@@ -9,6 +9,8 @@ export default function AdminTransactionsPage() {
     const [searchTerm, setSearchTerm] = useState('');
     const [filterStatus, setFilterStatus] = useState('all');
 
+    const [refundingId, setRefundingId] = useState(null);
+
     useEffect(() => {
         fetchOrders();
     }, []);
@@ -27,6 +29,8 @@ export default function AdminTransactionsPage() {
 
     const handleRefund = async (orderId) => {
         if (!confirm('Are you sure you want to process a refund for this transaction?')) return;
+
+        setRefundingId(orderId);
         try {
             const res = await fetch('/api/admin/transactions', {
                 method: 'POST',
@@ -37,9 +41,13 @@ export default function AdminTransactionsPage() {
             if (data.success) {
                 alert(data.message);
                 fetchOrders();
+            } else {
+                alert(data.message);
             }
         } catch (error) {
             alert('Refund process failed');
+        } finally {
+            setRefundingId(null);
         }
     };
 
@@ -239,10 +247,15 @@ export default function AdminTransactionsPage() {
                                             {order.status === 'completed' && (
                                                 <button
                                                     onClick={() => handleRefund(order._id)}
-                                                    className="p-2 text-slate-400 hover:text-amber-600 transition-colors"
+                                                    className="p-2 text-slate-400 hover:text-amber-600 transition-colors disabled:opacity-50"
                                                     title="Process Refund"
+                                                    disabled={refundingId === order._id}
                                                 >
-                                                    <RefreshCcw size={16} />
+                                                    {refundingId === order._id ? (
+                                                        <Loader2 size={16} className="animate-spin text-amber-600" />
+                                                    ) : (
+                                                        <RefreshCcw size={16} />
+                                                    )}
                                                 </button>
                                             )}
                                         </td>

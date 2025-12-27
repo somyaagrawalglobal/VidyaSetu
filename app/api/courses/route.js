@@ -49,6 +49,9 @@ export async function GET(request) {
             }
         }
 
+        // Always filter out soft-deleted courses
+        query.isDeleted = { $ne: true };
+
         const courses = await Course.find(query)
             .populate('instructor', 'firstName lastName headline bio')
             .select('-modules.lessons.videoId')

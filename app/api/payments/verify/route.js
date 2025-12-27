@@ -2,7 +2,9 @@ import { NextResponse } from 'next/server';
 import crypto from 'crypto';
 import dbConnect from '@/lib/db';
 import Order from '@/models/Order';
+import Course from '@/models/Course';
 import { authenticateApi } from '@/lib/api-auth';
+import { sendPurchaseEmail } from '@/lib/email';
 
 export async function POST(request) {
     try {
@@ -30,13 +32,53 @@ export async function POST(request) {
                     razorpaySignature: razorpay_signature
                 },
                 { new: true }
-            );
+            ).populate('course', 'title slug price');
 
-            // Here you might also update User.enrolledCourses if you keep denormalized data
-            // For now, we rely on checking Orders for enrollment status (common pattern to avoid sync issues)
+            // Send success email notification
+            try {
+                if (user && user.email && order?.course) {
+                    await sendPurchaseEmail({
+                        to: user.email,
+                        userName: `${user.firstName} ${user.lastName}`,
+                        courseName: order.course.title,
+                        coursePrice: order.amount,
+                        orderId: order.razorpayOrderId,
+                        status: 'completed',
+                        courseUrl: `${process.env.NEXT_PUBLIC_APP_URL}/courses/${order.course.slug}/watch`
+                    });
+                }
+            } catch (emailError) {
+                console.error('Failed to send purchase email:', emailError);
+                // Don't fail the payment verification if email fails
+            }
 
             return NextResponse.json({ success: true, message: "Payment Verified", orderId: order._id });
         } else {
+            // Payment verification failed - send failed email
+            await dbConnect();
+            const order = await Order.findOneAndUpdate(
+                { razorpayOrderId: razorpay_order_id },
+                { status: 'failed' },
+                { new: true }
+            ).populate('course', 'title price');
+
+            if (order) {
+                try {
+                    if (user && user.email && order?.course) {
+                        await sendPurchaseEmail({
+                            to: user.email,
+                            userName: `${user.firstName} ${user.lastName}`,
+                            courseName: order.course.title,
+                            coursePrice: order.amount,
+                            orderId: order.razorpayOrderId,
+                            status: 'failed'
+                        });
+                    }
+                } catch (emailError) {
+                    console.error('Failed to send failed payment email:', emailError);
+                }
+            }
+
             return NextResponse.json({ success: false, message: "Invalid Signature" }, { status: 400 });
         }
     } catch (error) {
