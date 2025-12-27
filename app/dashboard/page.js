@@ -13,7 +13,9 @@ import {
     LayoutDashboard,
     Settings,
     ArrowRight,
-    PlayCircle
+    PlayCircle,
+    Tag,
+    CreditCard
 } from 'lucide-react';
 
 export default async function Dashboard() {
@@ -126,6 +128,36 @@ export default async function Dashboard() {
                                             <p className="text-slate-500 text-xs leading-relaxed mb-4">Administer platform users and permissions.</p>
                                             <div className="mt-auto flex items-center text-[11px] font-bold text-amber-600 uppercase tracking-wider">
                                                 Administer <ArrowRight className="w-3.5 h-3.5 ml-1.5 transition-transform group-hover:translate-x-1" />
+                                            </div>
+                                        </div>
+                                    </Link>
+                                )}
+
+                                {isAdmin && (
+                                    <Link href="/admin/coupons" className="group bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:border-indigo-300 hover:shadow-md transition-all duration-300 relative overflow-hidden" data-aos="fade-up" data-aos-delay="250">
+                                        <div className="flex flex-col h-full">
+                                            <div className="p-2.5 bg-indigo-50 w-fit rounded-lg text-indigo-600 mb-4 group-hover:bg-indigo-600 group-hover:text-white transition-colors duration-300">
+                                                <Tag className="w-5 h-5" />
+                                            </div>
+                                            <h3 className="text-base font-bold text-slate-800 mb-1">Coupons</h3>
+                                            <p className="text-slate-500 text-xs leading-relaxed mb-4">Create and manage course discount offers.</p>
+                                            <div className="mt-auto flex items-center text-[11px] font-bold text-indigo-600 uppercase tracking-wider">
+                                                Manage <ArrowRight className="w-3.5 h-3.5 ml-1.5 transition-transform group-hover:translate-x-1" />
+                                            </div>
+                                        </div>
+                                    </Link>
+                                )}
+
+                                {isAdmin && (
+                                    <Link href="/admin/transactions" className="group bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:border-emerald-300 hover:shadow-md transition-all duration-300 relative overflow-hidden" data-aos="fade-up" data-aos-delay="300">
+                                        <div className="flex flex-col h-full">
+                                            <div className="p-2.5 bg-emerald-50 w-fit rounded-lg text-emerald-600 mb-4 group-hover:bg-emerald-600 group-hover:text-white transition-colors duration-300">
+                                                <CreditCard className="w-5 h-5" />
+                                            </div>
+                                            <h3 className="text-base font-bold text-slate-800 mb-1">Transactions</h3>
+                                            <p className="text-slate-500 text-xs leading-relaxed mb-4">Track payments and manage student refunds.</p>
+                                            <div className="mt-auto flex items-center text-[11px] font-bold text-emerald-600 uppercase tracking-wider">
+                                                Track <ArrowRight className="w-3.5 h-3.5 ml-1.5 transition-transform group-hover:translate-x-1" />
                                             </div>
                                         </div>
                                     </Link>

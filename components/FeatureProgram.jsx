@@ -87,7 +87,7 @@ export default function FeaturedProgramsSection() {
                                 {/* --- 1. Top Graphic Header Section --- */}
                                 <div className="relative h-48 flex items-center justify-center overflow-hidden">
                                     <Image
-                                        src={program.image || '/assets/images/course-placeholder.jpg'}
+                                        src={program.thumbnail || '/assets/images/course-placeholder.jpg'}
                                         alt={program.title}
                                         fill
                                         style={{ objectFit: 'cover' }}

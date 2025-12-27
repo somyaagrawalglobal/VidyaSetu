@@ -18,14 +18,20 @@ import {
 } from 'lucide-react';
 
 import VideoPlayerModal from '@/components/VideoPlayerModal';
+import EnrollmentModal from '@/components/EnrollmentModal';
 
 const loadRazorpay = () => {
     return new Promise((resolve) => {
         const script = document.createElement('script');
         script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+        script.id = 'razorpay-checkout-js';
         script.onload = () => resolve(true);
         script.onerror = () => resolve(false);
-        document.body.appendChild(script);
+        if (!document.getElementById('razorpay-checkout-js')) {
+            document.body.appendChild(script);
+        } else {
+            resolve(true);
+        }
     });
 };
 
@@ -38,12 +44,14 @@ export default function CourseDetails({ params }) {
     const [isAdmin, setIsAdmin] = useState(false);
     const [activeModule, setActiveModule] = useState(0);
     const [previewModal, setPreviewModal] = useState({ isOpen: false, videoId: '', title: '' });
+    const [isEnrollModalOpen, setIsEnrollModalOpen] = useState(false);
 
     const openPreview = (videoId, title) => {
         setPreviewModal({ isOpen: true, videoId, title });
     };
 
     useEffect(() => {
+        loadRazorpay();
         const fetchCourse = async () => {
             try {
                 const res = await fetch(`/api/courses/${slug}`);
@@ -62,91 +70,14 @@ export default function CourseDetails({ params }) {
         fetchCourse();
     }, [slug]);
 
-    const handleBuyNow = async () => {
-        if (course.price === 0) {
-            try {
-                const res = await fetch('/api/payments/create-order', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ courseId: course._id }),
-                });
-                const data = await res.json();
-                if (data.success) {
-                    alert('Enrolled successfully!');
-                    setIsEnrolled(true);
-                    router.push(`/courses/${slug}/watch`);
-                } else {
-                    if (data.message === 'Unauthorized') router.push('/login');
-                    else throw new Error(data.message);
-                }
-            } catch (error) {
-                alert('Enrollment failed: ' + error.message);
-            }
-            return;
-        }
+    const handleBuyNow = () => {
+        setIsEnrollModalOpen(true);
+    };
 
-        const res = await loadRazorpay();
-        if (!res) {
-            alert('Razorpay SDK failed to load. Are you online?');
-            return;
-        }
-
-        try {
-            const orderRes = await fetch('/api/payments/create-order', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ courseId: course._id }),
-            });
-            const orderData = await orderRes.json();
-
-            if (!orderData.success) {
-                if (orderData.message === 'Already enrolled') {
-                    alert('You are already enrolled!');
-                    router.push(`/courses/${slug}/watch`);
-                    return;
-                }
-                if (orderData.message === 'Unauthorized') {
-                    router.push('/login');
-                    return;
-                }
-                throw new Error(orderData.message);
-            }
-
-            const options = {
-                key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
-                amount: orderData.order.amount,
-                currency: orderData.order.currency,
-                name: "VidyaSetu",
-                description: `Purchase ${course.title}`,
-                order_id: orderData.order.id,
-                handler: async function (response) {
-                    const verifyRes = await fetch('/api/payments/verify', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            razorpay_order_id: response.razorpay_order_id,
-                            razorpay_payment_id: response.razorpay_payment_id,
-                            razorpay_signature: response.razorpay_signature,
-                        }),
-                    });
-
-                    const verifyData = await verifyRes.json();
-                    if (verifyData.success) {
-                        alert('Payment Successful!');
-                        setIsEnrolled(true);
-                        router.push(`/courses/${slug}/watch`);
-                    } else {
-                        alert('Payment Verification Failed');
-                    }
-                },
-                theme: { color: "#4F46E5" },
-            };
-            const paymentObject = new window.Razorpay(options);
-            paymentObject.open();
-
-        } catch (error) {
-            alert('Payment failed: ' + error.message);
-        }
+    const handleEnrollSuccess = () => {
+        alert('Enrolled successfully!');
+        setIsEnrolled(true);
+        router.push(`/courses/${slug}/watch`);
     };
 
     const handleShare = () => {
@@ -438,6 +369,13 @@ export default function CourseDetails({ params }) {
 
                 </div>
             </div>
+
+            <EnrollmentModal
+                isOpen={isEnrollModalOpen}
+                onClose={() => setIsEnrollModalOpen(false)}
+                course={course}
+                onEnrollSuccess={handleEnrollSuccess}
+            />
 
             <VideoPlayerModal
                 isOpen={previewModal.isOpen}

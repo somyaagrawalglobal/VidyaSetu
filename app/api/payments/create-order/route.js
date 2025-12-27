@@ -13,7 +13,7 @@ export async function POST(request) {
             return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
         }
 
-        const { courseId } = await request.json();
+        const { courseId, couponCode, userDetails } = await request.json();
         if (!courseId) {
             return NextResponse.json({ success: false, message: 'Course ID is required' }, { status: 400 });
         }
@@ -30,26 +30,56 @@ export async function POST(request) {
             return NextResponse.json({ success: false, message: 'Already enrolled' }, { status: 400 });
         }
 
-        // If course is free, create completed order immediately
-        if (course.price === 0) {
+        let finalAmount = course.price;
+        let discountAmount = 0;
+        let appliedCoupon = null;
+
+        if (couponCode) {
+            const Coupon = (await import('@/models/Coupon')).default;
+            appliedCoupon = await Coupon.findOne({ code: couponCode.toUpperCase(), isActive: true });
+
+            if (appliedCoupon && new Date() <= appliedCoupon.expiryDate && appliedCoupon.currentUses < appliedCoupon.maxUses) {
+                if (appliedCoupon.discountType === 'percentage') {
+                    discountAmount = (course.price * appliedCoupon.discountValue) / 100;
+                } else {
+                    discountAmount = appliedCoupon.discountValue;
+                }
+                discountAmount = Math.min(discountAmount, course.price);
+                finalAmount = course.price - discountAmount;
+            }
+        }
+
+        // If course is free or becomes free after coupon, create completed order immediately
+        if (finalAmount <= 0) {
             const order = await Order.create({
                 user: user._id,
                 course: course._id,
                 amount: 0,
+                discountAmount: course.price,
+                actualAmount: course.price,
                 currency: "INR",
                 status: 'completed',
-                razorpayOrderId: 'FREE_ENROLLMENT'
+                razorpayOrderId: 'FREE_OR_COUPON_ENROLLMENT',
+                couponCode: appliedCoupon?.code || null,
+                userDetails: userDetails || null
             });
+
+            if (appliedCoupon) {
+                appliedCoupon.currentUses += 1;
+                await appliedCoupon.save();
+            }
+
             return NextResponse.json({ success: true, message: 'Enrolled successfully', isFree: true });
         }
 
         const options = {
-            amount: course.price * 100, // Amount in paise
+            amount: Math.round(finalAmount * 100), // Amount in paise
             currency: "INR",
-            receipt: `receipt_${randomUUID()}`,
+            receipt: `rcpt_${randomUUID().slice(0, 18)}`,
             notes: {
                 courseId: course._id.toString(),
-                userId: user._id.toString()
+                userId: user._id.toString(),
+                couponCode: appliedCoupon?.code || ""
             }
         };
 
@@ -60,13 +90,23 @@ export async function POST(request) {
             user: user._id,
             course: course._id,
             razorpayOrderId: razorpayOrder.id,
-            amount: course.price,
+            amount: finalAmount,
+            actualAmount: course.price,
+            discountAmount: discountAmount,
             currency: "INR",
-            status: 'pending'
+            status: 'pending',
+            couponCode: appliedCoupon?.code || null,
+            userDetails: userDetails || null
         });
+
+        if (appliedCoupon) {
+            appliedCoupon.currentUses += 1;
+            await appliedCoupon.save();
+        }
 
         return NextResponse.json({ success: true, order: razorpayOrder, dbOrderId: order._id, isFree: false });
     } catch (error) {
-        return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+        console.error('RAZORPAY ORDER CREATION ERROR:', error);
+        return NextResponse.json({ success: false, message: error.message, error: error }, { status: 500 });
     }
 }

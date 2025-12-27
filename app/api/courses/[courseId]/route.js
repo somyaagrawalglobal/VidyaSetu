@@ -86,7 +86,7 @@ export async function PUT(request, { params }) {
         }
 
         const isAdmin = user.roles.includes('Admin');
-        const isOwner = existingCourse.instructor.toString() === user._id.toString();
+        const isOwner = (existingCourse.instructor || "").toString() === user._id.toString();
 
         if (!isAdmin && !isOwner) {
             return NextResponse.json({ success: false, message: 'Forbidden: You do not own this course' }, { status: 403 });
@@ -118,7 +118,7 @@ export async function DELETE(request, { params }) {
         }
 
         const isAdmin = user.roles.includes('Admin');
-        const isOwner = existingCourse.instructor.toString() === user._id.toString();
+        const isOwner = (existingCourse.instructor || "").toString() === user._id.toString();
 
         if (!isAdmin && !isOwner) {
             return NextResponse.json({ success: false, message: 'Forbidden: You do not own this course' }, { status: 403 });
