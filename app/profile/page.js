@@ -115,7 +115,7 @@ export default function Profile() {
                             <div>
                                 <h2 className="text-xl font-bold text-slate-800">{user.firstName} {user.lastName}</h2>
                                 <p className="text-slate-500 font-medium text-xs">{user.email}</p>
-                                <div className="mt-2.4 flex gap-2">
+                                <div className="mt-3 flex gap-2">
                                     <span className="px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider bg-indigo-100 text-indigo-700 border border-indigo-200/50">
                                         {user.roles?.[0] || 'Student'}
                                     </span>

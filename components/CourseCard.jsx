@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { Clock, Zap, BookOpen, User, ArrowRight, BarChart } from 'lucide-react';
+import { Clock, Zap, BookOpen, User, ArrowRight, BarChart, CheckCircle } from 'lucide-react';
 
-export default function CourseCard({ course }) {
+export default function CourseCard({ course, enrolled = false }) {
     const formatPrice = (price) => {
         if (price === 0) return 'Free';
         if (typeof price === 'number') return `₹${price.toLocaleString('en-IN')}`;
@@ -17,6 +17,12 @@ export default function CourseCard({ course }) {
     const instructorName = course.instructor
         ? `${course.instructor.firstName} ${course.instructor.lastName}`
         : 'Expert Instructor';
+
+    const actionUrl = enrolled
+        ? `/courses/${course.slug || course._id}/watch`
+        : `/courses/${course.slug || course._id}`;
+
+    const actionText = enrolled ? 'Watch' : 'Enroll';
 
     return (
         <div
@@ -60,7 +66,7 @@ export default function CourseCard({ course }) {
             <div className="p-7 flex flex-col flex-1">
                 {/* Title */}
                 <h3 className="text-xl font-bold text-slate-900 leading-tight mb-3 line-clamp-2 min-h-[3.5rem] group-hover:text-indigo-600 transition-colors">
-                    <Link href={`/courses/${course.slug || course._id}`}>
+                    <Link href={actionUrl}>
                         {course.title}
                     </Link>
                 </h3>
@@ -96,21 +102,29 @@ export default function CourseCard({ course }) {
                 {/* --- 3. Footer Area --- */}
                 <div className="flex justify-between items-center mt-auto">
                     <div className="flex flex-col">
-                        {hasDiscount && (
-                            <span className="text-xs text-slate-400 line-through font-medium mb-0.5">
-                                {originalPrice}
-                            </span>
+                        {!enrolled ? (
+                            <>
+                                {hasDiscount && (
+                                    <span className="text-xs text-slate-400 line-through font-medium mb-0.5">
+                                        {originalPrice}
+                                    </span>
+                                )}
+                                <span className="text-2xl font-black text-slate-900 tracking-tight leading-none">
+                                    {price}
+                                </span>
+                            </>
+                        ) : (
+                            <div className="flex items-center gap-2 text-emerald-600 font-bold text-xs uppercase tracking-widest bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-100">
+                                <CheckCircle className="w-3.5 h-3.5" /> Enrolled
+                            </div>
                         )}
-                        <span className="text-2xl font-black text-slate-900 tracking-tight leading-none">
-                            {price}
-                        </span>
                     </div>
 
                     <Link
-                        href={`/courses/${course.slug || course._id}`}
+                        href={actionUrl}
                         className="inline-flex items-center justify-center w-12 h-12 bg-indigo-600 text-white rounded-2xl transition-all duration-300 hover:bg-slate-900 group-hover:w-32 group-hover:rounded-full relative"
                     >
-                        <span className="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-bold text-sm left-6">Enroll</span>
+                        <span className="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-bold text-sm left-6">{actionText}</span>
                         <ArrowRight className="w-5 h-5 group-hover:ml-16 transition-all duration-300" />
                     </Link>
                 </div>
