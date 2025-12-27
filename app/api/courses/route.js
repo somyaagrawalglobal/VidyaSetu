@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import Course from '@/models/Course';
 import User from '@/models/User';
+import Order from '@/models/Order';
 import { validateSession } from '@/lib/session';
 
 import { authenticateApi } from '@/lib/api-auth';
@@ -52,7 +53,24 @@ export async function GET(request) {
             .select('-modules.lessons.videoId')
             .sort({ createdAt: -1 });
 
-        return NextResponse.json({ success: true, courses });
+        // Transform to plain objects for property assignment
+        const coursesWithStatus = courses.map(course => course.toObject());
+
+        // Check enrollments if user is logged in
+        if (user) {
+            const enrollments = await Order.find({
+                user: user._id,
+                status: 'completed'
+            }).select('course');
+
+            const enrolledCourseIds = new Set(enrollments.map(e => e.course.toString()));
+
+            coursesWithStatus.forEach(course => {
+                course.isEnrolled = enrolledCourseIds.has(course._id.toString());
+            });
+        }
+
+        return NextResponse.json({ success: true, courses: coursesWithStatus });
     } catch (error) {
         return NextResponse.json({ success: false, error: error.message }, { status: 500 });
     }

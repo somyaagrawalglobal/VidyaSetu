@@ -182,7 +182,10 @@ export default function Courses() {
                                             className="animate-in fade-in slide-in-from-bottom-8 duration-700 fill-mode-both"
                                             style={{ animationDelay: `${index * 100}ms` }}
                                         >
-                                            <CourseCard course={course} />
+                                            <CourseCard
+                                                course={course}
+                                                enrolled={course.isEnrolled}
+                                            />
                                         </div>
                                     ))
                                 ) : (
