@@ -2,9 +2,9 @@
 
 import { useState } from 'react';
 import VideoPlayer from '@/components/VideoPlayer';
-import { Info, MessageCircle, FileText, Download } from 'lucide-react';
+import { Info, MessageCircle, FileText, Download, CheckCircle2 } from 'lucide-react';
 
-export default function WatchContent({ activeLesson, course }) {
+export default function WatchContent({ activeLesson, course, isCompleted, onToggleComplete }) {
     const [activeTab, setActiveTab] = useState('overview');
 
     if (!activeLesson) {
@@ -44,8 +44,12 @@ export default function WatchContent({ activeLesson, course }) {
                                 {activeLesson.title}
                             </h1>
                         </div>
-                        <button className="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-5 py-2.5 rounded-xl transition-all self-start md:self-center text-sm border border-slate-200/50">
-                            Mark as Complete
+                        <button
+                            onClick={onToggleComplete}
+                            className={`flex items-center gap-2 font-bold px-5 py-2.5 rounded-xl transition-all self-start md:self-center text-sm border ${isCompleted ? 'bg-emerald-50 text-emerald-700 border-emerald-100 hover:bg-emerald-100' : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200/50'}`}
+                        >
+                            {isCompleted ? <CheckCircle2 className="w-4 h-4" /> : null}
+                            {isCompleted ? 'Completed' : 'Mark as Complete'}
                         </button>
                     </div>
 

@@ -1,18 +1,20 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { ChevronLeft, Trophy } from 'lucide-react';
-import Link from 'next/link';
 
 export default function WatchHeader({ courseTitle, slug, progress }) {
+    const router = useRouter();
+
     return (
         <header className="h-16 bg-slate-900 border-b border-slate-800 flex items-center justify-between px-4 lg:px-6 sticky top-0 z-30">
             <div className="flex items-center gap-4 min-w-0">
-                <Link
-                    href={`/courses/${slug}`}
+                <button
+                    onClick={() => router.back()}
                     className="p-2 hover:bg-slate-800 rounded-lg text-slate-400 hover:text-white transition-colors flex-shrink-0"
                 >
                     <ChevronLeft className="w-5 h-5" />
-                </Link>
+                </button>
                 <div className="h-6 w-px bg-slate-800 flex-shrink-0" />
                 <h1 className="text-slate-100 font-semibold truncate text-sm sm:text-base">
                     {courseTitle}

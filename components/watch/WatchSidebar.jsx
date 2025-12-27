@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { PlayCircle, CheckCircle, ChevronDown, ChevronRight, Lock, FileText } from 'lucide-react';
 
-export default function WatchSidebar({ modules, activeLesson, onLessonSelect }) {
+export default function WatchSidebar({ modules, activeLesson, onLessonSelect, completedLessons = [] }) {
     const [expandedModules, setExpandedModules] = useState([0]); // First module expanded by default
 
     const toggleModule = (index) => {
@@ -23,6 +23,7 @@ export default function WatchSidebar({ modules, activeLesson, onLessonSelect }) 
             <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-200">
                 {modules.map((module, mIndex) => {
                     const isExpanded = expandedModules.includes(mIndex);
+                    const completedInModule = module.lessons.filter(l => completedLessons.includes(l._id)).length;
 
                     return (
                         <div key={mIndex} className="border-b border-slate-100 last:border-0">
@@ -38,9 +39,9 @@ export default function WatchSidebar({ modules, activeLesson, onLessonSelect }) 
                                         Module {mIndex + 1}: {module.title}
                                     </h3>
                                     <p className="text-[11px] text-slate-400 mt-1 font-medium flex items-center gap-1.5">
-                                        <span>{module.lessons.length} Lessons</span>
+                                        <span className="text-indigo-600 font-bold">{completedInModule}/{module.lessons.length}</span>
                                         <span className="w-1 h-1 rounded-full bg-slate-300" />
-                                        <span>{Math.floor(Math.random() * 60 + 20)}m total</span>
+                                        <span>{module.lessons.length} Lessons</span>
                                     </p>
                                 </div>
                             </button>
@@ -49,6 +50,7 @@ export default function WatchSidebar({ modules, activeLesson, onLessonSelect }) 
                                 <div className="bg-slate-50 pb-2">
                                     {module.lessons.map((lesson, lIndex) => {
                                         const isActive = activeLesson?._id === lesson._id;
+                                        const isCompleted = completedLessons.includes(lesson._id);
                                         const isLocked = !lesson.isFree && false; // Future logic for locking
 
                                         return (
@@ -59,9 +61,9 @@ export default function WatchSidebar({ modules, activeLesson, onLessonSelect }) 
                                             >
                                                 {isActive && <div className="absolute left-0 top-0 bottom-0 w-1 bg-indigo-600" />}
 
-                                                <div className={`mt-0.5 flex-shrink-0 transition-colors ${isActive ? 'text-indigo-600' : 'text-slate-400'}`}>
-                                                    {lesson.isCompleted ? (
-                                                        <CheckCircle className="w-4 h-4 fill-green-50" />
+                                                <div className={`mt-0.5 flex-shrink-0 transition-colors ${isActive ? 'text-indigo-600' : (isCompleted ? 'text-emerald-500' : 'text-slate-400')}`}>
+                                                    {isCompleted ? (
+                                                        <CheckCircle className="w-4 h-4 fill-emerald-50" />
                                                     ) : (
                                                         <PlayCircle className={`w-4 h-4 ${isActive ? 'fill-indigo-50' : ''}`} />
                                                     )}

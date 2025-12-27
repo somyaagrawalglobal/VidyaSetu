@@ -11,36 +11,68 @@ export default function WatchCoursePage({ params }) {
     const [course, setCourse] = useState(null);
     const [loading, setLoading] = useState(true);
     const [activeLesson, setActiveLesson] = useState(null);
+    const [completedLessons, setCompletedLessons] = useState([]);
     const [error, setError] = useState(null);
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
     useEffect(() => {
-        const fetchCourse = async () => {
+        const fetchCourseAndProgress = async () => {
             try {
-                const res = await fetch(`/api/courses/${slug}`);
-                const data = await res.json();
+                // Fetch course
+                const courseRes = await fetch(`/api/courses/${slug}`);
+                const courseData = await courseRes.json();
 
-                if (data.success) {
-                    if (!data.isEnrolled && !data.isAdmin) {
+                if (courseData.success) {
+                    if (!courseData.isEnrolled && !courseData.isAdmin) {
                         setError('You need to enroll in this course to watch it.');
                     }
-                    setCourse(data.course);
+                    setCourse(courseData.course);
 
                     // Set first lesson as active
-                    if (data.course.modules.length > 0 && data.course.modules[0].lessons.length > 0) {
-                        setActiveLesson(data.course.modules[0].lessons[0]);
+                    if (courseData.course.modules.length > 0 && courseData.course.modules[0].lessons.length > 0) {
+                        setActiveLesson(courseData.course.modules[0].lessons[0]);
+                    }
+
+                    // Fetch progress
+                    const progressRes = await fetch(`/api/courses/${courseData.course._id}/progress`);
+                    const progressData = await progressRes.json();
+                    if (progressData.success) {
+                        setCompletedLessons(progressData.completedLessons || []);
                     }
                 } else {
-                    setError(data.message || 'Error loading course');
+                    setError(courseData.message || 'Error loading course');
                 }
             } catch (error) {
-                setError('Failed to load course');
+                setError('Failed to load course details');
             } finally {
                 setLoading(false);
             }
         };
-        fetchCourse();
+        fetchCourseAndProgress();
     }, [slug]);
+
+    const handleToggleLesson = async (lessonId) => {
+        try {
+            const res = await fetch(`/api/courses/${course._id}/progress`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ lessonId })
+            });
+            const data = await res.json();
+            if (data.success) {
+                setCompletedLessons(data.completedLessons);
+            }
+        } catch (error) {
+            console.error("Error toggling lesson progress:", error);
+        }
+    };
+
+    const calculateProgressPercentage = () => {
+        if (!course) return 0;
+        const totalLessons = course.modules.reduce((acc, m) => acc + m.lessons.length, 0);
+        if (totalLessons === 0) return 0;
+        return Math.round((completedLessons.length / totalLessons) * 100);
+    };
 
     if (loading) return (
         <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center space-y-4">
@@ -65,12 +97,14 @@ export default function WatchCoursePage({ params }) {
         </div>
     );
 
+    const progressPercentage = calculateProgressPercentage();
+
     return (
         <div className="min-h-screen flex flex-col bg-white overflow-hidden font-sans pt-16">
             <WatchHeader
                 courseTitle={course.title}
                 slug={slug}
-                progress={0} // Hardcoded for now, potential future enhancement
+                progress={progressPercentage}
             />
 
             <div className="flex-1 flex overflow-hidden relative">
@@ -78,11 +112,14 @@ export default function WatchCoursePage({ params }) {
                     modules={course.modules}
                     activeLesson={activeLesson}
                     onLessonSelect={setActiveLesson}
+                    completedLessons={completedLessons}
                 />
 
                 <WatchContent
                     activeLesson={activeLesson}
                     course={course}
+                    isCompleted={completedLessons.includes(activeLesson?._id)}
+                    onToggleComplete={() => handleToggleLesson(activeLesson?._id)}
                 />
             </div>
         </div>
