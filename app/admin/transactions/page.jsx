@@ -8,6 +8,7 @@ export default function AdminTransactionsPage() {
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [filterStatus, setFilterStatus] = useState('all');
+    const [isAuthorized, setIsAuthorized] = useState(true);
 
     const [refundingId, setRefundingId] = useState(null);
 
@@ -18,6 +19,13 @@ export default function AdminTransactionsPage() {
     const fetchOrders = async () => {
         try {
             const res = await fetch('/api/admin/transactions');
+
+            if (res.status === 401) {
+                setIsAuthorized(false);
+                setLoading(false);
+                return;
+            }
+
             const data = await res.json();
             if (data.success) setOrders(data.orders);
         } catch (error) {
@@ -134,6 +142,23 @@ export default function AdminTransactionsPage() {
             <Loader2 className="animate-spin text-indigo-600" size={40} />
         </div>
     );
+
+    if (!isAuthorized) {
+        return (
+            <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+                <div className="bg-white max-w-md w-full p-8 rounded-2xl border border-slate-200 shadow-xl text-center">
+                    <div className="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <AlertCircle className="text-red-500" size={32} />
+                    </div>
+                    <h1 className="text-2xl font-black text-slate-900 mb-2">Access Denied</h1>
+                    <p className="text-slate-500 mb-8">You do not have permission to view this financial data. This area is restricted to administrators only.</p>
+                    <a href="/" className="inline-block w-full py-3 bg-slate-900 text-white rounded-xl font-bold hover:bg-slate-800 transition-colors">
+                        Return to Home
+                    </a>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-slate-50/30 pt-24 pb-16 px-4">
