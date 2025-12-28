@@ -73,9 +73,3 @@ export async function POST(request) {
         return NextResponse.json({ success: false, error: error.message }, { status: 500 });
     }
 }
-// Increase limit for binary parsing
-export const config = {
-    api: {
-        bodyParser: false, // Important: We handle binary stream
-    },
-};
