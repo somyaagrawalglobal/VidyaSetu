@@ -31,15 +31,31 @@ export const ToastProvider = ({ children }) => {
         setToasts((prev) => prev.filter((toast) => toast.id !== id));
     }, []);
 
-    const success = (message, duration) => showToast(message, 'success', duration);
-    const error = (message, duration) => showToast(message, 'error', duration);
-    const info = (message, duration) => showToast(message, 'info', duration);
-    const warning = (message, duration) => showToast(message, 'warning', duration);
+    const success = useCallback((message, duration) => {
+        console.log('Toast Success:', message);
+        showToast(message, 'success', duration);
+    }, [showToast]);
+
+    const error = useCallback((message, duration) => {
+        console.error('Toast Error:', message);
+        showToast(message, 'error', duration);
+    }, [showToast]);
+
+    const info = useCallback((message, duration) => {
+        console.log('Toast Info:', message);
+        showToast(message, 'info', duration);
+    }, [showToast]);
+
+    const warning = useCallback((message, duration) => {
+        console.warn('Toast Warning:', message);
+        showToast(message, 'warning', duration);
+    }, [showToast]);
 
     return (
         <ToastContext.Provider value={{ showToast, success, error, info, warning }}>
             {children}
             <div className="fixed bottom-6 right-6 z-[9999] flex flex-col gap-3 pointer-events-none">
+                {toasts.length > 0 && console.log('Rendering Toasts:', toasts.length)}
                 {toasts.map((toast) => (
                     <ToastItem key={toast.id} {...toast} onRemove={() => removeToast(toast.id)} />
                 ))}

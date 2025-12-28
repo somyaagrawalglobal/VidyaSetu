@@ -78,6 +78,11 @@ export async function GET(request, { params }) {
             if (enrollment) isEnrolled = true;
         }
 
+        // Access Control: If not approved, only Admin or Instructor can see it
+        if (course.approvalStatus !== 'approved' && !isAdmin && !isInstructor) {
+            return NextResponse.json({ success: false, message: 'This course is pending approval or has been rejected.' }, { status: 403 });
+        }
+
         if (!isEnrolled && !isAdmin && !isInstructor) {
             course.modules.forEach(module => {
                 module.lessons.forEach(lesson => {
@@ -127,6 +132,49 @@ export async function PUT(request, { params }) {
 
         // 1. Update Course Basic Info (Clean out sensitive fields)
         const { _id, instructor, createdAt, updatedAt, __v, ...updateCourseData } = courseData;
+
+        // Security check: Only Admins can change approvalStatus or rejectionReason
+        if (!isAdmin) {
+            delete updateCourseData.approvalStatus;
+            delete updateCourseData.rejectionReason;
+
+            // Reset status to pending if instructor updates a rejected course
+            if (existingCourse.approvalStatus === 'rejected') {
+                updateCourseData.approvalStatus = 'pending';
+                updateCourseData.rejectionReason = null;
+
+                // Notify Admins of Resubmission
+                try {
+                    const admins = await User.find({ roles: { $in: ['Admin'] }, isDeleted: { $ne: true } });
+                    if (admins.length > 0) {
+                        const { sendCourseApprovalNotification } = await import('@/lib/email');
+                        for (const admin of admins) {
+                            try {
+                                await sendCourseApprovalNotification({
+                                    to: admin.email,
+                                    adminName: admin.firstName,
+                                    instructorName: `${user.firstName} ${user.lastName}`,
+                                    courseTitle: existingCourse.title,
+                                    courseId: existingCourse._id.toString()
+                                });
+                            } catch (e) {
+                                console.error(`[RESUBMISSION EMAIL] Error for ${admin.email}:`, e.message);
+                            }
+                        }
+                    }
+                } catch (err) {
+                    console.error('[RESUBMISSION EMAIL] Global error:', err);
+                }
+            }
+        } else {
+            // Admin is updating - check if approvalStatus changed
+            if (updateCourseData.approvalStatus && updateCourseData.approvalStatus !== existingCourse.approvalStatus) {
+                console.log(`[ADMIN ACTION] Status changing from ${existingCourse.approvalStatus} to ${updateCourseData.approvalStatus}`);
+                // Notify Instructor after update (we'll do it after finding the course below)
+                updateCourseData._notifyInstructor = true;
+            }
+        }
+
         const course = await Course.findByIdAndUpdate(existingCourse._id, updateCourseData, { new: true, runValidators: true }).lean();
 
         // 2. Sync Lessons
@@ -221,7 +269,35 @@ export async function PUT(request, { params }) {
         });
         course.modules = Object.values(moduleMap);
 
-        return NextResponse.json({ success: true, course });
+        const isResubmission = !isAdmin && existingCourse.approvalStatus === 'rejected';
+        let emailSentMessage = null;
+
+        if (isAdmin && updateCourseData._notifyInstructor) {
+            try {
+                const instructorUser = await User.findById(existingCourse.instructor);
+                if (instructorUser) {
+                    const { sendInstructorStatusUpdate } = await import('@/lib/email');
+                    await sendInstructorStatusUpdate({
+                        to: instructorUser.email,
+                        instructorName: instructorUser.firstName,
+                        courseTitle: course.title,
+                        status: course.approvalStatus,
+                        rejectionReason: course.rejectionReason
+                    });
+                    emailSentMessage = `Instructor (${instructorUser.email}) has been notified of the status update.`;
+                }
+            } catch (instructorEmailErr) {
+                console.error('[STATUS UPDATE EMAIL] Failed to notify instructor:', instructorEmailErr);
+            }
+        }
+
+        return NextResponse.json({
+            success: true,
+            course,
+            message: isResubmission
+                ? 'Course resubmitted for review. Administrators have been notified.'
+                : (emailSentMessage || 'Course updated successfully.')
+        });
     } catch (error) {
         console.error('[API] Course Update Error:', error);
         return NextResponse.json({ success: false, error: error.message }, { status: 500 });

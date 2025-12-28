@@ -20,9 +20,10 @@ export default function CourseStudentsPage({ params }) {
     const { courseId } = use(params);
     const [students, setStudents] = useState([]);
     const [courseTitle, setCourseTitle] = useState('');
+    const [totalEarnings, setTotalEarnings] = useState(0);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
-    const { toast } = useToast();
+    const toast = useToast();
 
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedStudent, setSelectedStudent] = useState(null);
@@ -39,6 +40,7 @@ export default function CourseStudentsPage({ params }) {
             if (data.success) {
                 setStudents(data.students);
                 setCourseTitle(data.courseTitle);
+                setTotalEarnings(data.totalEarnings || 0);
             } else {
                 toast.error(data.message || 'Failed to fetch students');
             }
@@ -139,17 +141,21 @@ export default function CourseStudentsPage({ params }) {
                 </div>
 
                 {/* Stats Row */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+                <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-8">
                     <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
                         <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Total Enrolled</p>
                         <p className="text-2xl font-black text-slate-900">{students.length}</p>
+                    </div>
+                    <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Total Earnings</p>
+                        <p className="text-2xl font-black text-indigo-600">₹{totalEarnings.toLocaleString('en-IN')}</p>
                     </div>
                     <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
                         <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Active Students</p>
                         <p className="text-2xl font-black text-emerald-600">{students.filter(s => s.accessStatus !== 'blocked').length}</p>
                     </div>
                     <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Blocked Students</p>
+                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Blocked Access</p>
                         <p className="text-2xl font-black text-red-600">{students.filter(s => s.accessStatus === 'blocked').length}</p>
                     </div>
                 </div>

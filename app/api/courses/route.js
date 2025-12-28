@@ -28,11 +28,16 @@ export async function GET(request) {
         const publishedOnly = searchParams.get('published') !== 'false';
 
         const user = await authenticateApi(request);
+        const isAdminUser = user?.roles.includes('Admin');
+        const isInstructorUser = user?.roles.includes('Instructor');
 
-        let query = publishedOnly ? { published: true } : {};
+        let query = {};
 
-        // If not publishedOnly, it's likely an admin/instructor list view
-        if (!publishedOnly) {
+        if (publishedOnly) {
+            // For general public/students: only show published AND approved courses
+            query = { published: true, approvalStatus: 'approved' };
+        } else {
+            // For admin/instructor dashboard views
             if (!user) {
                 return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
             }
@@ -99,10 +104,48 @@ export async function POST(request) {
             courseData.slug = courseData.title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
         }
 
+        // 1. VALIDATION: Check for modules and lessons
+        if (!modules || modules.length === 0) {
+            return NextResponse.json({ success: false, message: 'At least one module is required to create a course' }, { status: 400 });
+        }
+
+        const hasLessons = modules.some(m => m.lessons && m.lessons.length > 0);
+        if (!hasLessons) {
+            return NextResponse.json({ success: false, message: 'At least one lesson is required to create a course' }, { status: 400 });
+        }
+
+        // 2. CREATE COURSE with pending status
         const course = await Course.create({
             ...courseData,
             instructor: user._id,
+            approvalStatus: 'pending', // Explicitly set even though it's default
         });
+
+        // 3. SEND EMAIL NOTIFICATION TO ADMINS
+        try {
+            console.log('[API POST] Searching for admins...');
+            const admins = await User.find({ roles: { $in: ['Admin'] }, isDeleted: { $ne: true } });
+            console.log(`[API POST] Found ${admins.length} admins.`);
+            const { sendCourseApprovalNotification } = await import('@/lib/email');
+
+            for (const admin of admins) {
+                try {
+                    console.log(`[API POST] Emailing admin: ${admin.email}`);
+                    await sendCourseApprovalNotification({
+                        to: admin.email,
+                        adminName: admin.firstName,
+                        instructorName: `${user.firstName} ${user.lastName}`,
+                        courseTitle: courseData.title,
+                        courseId: course._id.toString()
+                    });
+                } catch (singleErr) {
+                    console.error(`[API POST] Failed to notify ${admin.email}:`, singleErr.message);
+                }
+            }
+        } catch (emailError) {
+            console.error('[API POST] Failed to send admin notification:', emailError);
+            // Don't fail the whole request if email fails, but log it
+        }
 
         // Save lessons if any
         if (modules && modules.length > 0) {
@@ -149,7 +192,11 @@ export async function POST(request) {
         });
         courseObj.modules = Object.values(moduleMap);
 
-        return NextResponse.json({ success: true, course: courseObj }, { status: 201 });
+        return NextResponse.json({
+            success: true,
+            course: courseObj,
+            message: 'Course created and submitted for review. Administrators have been notified.'
+        }, { status: 201 });
     } catch (error) {
         return NextResponse.json({ success: false, error: error.message }, { status: 500 });
     }

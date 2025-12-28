@@ -10,7 +10,7 @@ import GenericMultiSelect from '@/components/GenericMultiSelect';
 export default function CouponDetailsPage() {
     const { id } = useParams();
     const router = useRouter();
-    const { toast } = useToast();
+    const toast = useToast();
 
     const [coupon, setCoupon] = useState(null);
     const [courses, setCourses] = useState([]);
