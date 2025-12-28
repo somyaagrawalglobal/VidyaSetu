@@ -79,6 +79,11 @@ const OrderSchema = new mongoose.Schema({
     },
     razorpayRefundId: {
         type: String,
+    },
+    accessStatus: {
+        type: String,
+        enum: ['active', 'blocked'],
+        default: 'active',
     }
 }, {
     timestamps: true,

@@ -64,7 +64,8 @@ export async function GET(request) {
         if (user) {
             const enrollments = await Order.find({
                 user: user._id,
-                status: 'completed'
+                status: 'completed',
+                accessStatus: { $ne: 'blocked' }
             }).select('course');
 
             const enrolledCourseIds = new Set(enrollments.map(e => e.course.toString()));

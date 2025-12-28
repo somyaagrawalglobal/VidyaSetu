@@ -13,8 +13,12 @@ export async function GET(request) {
 
         await dbConnect();
 
-        // Find all completed orders for this user
-        const orders = await Order.find({ user: user._id, status: 'completed' }).select('course');
+        // Find all completed and active orders for this user
+        const orders = await Order.find({
+            user: user._id,
+            status: 'completed',
+            accessStatus: { $ne: 'blocked' }
+        }).select('course');
 
         // Extract course IDs
         const courseIds = orders.map(order => order.course);

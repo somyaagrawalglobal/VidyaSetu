@@ -17,7 +17,8 @@ import {
     Trash2,
     UserPlus,
     X,
-    Check
+    Check,
+    BookOpen
 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -272,6 +273,13 @@ export default function UserManagementPage() {
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                             <div className="flex justify-end gap-2">
+                                                <Link
+                                                    href={`/admin/users/${user._id}/enrollments`}
+                                                    className="p-2 text-gray-400 hover:text-emerald-600 transition-colors bg-gray-50 rounded-lg"
+                                                    title="View Enrollments"
+                                                >
+                                                    <BookOpen className="w-4 h-4" />
+                                                </Link>
                                                 <button
                                                     onClick={() => handleEditUser(user)}
                                                     className="p-2 text-gray-400 hover:text-indigo-600 transition-colors bg-gray-50 rounded-lg"
