@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { Plus, Tag, Calendar, Users, Trash2, Loader2, AlertCircle, CheckCircle2, Edit } from 'lucide-react';
+import { Plus, Tag, Calendar, Users, Trash2, Loader2, AlertCircle, CheckCircle2, Edit, Ban } from 'lucide-react';
 import { useToast } from '@/components/ToastContext';
 import GenericMultiSelect from '@/components/GenericMultiSelect';
 import Modal from '@/components/Modal';
@@ -28,35 +28,133 @@ export default function AdminCouponsPage() {
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [couponToDelete, setCouponToDelete] = useState(null);
 
+    const [expireModalOpen, setExpireModalOpen] = useState(false);
+    const [couponToExpire, setCouponToExpire] = useState(null);
+
+    // ... (useEffect and fetchData unchanged)
+
+    const confirmDelete = async () => {
+        if (!couponToDelete) return;
+        try {
+            const res = await fetch(`/api/admin/coupons?id=${couponToDelete}`, { method: 'DELETE' });
+            const data = await res.json();
+            if (data.success) {
+                setCoupons(coupons.filter(c => c._id !== couponToDelete));
+                toast.success('Coupon deleted successfully');
+            } else {
+                toast.error(data.message || 'Failed to delete coupon');
+            }
+        } catch (error) {
+            toast.error('An error occurred');
+        } finally {
+            setDeleteModalOpen(false);
+            setCouponToDelete(null);
+        }
+    };
+
+    const confirmExpire = async () => {
+        if (!couponToExpire) return;
+        try {
+            // Expire by setting date to yesterday
+            const yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+
+            const res = await fetch(`/api/admin/coupons/${couponToExpire}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ expiryDate: yesterday.toISOString() }),
+            });
+            const data = await res.json();
+
+            if (data.success) {
+                // Update local state
+                setCoupons(coupons.map(c => c._id === couponToExpire ? { ...c, expiryDate: yesterday.toISOString() } : c));
+                toast.success('Coupon marked as expired');
+            } else {
+                toast.error(data.message || 'Failed to expire coupon');
+            }
+        } catch (error) {
+            toast.error('An error occurred');
+        } finally {
+            setExpireModalOpen(false);
+            setCouponToExpire(null);
+        }
+    };
+
+    const handleDeleteClick = (id) => {
+        setCouponToDelete(id);
+        setDeleteModalOpen(true);
+    };
+
+    const handleExpireClick = (id) => {
+        setCouponToExpire(id);
+        setExpireModalOpen(true);
+    };
+
     useEffect(() => {
         fetchData();
     }, []);
 
     const fetchData = async () => {
         try {
-            const [couponsRes, coursesRes, usersRes] = await Promise.all([
+            setLoading(true);
+            const results = await Promise.allSettled([
                 fetch('/api/admin/coupons'),
                 fetch('/api/courses'),
                 fetch('/api/admin/users')
             ]);
 
-            if (couponsRes.status === 401) {
-                setIsAuthorized(false);
-                setLoading(false);
-                return;
+            const [couponsResult, coursesResult, usersResult] = results;
+
+            // Handle Coupons
+            if (couponsResult.status === 'fulfilled') {
+                const res = couponsResult.value;
+                if (res.status === 401) {
+                    setIsAuthorized(false);
+                    setLoading(false);
+                    return;
+                }
+                const data = await res.json();
+                if (data.success) {
+                    setCoupons(data.coupons);
+                } else {
+                    console.error('Coupons fetch failed:', data.message);
+                    toast.error('Failed to load coupons');
+                }
+            } else {
+                console.error('Coupons request failed:', couponsResult.reason);
+                toast.error('Failed to load coupons');
             }
 
-            const couponsData = await couponsRes.json();
-            const coursesData = await coursesRes.json();
-            const usersData = await usersRes.json();
+            // Handle Courses
+            if (coursesResult.status === 'fulfilled') {
+                const res = coursesResult.value;
+                const data = await res.json();
+                if (data.success) {
+                    setCourses(data.courses);
+                } else {
+                    console.error('Courses fetch failed:', data.message);
+                }
+            } else {
+                console.error('Courses request failed:', coursesResult.reason);
+            }
 
-            if (couponsData.success) setCoupons(couponsData.coupons);
-            if (coursesData.success) setCourses(coursesData.courses);
-            if (usersData.success) setUsers(usersData.users);
+            // Handle Users
+            if (usersResult.status === 'fulfilled') {
+                const res = usersResult.value;
+                const data = await res.json();
+                if (data.success) {
+                    setUsers(data.users);
+                } else {
+                    console.error('Users fetch failed:', data.message);
+                }
+            } else {
+                console.error('Users request failed:', usersResult.reason);
+            }
 
         } catch (error) {
-            console.error('Failed to fetch data');
-            toast.error('Failed to load data');
+            console.error('Critical error in fetchData:', error);
+            toast.error('Failed to load page data');
         } finally {
             setLoading(false);
         }
@@ -92,64 +190,25 @@ export default function AdminCouponsPage() {
         }
     };
 
-    const confirmDelete = async () => {
-        if (!couponToDelete) return;
-        try {
-            const res = await fetch(`/api/admin/coupons?id=${couponToDelete}`, { method: 'DELETE' });
-            const data = await res.json();
-            if (data.success) {
-                setCoupons(coupons.filter(c => c._id !== couponToDelete));
-                toast.success('Coupon deleted successfully');
-            } else {
-                toast.error(data.message || 'Failed to delete coupon');
-            }
-        } catch (error) {
-            toast.error('An error occurred');
-        } finally {
-            setDeleteModalOpen(false);
-            setCouponToDelete(null);
-        }
-    };
-
-    const handleDelete = (id) => {
-        setCouponToDelete(id);
-        setDeleteModalOpen(true);
-    };
-
-    if (loading) return (
-        <div className="min-h-screen bg-slate-50 pt-32 flex justify-center">
-            <Loader2 className="animate-spin text-indigo-600" size={40} />
-        </div>
-    );
-
-    if (!isAuthorized) {
-        // ... (Unauthorized view unchanged)
-        return (
-            <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
-                <div className="bg-white max-w-md w-full p-8 rounded-2xl border border-slate-200 shadow-xl text-center">
-                    <div className="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <AlertCircle className="text-red-500" size={32} />
-                    </div>
-                    <h1 className="text-2xl font-black text-slate-900 mb-2">Access Denied</h1>
-                    <p className="text-slate-500 mb-8">You do not have permission to view marketing tools. This area is restricted to administrators only.</p>
-                    <a href="/" className="inline-block w-full py-3 bg-slate-900 text-white rounded-xl font-bold hover:bg-slate-800 transition-colors">
-                        Return to Home
-                    </a>
-                </div>
-            </div>
-        );
-    }
-
     return (
         <div className="min-h-screen bg-slate-50 pt-24 pb-16 px-4">
             <Modal
                 isOpen={deleteModalOpen}
                 onClose={() => setDeleteModalOpen(false)}
                 title="Delete Coupon"
-                message="Are you sure you want to delete this coupon? This action cannot be undone if the coupon has not been used."
+                message="Are you sure you want to delete this coupon? This action cannot be undone."
                 type="danger"
                 confirmText="Yes, Delete"
                 onConfirm={confirmDelete}
+            />
+            <Modal
+                isOpen={expireModalOpen}
+                onClose={() => setExpireModalOpen(false)}
+                title="Expire Coupon"
+                message="Are you sure you want to expire this coupon? It will no longer be usable by users."
+                type="danger"
+                confirmText="Yes, Expire"
+                onConfirm={confirmExpire}
             />
             <div className="max-w-6xl mx-auto">
                 <div className="flex justify-between items-end mb-10">
@@ -271,9 +330,15 @@ export default function AdminCouponsPage() {
                                     <Link href={`/admin/coupons/${coupon._id}`} className="text-slate-300 hover:text-indigo-600 transition-colors">
                                         <Edit size={18} />
                                     </Link>
-                                    <button onClick={() => handleDelete(coupon._id)} className="text-slate-300 hover:text-red-500 transition-colors">
-                                        <Trash2 size={18} />
-                                    </button>
+                                    {coupon.currentUses > 0 ? (
+                                        <button onClick={() => handleExpireClick(coupon._id)} className="text-slate-300 hover:text-amber-500 transition-colors" title="Invalidate Coupon">
+                                            <Ban size={18} />
+                                        </button>
+                                    ) : (
+                                        <button onClick={() => handleDeleteClick(coupon._id)} className="text-slate-300 hover:text-red-500 transition-colors" title="Delete Coupon">
+                                            <Trash2 size={18} />
+                                        </button>
+                                    )}
                                 </div>
                                 <div className="flex items-center gap-3 mb-6">
                                     <div className="p-3 bg-indigo-50 text-indigo-600 rounded-xl">
