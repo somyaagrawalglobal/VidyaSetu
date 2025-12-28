@@ -15,6 +15,7 @@ const registerSchema = z.object({
     email: z.string().email('Invalid email address'),
     mobileNumber: z.string().min(10, 'Valid mobile number is required'),
     password: z.string().min(6, 'Password must be at least 6 characters'),
+    role: z.enum(['Student', 'Instructor']).default('Student'),
 });
 
 export async function POST(req) {
@@ -43,7 +44,7 @@ export async function POST(req) {
             );
         }
 
-        const { firstName, lastName, email, mobileNumber, password } = validation.data;
+        const { firstName, lastName, email, mobileNumber, password, role } = validation.data;
 
         // 4. Check if user already exists
         const existingUser = await User.findOne({ email });
@@ -68,7 +69,7 @@ export async function POST(req) {
             email,
             mobileNumber,
             passwordHash,
-            roles: ['Student'], // Default role
+            roles: [role], // Use selected role
             verificationToken,
             verificationTokenExpiry,
             isVerified: false,

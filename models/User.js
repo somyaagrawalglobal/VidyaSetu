@@ -11,6 +11,16 @@ const UserSchema = new mongoose.Schema({
         required: [true, 'Last Name is required'],
         trim: true,
     },
+    headline: {
+        type: String,
+        default: 'Instructor',
+        trim: true,
+    },
+    bio: {
+        type: String,
+        default: '',
+        trim: true,
+    },
     email: {
         type: String,
         required: [true, 'Email is required'],
@@ -56,6 +66,10 @@ const UserSchema = new mongoose.Schema({
     deletedOn: {
         type: Date,
         default: null,
+    },
+    isDeleted: {
+        type: Boolean,
+        default: false,
     },
 }, {
     timestamps: { createdAt: 'createdOn', updatedAt: 'updatedOn' }
