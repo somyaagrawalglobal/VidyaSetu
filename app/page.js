@@ -194,7 +194,7 @@ export default function Home() {
                         </div>
 
                         <div
-                            className="relative w-full aspect-[4/3] rounded-3xl shadow-2xl overflow-hidden ring-4 ring-white"
+                            className="relative w-full aspect-[4/3] rounded-3xl shadow-2xl overflow-hidden"
                             data-aos="zoom-in-left"
                             data-aos-delay="200"
                         >
