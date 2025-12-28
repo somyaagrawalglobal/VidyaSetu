@@ -75,7 +75,6 @@ export default function CourseDetails({ params }) {
     };
 
     const handleEnrollSuccess = () => {
-        alert('Enrolled successfully!');
         setIsEnrolled(true);
         router.push(`/courses/${slug}/watch`);
     };

@@ -1,7 +1,25 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Search, Filter, Download, CreditCard, User, BookOpen, Clock, AlertCircle, CheckCircle2, RefreshCcw, Loader2 } from 'lucide-react';
+import {
+    Search,
+    Filter,
+    Download,
+    CreditCard,
+    User,
+    BookOpen,
+    Clock,
+    AlertCircle,
+    CheckCircle2,
+    RefreshCcw,
+    Loader2,
+    Eye,
+    ChevronLeft,
+    FileText
+} from 'lucide-react';
+import Link from 'next/link';
+import { useToast } from '@/components/ToastContext';
+import Modal from '@/components/Modal';
 
 export default function AdminTransactionsPage() {
     const [orders, setOrders] = useState([]);
@@ -9,7 +27,10 @@ export default function AdminTransactionsPage() {
     const [searchTerm, setSearchTerm] = useState('');
     const [filterStatus, setFilterStatus] = useState('all');
     const [isAuthorized, setIsAuthorized] = useState(true);
+    const toast = useToast();
 
+    // Modal States
+    const [confirmModal, setConfirmModal] = useState({ isOpen: false, title: '', message: '', onConfirm: null });
     const [refundingId, setRefundingId] = useState(null);
 
     useEffect(() => {
@@ -27,33 +48,49 @@ export default function AdminTransactionsPage() {
             }
 
             const data = await res.json();
-            if (data.success) setOrders(data.orders);
+            if (data.success) {
+                setOrders(data.orders);
+            } else {
+                toast.error(data.message);
+            }
         } catch (error) {
-            console.error('Failed to fetch orders');
+            toast.error('Failed to fetch orders');
         } finally {
             setLoading(false);
         }
     };
 
-    const handleRefund = async (orderId) => {
-        if (!confirm('Are you sure you want to process a refund for this transaction?')) return;
+    const handleRefundClick = (order) => {
+        setConfirmModal({
+            isOpen: true,
+            title: 'Confirm Refund',
+            message: `Are you sure you want to process a refund for order ${order.razorpayOrderId}?`,
+            onConfirm: () => handleRefund(order._id)
+        });
+    };
 
+    const handleRefund = async (orderId) => {
         setRefundingId(orderId);
         try {
             const res = await fetch('/api/admin/transactions', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ orderId, action: 'refund' }),
+                body: JSON.stringify({
+                    orderId,
+                    action: 'refund',
+                    refundMethod: 'razorpay',
+                    refundNote: 'Initiated from transactions list'
+                }),
             });
             const data = await res.json();
             if (data.success) {
-                alert(data.message);
+                toast.success(data.message);
                 fetchOrders();
             } else {
-                alert(data.message);
+                toast.error(data.message);
             }
         } catch (error) {
-            alert('Refund process failed');
+            toast.error('Refund process failed');
         } finally {
             setRefundingId(null);
         }
@@ -61,7 +98,7 @@ export default function AdminTransactionsPage() {
 
     const exportToCSV = () => {
         if (filteredOrders.length === 0) {
-            alert('No transactions to export');
+            toast.info('No transactions to export');
             return;
         }
 
@@ -89,7 +126,6 @@ export default function AdminTransactionsPage() {
             order.status || ''
         ]);
 
-        // Escape special characters for CSV
         const escapeCSV = (value) => {
             const str = String(value);
             if (str.includes(',') || str.includes('"') || str.includes('\n')) {
@@ -98,13 +134,11 @@ export default function AdminTransactionsPage() {
             return str;
         };
 
-        // Build CSV content
         const csvContent = [
             headers.map(escapeCSV).join(','),
             ...rows.map(row => row.map(escapeCSV).join(','))
         ].join('\n');
 
-        // Create and download file
         const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
@@ -114,6 +148,7 @@ export default function AdminTransactionsPage() {
         link.click();
         document.body.removeChild(link);
         URL.revokeObjectURL(url);
+        toast.success('Transactions exported successfully');
     };
 
     const getStatusStyle = (status) => {
@@ -126,11 +161,12 @@ export default function AdminTransactionsPage() {
     };
 
     const filteredOrders = orders.filter(order => {
+        const fullName = `${order.user?.firstName} ${order.user?.lastName}`.toLowerCase();
         const matchesSearch =
-            order.user?.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            fullName.includes(searchTerm.toLowerCase()) ||
             order.user?.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
             order.course?.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            order.razorpayOrderId.includes(searchTerm);
+            order.razorpayOrderId.toLowerCase().includes(searchTerm.toLowerCase());
 
         const matchesFilter = filterStatus === 'all' || order.status === filterStatus;
 
@@ -152,16 +188,16 @@ export default function AdminTransactionsPage() {
                     </div>
                     <h1 className="text-2xl font-black text-slate-900 mb-2">Access Denied</h1>
                     <p className="text-slate-500 mb-8">You do not have permission to view this financial data. This area is restricted to administrators only.</p>
-                    <a href="/" className="inline-block w-full py-3 bg-slate-900 text-white rounded-xl font-bold hover:bg-slate-800 transition-colors">
+                    <Link href="/" className="inline-block w-full py-3 bg-slate-900 text-white rounded-xl font-bold hover:bg-slate-800 transition-colors">
                         Return to Home
-                    </a>
+                    </Link>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-slate-50/30 pt-24 pb-16 px-4">
+        <div className="min-h-screen bg-slate-50/30 pt-24 pb-16 px-4 font-sans">
             <div className="max-w-7xl mx-auto">
                 {/* Header */}
                 <div className="mb-10">
@@ -185,7 +221,7 @@ export default function AdminTransactionsPage() {
                 </div>
 
                 {/* Filters */}
-                <div className="bg-white p-4 rounded-2xl border border-slate-200 mb-8 flex flex-col md:flex-row gap-4">
+                <div className="bg-white p-4 rounded-2xl border border-slate-200 mb-8 flex flex-col md:flex-row gap-4 shadow-sm">
                     <div className="relative flex-1">
                         <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
                         <input
@@ -221,7 +257,7 @@ export default function AdminTransactionsPage() {
                                     <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Student Details</th>
                                     <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Course Purchased</th>
                                     <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-right">Amount</th>
-                                    <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Status</th>
+                                    <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center">Status</th>
                                     <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center">Action</th>
                                 </tr>
                             </thead>
@@ -238,8 +274,8 @@ export default function AdminTransactionsPage() {
                                         </td>
                                         <td className="px-6 py-4">
                                             <div className="flex items-center gap-3">
-                                                <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 font-bold text-xs">
-                                                    {order.user?.firstName.charAt(0)}
+                                                <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 font-bold text-[10px]">
+                                                    {order.user?.firstName?.charAt(0)}
                                                 </div>
                                                 <div className="flex flex-col">
                                                     <span className="text-xs font-bold text-slate-800">{order.user?.firstName} {order.user?.lastName}</span>
@@ -251,7 +287,7 @@ export default function AdminTransactionsPage() {
                                             <div className="flex flex-col">
                                                 <span className="text-xs font-bold text-slate-800 truncate max-w-[200px]">{order.course?.title}</span>
                                                 {order.couponCode && (
-                                                    <span className="text-[10px] font-bold text-indigo-600 bg-indigo-50 w-fit px-1.5 py-0.5 rounded mt-1 flex items-center gap-1 uppercase tracking-tighter">
+                                                    <span className="text-[9px] font-bold text-indigo-600 bg-indigo-50 w-fit px-1.5 py-0.5 rounded mt-1 flex items-center gap-1 uppercase tracking-tighter shadow-sm border border-indigo-100/30">
                                                         <CreditCard size={10} /> Coupon: {order.couponCode}
                                                     </span>
                                                 )}
@@ -260,29 +296,46 @@ export default function AdminTransactionsPage() {
                                         <td className="px-6 py-4 text-right">
                                             <span className="text-sm font-black text-slate-900">₹{order.amount?.toLocaleString()}</span>
                                         </td>
-                                        <td className="px-6 py-4">
-                                            <div className={`px-2 py-1 rounded-md border text-[10px] font-black uppercase tracking-widest w-fit inline-flex items-center gap-1.5 ${getStatusStyle(order.status)}`}>
+                                        <td className="px-6 py-4 text-center">
+                                            <div className={`px-2 py-1 rounded-md border text-[9px] font-black uppercase tracking-widest inline-flex items-center gap-1.5 ${getStatusStyle(order.status)} shadow-sm`}>
                                                 {order.status === 'completed' ? <CheckCircle2 size={12} /> :
                                                     order.status === 'failed' ? <AlertCircle size={12} /> :
                                                         order.status === 'refunded' ? <RefreshCcw size={12} /> : null}
                                                 {order.status}
                                             </div>
                                         </td>
-                                        <td className="px-6 py-4 text-center">
-                                            {order.status === 'completed' && (
-                                                <button
-                                                    onClick={() => handleRefund(order._id)}
-                                                    className="p-2 text-slate-400 hover:text-amber-600 transition-colors disabled:opacity-50"
-                                                    title="Process Refund"
-                                                    disabled={refundingId === order._id}
+                                        <td className="px-6 py-4">
+                                            <div className="flex items-center justify-center gap-2">
+                                                <Link
+                                                    href={`/admin/transactions/${order._id}`}
+                                                    className="p-2 text-gray-400 hover:text-indigo-600 transition-colors bg-gray-50 rounded-lg"
+                                                    title="View Full Details"
                                                 >
-                                                    {refundingId === order._id ? (
-                                                        <Loader2 size={16} className="animate-spin text-amber-600" />
-                                                    ) : (
-                                                        <RefreshCcw size={16} />
-                                                    )}
-                                                </button>
-                                            )}
+                                                    <Eye size={16} />
+                                                </Link>
+                                                <Link
+                                                    href={`/invoice/${order._id}`}
+                                                    className="p-2 text-gray-400 hover:text-emerald-600 transition-colors bg-gray-50 rounded-lg"
+                                                    title="View Invoice"
+                                                    target="_blank"
+                                                >
+                                                    <FileText size={16} />
+                                                </Link>
+                                                {order.status === 'completed' && (
+                                                    <button
+                                                        onClick={() => handleRefundClick(order)}
+                                                        className="p-2 text-gray-400 hover:text-rose-600 transition-colors bg-gray-50 rounded-lg disabled:opacity-50"
+                                                        title="Process Refund"
+                                                        disabled={refundingId === order._id}
+                                                    >
+                                                        {refundingId === order._id ? (
+                                                            <Loader2 size={16} className="animate-spin text-rose-600" />
+                                                        ) : (
+                                                            <RefreshCcw size={16} />
+                                                        )}
+                                                    </button>
+                                                )}
+                                            </div>
                                         </td>
                                     </tr>
                                 ))}
@@ -299,6 +352,17 @@ export default function AdminTransactionsPage() {
                     </div>
                 </div>
             </div>
+
+            {/* Confirmation Modal */}
+            <Modal
+                isOpen={confirmModal.isOpen}
+                onClose={() => setConfirmModal({ ...confirmModal, isOpen: false })}
+                title={confirmModal.title}
+                message={confirmModal.message}
+                type="danger"
+                confirmText="Yes, Proceed"
+                onConfirm={confirmModal.onConfirm}
+            />
         </div>
     );
 }

@@ -22,9 +22,19 @@ export async function GET(request) {
         // Fetch courses details (exclude soft-deleted)
         const courses = await Course.find({ _id: { $in: courseIds }, isDeleted: { $ne: true } })
             .populate('instructor', 'firstName lastName')
-            .select('-modules.lessons.videoId'); // Secure, don't send video IDs in list
+            .select('-modules.lessons.videoId')
+            .lean();
 
-        return NextResponse.json({ success: true, courses });
+        // Attach order ID to each course for invoice linking
+        const coursesWithOrderId = courses.map(course => {
+            const order = orders.find(o => o.course.toString() === course._id.toString());
+            return {
+                ...course,
+                orderId: order?._id
+            };
+        });
+
+        return NextResponse.json({ success: true, courses: coursesWithOrderId });
     } catch (error) {
         return NextResponse.json({ success: false, error: error.message }, { status: 500 });
     }

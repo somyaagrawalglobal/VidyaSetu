@@ -60,6 +60,25 @@ const OrderSchema = new mongoose.Schema({
         lastName: String,
         email: String,
         mobileNumber: String,
+    },
+    invoiceNumber: {
+        type: String,
+        unique: true,
+        sparse: true,
+    },
+    invoiceDate: {
+        type: Date,
+    },
+    refundMethod: {
+        type: String,
+        enum: ['none', 'razorpay', 'manual'],
+        default: 'none',
+    },
+    refundNote: {
+        type: String,
+    },
+    razorpayRefundId: {
+        type: String,
     }
 }, {
     timestamps: true,

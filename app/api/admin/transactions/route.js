@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
+import razorpay from '@/lib/razorpay';
 import Order from '@/models/Order';
 import User from '@/models/User';
 import { authenticateApi } from '@/lib/api-auth';
@@ -31,20 +32,45 @@ export async function POST(req) {
             return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
         }
 
-        const { orderId, action } = await req.json();
+        const { orderId, action, refundMethod, refundNote } = await req.json();
         await dbConnect();
 
         if (action === 'refund') {
-            // Logic for triggering Razorpay Refund would go here
-            // For now, we update the status locally
             const order = await Order.findById(orderId)
                 .populate('user', 'firstName lastName email')
                 .populate('course', 'title price');
 
             if (!order) return NextResponse.json({ success: false, message: 'Order not found' }, { status: 404 });
 
+            if (refundMethod === 'razorpay') {
+                if (!order.razorpayPaymentId) {
+                    return NextResponse.json({ success: false, message: 'No Razorpay payment ID found for this order' }, { status: 400 });
+                }
+
+                try {
+                    const refund = await razorpay.payments.refund(order.razorpayPaymentId, {
+                        amount: Math.round(order.amount * 100), // Full refund
+                        notes: {
+                            reason: refundNote || "Admin initiated refund",
+                            orderId: order._id.toString()
+                        }
+                    });
+
+                    order.razorpayRefundId = refund.id;
+                    order.refundMethod = 'razorpay';
+                } catch (rzpError) {
+                    console.error('Razorpay Refund Error:', rzpError);
+                    return NextResponse.json({ success: false, message: rzpError.message || 'Razorpay refund failed' }, { status: 500 });
+                }
+            } else if (refundMethod === 'manual') {
+                order.refundMethod = 'manual';
+            } else {
+                return NextResponse.json({ success: false, message: 'Invalid refund method' }, { status: 400 });
+            }
+
             order.status = 'refunded';
             order.refundStatus = 'completed';
+            order.refundNote = refundNote || "";
             await order.save();
 
             // Send refund email notification
@@ -56,15 +82,15 @@ export async function POST(req) {
                         courseName: order.course.title,
                         coursePrice: order.amount,
                         orderId: order.razorpayOrderId,
-                        status: 'refunded'
+                        status: 'refunded',
+                        refundMethod: order.refundMethod
                     });
                 }
             } catch (emailError) {
                 console.error('Failed to send refund email:', emailError);
-                // Don't fail the refund if email fails
             }
 
-            return NextResponse.json({ success: true, message: 'Refund processed successfully' });
+            return NextResponse.json({ success: true, message: `Refund processed successfully via ${order.refundMethod}` });
         }
 
         return NextResponse.json({ success: false, message: 'Invalid action' }, { status: 400 });
