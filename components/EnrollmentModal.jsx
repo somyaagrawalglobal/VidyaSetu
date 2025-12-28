@@ -56,7 +56,7 @@ export default function EnrollmentModal({ isOpen, onClose, course, onEnrollSucce
             const res = await fetch('/api/coupons/validate', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ code: couponCode, amount: course.price }),
+                body: JSON.stringify({ code: couponCode, amount: course.price, courseId: course._id }),
             });
             const data = await res.json();
             if (data.success) {

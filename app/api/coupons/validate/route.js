@@ -1,3 +1,4 @@
+import { authenticateApi } from '@/lib/api-auth';
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import Coupon from '@/models/Coupon';
@@ -5,7 +6,7 @@ import Coupon from '@/models/Coupon';
 export async function POST(req) {
     try {
         await dbConnect();
-        const { code, amount } = await req.json();
+        const { code, amount, courseId } = await req.json();
 
         if (!code) {
             return NextResponse.json({ success: false, message: 'Coupon code is required' }, { status: 400 });
@@ -23,6 +24,24 @@ export async function POST(req) {
 
         if (coupon.currentUses >= coupon.maxUses) {
             return NextResponse.json({ success: false, message: 'Coupon usage limit reached' }, { status: 400 });
+        }
+
+        // 1. Verify Course Applicability
+        if (coupon.applicableCourses && coupon.applicableCourses.length > 0) {
+            if (!courseId || !coupon.applicableCourses.map(id => id.toString()).includes(courseId)) {
+                return NextResponse.json({ success: false, message: 'This coupon is not valid for this course.' }, { status: 400 });
+            }
+        }
+
+        // 2. Verify User Applicability
+        if (coupon.applicableUsers && coupon.applicableUsers.length > 0) {
+            const user = await authenticateApi(req);
+            if (!user) {
+                return NextResponse.json({ success: false, message: 'Please login to use this exclusive coupon.' }, { status: 401 });
+            }
+            if (!coupon.applicableUsers.map(id => id.toString()).includes(user._id.toString())) {
+                return NextResponse.json({ success: false, message: 'This coupon is not valid for your account.' }, { status: 403 });
+            }
         }
 
         let discount = 0;

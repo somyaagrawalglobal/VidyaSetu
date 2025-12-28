@@ -39,6 +39,20 @@ export async function POST(request) {
             appliedCoupon = await Coupon.findOne({ code: couponCode.toUpperCase(), isActive: true });
 
             if (appliedCoupon && new Date() <= appliedCoupon.expiryDate && appliedCoupon.currentUses < appliedCoupon.maxUses) {
+                // 1. Verify Course Applicability
+                if (appliedCoupon.applicableCourses && appliedCoupon.applicableCourses.length > 0) {
+                    if (!appliedCoupon.applicableCourses.map(id => id.toString()).includes(courseId)) {
+                        return NextResponse.json({ success: false, message: 'Coupon not valid for this course' }, { status: 400 });
+                    }
+                }
+
+                // 2. Verify User Applicability
+                if (appliedCoupon.applicableUsers && appliedCoupon.applicableUsers.length > 0) {
+                    if (!appliedCoupon.applicableUsers.map(id => id.toString()).includes(user._id.toString())) {
+                        return NextResponse.json({ success: false, message: 'Coupon not valid for your account' }, { status: 403 });
+                    }
+                }
+
                 if (appliedCoupon.discountType === 'percentage') {
                     discountAmount = (course.price * appliedCoupon.discountValue) / 100;
                 } else {

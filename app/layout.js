@@ -1,8 +1,6 @@
-import Footer from "../components/Footer";
-import Navbar from "../components/Navbar";
-import AOSInitializer from "@/components/AOSInitializer";
 import { AuthProvider } from "@/components/AuthProvider";
 import { ToastProvider } from "@/components/ToastContext";
+import LayoutWrapper from "@/components/LayoutWrapper";
 import "./globals.css";
 
 export const metadata = {
@@ -16,10 +14,9 @@ export default function RootLayout({ children }) {
       <body className="bg-slate-50 text-slate-800 overflow-x-hidden">
         <AuthProvider>
           <ToastProvider>
-            <Navbar />
-            <AOSInitializer />
-            {children}
-            <Footer />
+            <LayoutWrapper>
+              {children}
+            </LayoutWrapper>
           </ToastProvider>
         </AuthProvider>
       </body>

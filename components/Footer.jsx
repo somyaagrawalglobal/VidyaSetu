@@ -21,7 +21,7 @@ const footerLinks = {
 
 export default function Footer() {
   return (
-    <footer className="bg-slate-950 text-slate-400 py-16 border-t border-indigo-900/50 shadow-inner">
+    <footer className="bg-slate-950 text-slate-400 py-16 border-t border-indigo-900/50 shadow-inner print:hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-12 mb-16">
 
@@ -34,7 +34,7 @@ export default function Footer() {
               Bridging the gap between education and employability. Master real skills, land real jobs.
             </p>
             {/* Added Newsletter Sign-up for modern footers */}
-            
+
           </div>
 
           {/* 2. Explore Links (Mapped for cleanliness) */}
@@ -69,18 +69,18 @@ export default function Footer() {
           <div>
             <h4 className="text-indigo-400 font-bold text-lg mb-6 tracking-wider">Connect</h4>
             <ul className="space-y-4">
-                <li className="flex items-center space-x-3">
-                    <Mail className="w-5 h-5 text-indigo-400" />
-                    <a href="mailto:info@vidya-setu.com" className="text-sm hover:text-white transition-colors">
-                        info@vidya-setu.com
-                    </a>
-                </li>
-                <li className="flex items-center space-x-3">
-                    <Phone className="w-5 h-5 text-indigo-400" />
-                    <a href="tel:+1234567890" className="text-sm hover:text-white transition-colors">
-                        +91 98765 43210
-                    </a>
-                </li>
+              <li className="flex items-center space-x-3">
+                <Mail className="w-5 h-5 text-indigo-400" />
+                <a href="mailto:info@vidya-setu.com" className="text-sm hover:text-white transition-colors">
+                  info@vidya-setu.com
+                </a>
+              </li>
+              <li className="flex items-center space-x-3">
+                <Phone className="w-5 h-5 text-indigo-400" />
+                <a href="tel:+1234567890" className="text-sm hover:text-white transition-colors">
+                  +91 98765 43210
+                </a>
+              </li>
             </ul>
 
             {/* Social Icons - Bigger and Accent-Colored */}

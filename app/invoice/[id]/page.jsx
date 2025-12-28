@@ -72,7 +72,7 @@ export default function InvoicePage() {
     if (!order) return null;
 
     return (
-        <div className="min-h-screen bg-slate-100/50 py-12 px-4 print:bg-white print:py-0 print:px-0">
+        <div className="min-h-screen bg-slate-100/50 pt-24 pb-12 px-4 print:bg-white print:py-0 print:px-0">
             <div className="max-w-4xl mx-auto">
                 {/* Actions (Non-printable) */}
                 <div className="mb-6 flex justify-between items-center print:hidden">

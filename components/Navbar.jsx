@@ -40,7 +40,7 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="fixed w-full z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100 shadow-lg">
+    <nav className="fixed w-full z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100 shadow-lg print:hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex justify-between items-center">
         {/* Logo Section */}
         <Link href="/" className="text-3xl font-extrabold tracking-tight transition-transform duration-300 hover:scale-[1.02]">

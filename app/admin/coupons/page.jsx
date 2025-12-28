@@ -1,10 +1,17 @@
 'use client';
 
+import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { Plus, Tag, Calendar, Users, Trash2, Loader2, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { Plus, Tag, Calendar, Users, Trash2, Loader2, AlertCircle, CheckCircle2, Edit } from 'lucide-react';
+import { useToast } from '@/components/ToastContext';
+import GenericMultiSelect from '@/components/GenericMultiSelect';
+import Modal from '@/components/Modal';
 
 export default function AdminCouponsPage() {
+    const { toast } = useToast();
     const [coupons, setCoupons] = useState([]);
+    const [courses, setCourses] = useState([]);
+    const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [isCreating, setIsCreating] = useState(false);
     const [isAuthorized, setIsAuthorized] = useState(true);
@@ -13,27 +20,43 @@ export default function AdminCouponsPage() {
         discountType: 'percentage',
         discountValue: '',
         expiryDate: '',
-        maxUses: 100
+        maxUses: 100,
+        applicableCourses: [],
+        applicableUsers: []
     });
 
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+    const [couponToDelete, setCouponToDelete] = useState(null);
+
     useEffect(() => {
-        fetchCoupons();
+        fetchData();
     }, []);
 
-    const fetchCoupons = async () => {
+    const fetchData = async () => {
         try {
-            const res = await fetch('/api/admin/coupons');
+            const [couponsRes, coursesRes, usersRes] = await Promise.all([
+                fetch('/api/admin/coupons'),
+                fetch('/api/courses'),
+                fetch('/api/admin/users')
+            ]);
 
-            if (res.status === 401) {
+            if (couponsRes.status === 401) {
                 setIsAuthorized(false);
                 setLoading(false);
                 return;
             }
 
-            const data = await res.json();
-            if (data.success) setCoupons(data.coupons);
+            const couponsData = await couponsRes.json();
+            const coursesData = await coursesRes.json();
+            const usersData = await usersRes.json();
+
+            if (couponsData.success) setCoupons(couponsData.coupons);
+            if (coursesData.success) setCourses(coursesData.courses);
+            if (usersData.success) setUsers(usersData.users);
+
         } catch (error) {
-            console.error('Failed to fetch coupons');
+            console.error('Failed to fetch data');
+            toast.error('Failed to load data');
         } finally {
             setLoading(false);
         }
@@ -51,24 +74,46 @@ export default function AdminCouponsPage() {
             if (data.success) {
                 setCoupons([data.coupon, ...coupons]);
                 setIsCreating(false);
-                setNewCoupon({ code: '', discountType: 'percentage', discountValue: '', expiryDate: '', maxUses: 100 });
+                setNewCoupon({
+                    code: '',
+                    discountType: 'percentage',
+                    discountValue: '',
+                    expiryDate: '',
+                    maxUses: 100,
+                    applicableCourses: [],
+                    applicableUsers: []
+                });
+                toast.success('Coupon created successfully');
+            } else {
+                toast.error(data.message || 'Failed to create coupon');
             }
         } catch (error) {
-            alert('Failed to create coupon');
+            toast.error('An error occurred');
         }
     };
 
-    const handleDelete = async (id) => {
-        if (!confirm('Are you sure you want to delete this coupon?')) return;
+    const confirmDelete = async () => {
+        if (!couponToDelete) return;
         try {
-            const res = await fetch(`/api/admin/coupons?id=${id}`, { method: 'DELETE' });
+            const res = await fetch(`/api/admin/coupons?id=${couponToDelete}`, { method: 'DELETE' });
             const data = await res.json();
             if (data.success) {
-                setCoupons(coupons.filter(c => c._id !== id));
+                setCoupons(coupons.filter(c => c._id !== couponToDelete));
+                toast.success('Coupon deleted successfully');
+            } else {
+                toast.error(data.message || 'Failed to delete coupon');
             }
         } catch (error) {
-            alert('Failed to delete coupon');
+            toast.error('An error occurred');
+        } finally {
+            setDeleteModalOpen(false);
+            setCouponToDelete(null);
         }
+    };
+
+    const handleDelete = (id) => {
+        setCouponToDelete(id);
+        setDeleteModalOpen(true);
     };
 
     if (loading) return (
@@ -78,6 +123,7 @@ export default function AdminCouponsPage() {
     );
 
     if (!isAuthorized) {
+        // ... (Unauthorized view unchanged)
         return (
             <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
                 <div className="bg-white max-w-md w-full p-8 rounded-2xl border border-slate-200 shadow-xl text-center">
@@ -96,6 +142,15 @@ export default function AdminCouponsPage() {
 
     return (
         <div className="min-h-screen bg-slate-50 pt-24 pb-16 px-4">
+            <Modal
+                isOpen={deleteModalOpen}
+                onClose={() => setDeleteModalOpen(false)}
+                title="Delete Coupon"
+                message="Are you sure you want to delete this coupon? This action cannot be undone if the coupon has not been used."
+                type="danger"
+                confirmText="Yes, Delete"
+                onConfirm={confirmDelete}
+            />
             <div className="max-w-6xl mx-auto">
                 <div className="flex justify-between items-end mb-10">
                     <div>
@@ -169,6 +224,31 @@ export default function AdminCouponsPage() {
                                     className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/20 outline-none transition-all font-bold text-slate-600"
                                 />
                             </div>
+
+                            {/* New Fields: Course & User Selection */}
+                            <div className="md:col-span-1">
+                                <GenericMultiSelect
+                                    label="Restricted to Courses (Optional)"
+                                    placeholder="All Courses"
+                                    options={courses}
+                                    selectedIds={newCoupon.applicableCourses}
+                                    onChange={(ids) => setNewCoupon({ ...newCoupon, applicableCourses: ids })}
+                                    displayKey="title"
+                                    idKey="_id"
+                                />
+                            </div>
+                            <div className="md:col-span-1">
+                                <GenericMultiSelect
+                                    label="Restricted to Users (Optional)"
+                                    placeholder="All Users"
+                                    options={users}
+                                    selectedIds={newCoupon.applicableUsers}
+                                    onChange={(ids) => setNewCoupon({ ...newCoupon, applicableUsers: ids })}
+                                    displayKey="email"
+                                    idKey="_id"
+                                />
+                            </div>
+
                             <div className="flex items-end">
                                 <button type="submit" className="w-full bg-slate-800 text-white py-3 rounded-xl font-bold text-sm hover:bg-slate-900 transition-all">
                                     Create Coupon
@@ -187,7 +267,10 @@ export default function AdminCouponsPage() {
                     ) : (
                         coupons.map(coupon => (
                             <div key={coupon._id} className="bg-white rounded-2xl border border-slate-200 p-6 hover:shadow-lg transition-all group relative overflow-hidden">
-                                <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
+                                    <Link href={`/admin/coupons/${coupon._id}`} className="text-slate-300 hover:text-indigo-600 transition-colors">
+                                        <Edit size={18} />
+                                    </Link>
                                     <button onClick={() => handleDelete(coupon._id)} className="text-slate-300 hover:text-red-500 transition-colors">
                                         <Trash2 size={18} />
                                     </button>
