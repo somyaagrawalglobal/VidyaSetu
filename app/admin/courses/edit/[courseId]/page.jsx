@@ -2,17 +2,21 @@
 
 import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
-import { ChevronLeft, Plus, Trash2, Video, FileText, CheckCircle2 } from 'lucide-react';
+import { ChevronLeft, Plus, Trash2, Video, FileText, CheckCircle2, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import ListInput from '@/components/ListInput';
 import Modal from '@/components/Modal';
 import VideoUploader from '@/components/admin/VideoUploader';
+import FileUploader from '@/components/admin/FileUploader';
+import { AlertCircle, CheckCircle, XCircle, Send } from 'lucide-react';
+import { useToast } from '@/components/ToastContext';
 
 export default function EditCoursePage({ params }) {
     const { courseId } = use(params);
     const router = useRouter();
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
+    const toast = useToast();
     const [modalConfig, setModalConfig] = useState({
         isOpen: false,
         title: '',
@@ -40,10 +44,30 @@ export default function EditCoursePage({ params }) {
         provides: [],
         published: false,
     });
+    const [currentUser, setCurrentUser] = useState(null);
+    const [rejectionReasonInput, setRejectionReasonInput] = useState('');
+    const [isStatusUpdating, setIsStatusUpdating] = useState(false);
 
     useEffect(() => {
         fetchCourse();
+        fetchUser();
     }, [courseId]);
+
+    useEffect(() => {
+        if (formData.rejectionReason) {
+            setRejectionReasonInput(formData.rejectionReason);
+        }
+    }, [formData.rejectionReason]);
+
+    const fetchUser = async () => {
+        try {
+            const res = await fetch('/api/auth/me');
+            const data = await res.json();
+            if (data.user) setCurrentUser(data.user);
+        } catch (error) {
+            console.error('Failed to fetch user:', error);
+        }
+    };
 
     const fetchCourse = async () => {
         try {
@@ -105,13 +129,19 @@ export default function EditCoursePage({ params }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setSaving(true);
-        console.log("[FRONTEND] Submitting form data with modules:", formData.modules.length);
-        if (formData.modules.length > 0 && formData.modules[0].lessons.length > 0) {
-            console.log('[FRONTEND] First lesson sample:', {
-                title: formData.modules[0].lessons[0].title,
-                description: formData.modules[0].lessons[0].description,
-                resources: formData.modules[0].lessons[0].resources
-            });
+
+        // Curriculum Validation
+        if (!formData.modules || formData.modules.length === 0) {
+            openModal({ title: 'Curriculum Required', message: 'Please add at least one section to your course.', type: 'warning', showCancel: false });
+            setSaving(false);
+            return;
+        }
+
+        const totalLessons = formData.modules.reduce((acc, m) => acc + (m.lessons?.length || 0), 0);
+        if (totalLessons === 0) {
+            openModal({ title: 'Lessons Required', message: 'Your curriculum must have at least one lesson.', type: 'warning', showCancel: false });
+            setSaving(false);
+            return;
         }
 
         try {
@@ -132,9 +162,13 @@ export default function EditCoursePage({ params }) {
                 setFormData(data.course);
             }
 
+            if (data.message && data.message.includes('notified')) {
+                toast.success(data.message);
+            }
+
             openModal({
                 title: 'Success',
-                message: 'Course updated successfully!',
+                message: data.message || 'Course updated successfully!',
                 type: 'success',
                 confirmText: 'Go to List',
                 onConfirm: () => router.push('/admin/courses'),
@@ -148,6 +182,60 @@ export default function EditCoursePage({ params }) {
         }
     };
 
+    const handleAdminStatusUpdate = async (status) => {
+        if (status === 'rejected' && !rejectionReasonInput.trim()) {
+            openModal({ title: 'Reason Required', message: 'Please provide a reason for rejection.', type: 'warning', showCancel: false });
+            return;
+        }
+
+        setIsStatusUpdating(true);
+        console.log(`[ADMIN ACTION] Attempting to ${status} course ${courseId}...`);
+        try {
+            const res = await fetch(`/api/courses/${courseId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    approvalStatus: status,
+                    rejectionReason: status === 'rejected' ? rejectionReasonInput : null
+                }),
+            });
+
+            const data = await res.json();
+            console.log(`[ADMIN ACTION] Server response:`, data);
+
+            if (data.success) {
+                // Use the full course object from server if available, else update local
+                if (data.course) {
+                    setFormData(data.course);
+                } else {
+                    setFormData(prev => ({
+                        ...prev,
+                        approvalStatus: status,
+                        rejectionReason: status === 'rejected' ? rejectionReasonInput : null
+                    }));
+                }
+
+                if (data.message) {
+                    toast.success(data.message);
+                }
+
+                openModal({
+                    title: status === 'approved' ? 'Course Approved' : 'Course Rejected',
+                    message: data.message || `The course has been successfully ${status}.`,
+                    type: status === 'approved' ? 'success' : 'info',
+                    showCancel: false
+                });
+            } else {
+                throw new Error(data.message || data.error || 'Failed to update status');
+            }
+        } catch (error) {
+            console.error("[ADMIN ACTION] Error:", error);
+            openModal({ title: 'Error', message: error.message, type: 'danger', showCancel: false });
+        } finally {
+            setIsStatusUpdating(false);
+        }
+    };
+
     if (loading) return (
         <div className="flex items-center justify-center min-h-screen bg-slate-50 pt-24">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
@@ -155,21 +243,124 @@ export default function EditCoursePage({ params }) {
     );
 
     return (
-        <div className="min-h-screen bg-slate-50 pt-28 pb-12 px-4 sm:px-6 lg:px-8 font-sans">
+        <div className="min-h-screen bg-slate-50 pt-20 pb-12 px-4 sm:px-6 lg:px-8 font-sans">
             <div className="max-w-5xl mx-auto">
 
                 {/* Header */}
-                <div className="flex items-center justify-between mb-8">
-                    <div className="flex items-center gap-4">
-                        <Link href="/admin/courses" className="p-2 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 text-gray-500 transition-colors">
-                            <ChevronLeft className="w-5 h-5" />
+                <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center gap-3">
+                        <Link href="/admin/courses" className="p-1.5 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 text-gray-500 transition-colors shadow-sm">
+                            <ChevronLeft className="w-4 h-4" />
                         </Link>
                         <div>
-                            <h1 className="text-2xl font-bold text-slate-900">Edit Course</h1>
-                            <p className="text-slate-500 text-sm">Update content and settings for this course.</p>
+                            <h1 className="text-xl font-extrabold text-slate-900 tracking-tight">Edit Course</h1>
+                            <div className="flex items-center gap-2">
+                                <p className="text-slate-400 text-[11px] font-medium uppercase tracking-wider">Course Configuration</p>
+                                <div className={`inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest ${formData.approvalStatus === 'approved' ? 'bg-emerald-50 text-emerald-700 border border-emerald-100' :
+                                    formData.approvalStatus === 'rejected' ? 'bg-red-50 text-red-700 border border-red-100' :
+                                        'bg-amber-50 text-amber-700 border border-amber-100'
+                                    }`}>
+                                    {formData.approvalStatus || 'pending'}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+                {/* Admin Approval Section */}
+                {currentUser?.roles.includes('Admin') && (
+                    <div className="bg-white rounded-2xl shadow-sm border border-indigo-100 p-5 mb-8 relative overflow-hidden group hover:border-indigo-200 transition-colors">
+                        <div className="absolute top-0 right-0 p-4 opacity-[0.03] group-hover:opacity-[0.05] transition-opacity pointer-events-none">
+                            <AlertCircle className="w-16 h-16 text-indigo-900" />
+                        </div>
+
+                        <div className="relative z-10">
+                            <div className="flex items-center justify-between mb-4">
+                                <div className="flex items-center gap-2">
+                                    <div className="p-1.5 bg-indigo-50 text-indigo-600 rounded-lg">
+                                        <AlertCircle className="w-4 h-4" />
+                                    </div>
+                                    <h2 className="text-sm font-black text-slate-800 uppercase tracking-widest">
+                                        Admin Review Portal
+                                    </h2>
+                                </div>
+                                <span className="text-[10px] font-bold text-slate-400 italic">Visibility & Compliance Check</span>
+                            </div>
+
+                            <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+                                <div className="lg:col-span-12 xl:col-span-8">
+                                    <textarea
+                                        placeholder="Provide specific feedback if rejecting (e.g., 'Lesson 3 needs better audio', 'Incorrect category selected')..."
+                                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all placeholder:text-slate-400 text-sm min-h-[80px] resize-none"
+                                        value={rejectionReasonInput}
+                                        onChange={(e) => setRejectionReasonInput(e.target.value)}
+                                    />
+                                </div>
+                                <div className="lg:col-span-12 xl:col-span-4 flex flex-col sm:flex-row xl:flex-col gap-3 h-full justify-between">
+                                    {formData.approvalStatus !== 'approved' && (
+                                        <button
+                                            type="button"
+                                            disabled={isStatusUpdating}
+                                            onClick={() => handleAdminStatusUpdate('approved')}
+                                            className="flex-1 px-6 py-3 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white rounded-xl font-bold text-xs transition flex items-center justify-center gap-2 shadow-md shadow-emerald-200 active:scale-95"
+                                        >
+                                            {isStatusUpdating ? (
+                                                <>
+                                                    <Loader2 className="w-4 h-4 animate-spin" />
+                                                    APPROVING...
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <CheckCircle className="w-4 h-4" />
+                                                    APPROVE COURSE
+                                                </>
+                                            )}
+                                        </button>
+                                    )}
+                                    <button
+                                        type="button"
+                                        disabled={isStatusUpdating}
+                                        onClick={() => handleAdminStatusUpdate('rejected')}
+                                        className={`flex-1 px-6 py-3 disabled:opacity-50 rounded-xl font-bold text-xs transition flex items-center justify-center gap-2 active:scale-95 ${formData.approvalStatus === 'rejected'
+                                            ? 'bg-amber-500 text-white shadow-md shadow-amber-100 hover:bg-amber-600'
+                                            : 'bg-white text-red-600 border border-red-200 hover:bg-red-50'
+                                            }`}
+                                    >
+                                        {isStatusUpdating ? (
+                                            <>
+                                                <Loader2 className="w-4 h-4 animate-spin" />
+                                                PROCESSING...
+                                            </>
+                                        ) : (
+                                            <>
+                                                <XCircle className="w-4 h-4" />
+                                                {formData.approvalStatus === 'rejected' ? 'UPDATE FEEDBACK' : 'REJECT WITH REASON'}
+                                            </>
+                                        )}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* Rejection Reason display for Instructor */}
+                {formData.approvalStatus === 'rejected' && formData.rejectionReason && (
+                    <div className="bg-red-50 border border-red-100 rounded-2xl p-6 mb-8 flex items-start gap-4">
+                        <div className="p-3 bg-red-100 text-red-600 rounded-xl">
+                            <XCircle className="w-6 h-6" />
+                        </div>
+                        <div>
+                            <h3 className="text-red-900 font-bold mb-1">Course Rejected</h3>
+                            <p className="text-red-700 text-sm leading-relaxed">
+                                <span className="font-semibold">Reason:</span> {formData.rejectionReason}
+                            </p>
+                            <p className="text-red-500 text-xs mt-3 italic">
+                                Please address the issues mentioned above and resave the course. It will be returned to 'Pending' status automatically.
+                            </p>
+                        </div>
+                    </div>
+                )}
 
                 <form onSubmit={handleSubmit} className="space-y-8">
                     {/* Basic Info Card */}
@@ -283,15 +474,18 @@ export default function EditCoursePage({ params }) {
                             </div>
 
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">Thumbnail URL</label>
-                                <input
-                                    type="url"
-                                    required
-                                    placeholder="https://..."
-                                    className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all"
-                                    value={formData.thumbnail}
-                                    onChange={(e) => setFormData({ ...formData, thumbnail: e.target.value })}
+                                <label className="block text-sm font-semibold text-gray-700 mb-2">Course Thumbnail</label>
+                                <FileUploader
+                                    type="thumbnail"
+                                    initialUrl={formData.thumbnail}
+                                    onUploadSuccess={(url) => setFormData({ ...formData, thumbnail: url })}
+                                    accept="image/*"
                                 />
+                                {formData.thumbnail && (
+                                    <p className="mt-2 text-xs text-slate-400 break-all font-mono bg-slate-50 p-2 rounded-lg border border-slate-100">
+                                        URL: {formData.thumbnail}
+                                    </p>
+                                )}
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4">
@@ -432,17 +626,17 @@ export default function EditCoursePage({ params }) {
                                                                     setFormData({ ...formData, modules: newModules });
                                                                 }}
                                                             />
-                                                            <input
-                                                                type="url"
-                                                                placeholder="Link/URL"
-                                                                className="md:col-span-3 px-2 py-1.5 border border-gray-200 rounded-md text-xs font-mono"
-                                                                value={res.url}
-                                                                onChange={(e) => {
-                                                                    const newModules = structuredClone(formData.modules);
-                                                                    newModules[mIndex].lessons[lIndex].resources[rIndex].url = e.target.value;
-                                                                    setFormData({ ...formData, modules: newModules });
-                                                                }}
-                                                            />
+                                                            <div className="md:col-span-3">
+                                                                <FileUploader
+                                                                    type="resource"
+                                                                    initialUrl={res.url}
+                                                                    onUploadSuccess={(url) => {
+                                                                        const newModules = structuredClone(formData.modules);
+                                                                        newModules[mIndex].lessons[lIndex].resources[rIndex].url = url;
+                                                                        setFormData({ ...formData, modules: newModules });
+                                                                    }}
+                                                                />
+                                                            </div>
                                                             <button
                                                                 type="button"
                                                                 onClick={() => {
@@ -496,9 +690,16 @@ export default function EditCoursePage({ params }) {
                         <button
                             type="submit"
                             disabled={saving}
-                            className="w-full bg-slate-900 text-white py-4 rounded-xl text-lg font-bold hover:bg-slate-800 transition shadow-lg shadow-slate-200"
+                            className="w-full bg-slate-900 text-white py-4 rounded-xl text-lg font-bold hover:bg-slate-800 transition shadow-lg shadow-slate-200 flex items-center justify-center gap-2"
                         >
-                            {saving ? 'Updating Course...' : 'Update Course'}
+                            {saving ? (
+                                <>
+                                    <Loader2 className="w-5 h-5 animate-spin" />
+                                    UPDATING COURSE...
+                                </>
+                            ) : (
+                                'UPDATE COURSE'
+                            )}
                         </button>
                     </div>
                 </form>

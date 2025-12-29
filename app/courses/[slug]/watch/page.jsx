@@ -13,7 +13,7 @@ export default function WatchCoursePage({ params }) {
     const [activeLesson, setActiveLesson] = useState(null);
     const [completedLessons, setCompletedLessons] = useState([]);
     const [error, setError] = useState(null);
-    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Mobile sidebar hidden by default
 
     useEffect(() => {
         const fetchCourseAndProgress = async () => {
@@ -106,6 +106,7 @@ export default function WatchCoursePage({ params }) {
                 courseTitle={course.title}
                 slug={slug}
                 progress={progressPercentage}
+                onMenuToggle={() => setIsSidebarOpen(true)}
             />
 
             <div className="flex-1 flex overflow-hidden relative">
@@ -114,6 +115,8 @@ export default function WatchCoursePage({ params }) {
                     activeLesson={activeLesson}
                     onLessonSelect={setActiveLesson}
                     completedLessons={completedLessons}
+                    isOpen={isSidebarOpen}
+                    onClose={() => setIsSidebarOpen(false)}
                 />
 
                 <WatchContent

@@ -65,6 +65,15 @@ const CourseSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
+    approvalStatus: {
+        type: String,
+        enum: ['pending', 'approved', 'rejected'],
+        default: 'pending',
+    },
+    rejectionReason: {
+        type: String,
+        default: null,
+    },
     isDeleted: {
         type: Boolean,
         default: false,

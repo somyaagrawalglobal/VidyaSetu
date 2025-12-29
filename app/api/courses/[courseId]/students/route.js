@@ -51,10 +51,13 @@ export async function GET(request, { params }) {
             status: 'completed'
         }).populate('user', 'firstName lastName email profileImage');
 
-        // 2. Get total lessons in course for progress calculation
+        // 2. Calculate Total Earnings
+        const totalEarnings = enrollments.reduce((sum, order) => sum + (order.actualAmount || 0), 0);
+
+        // 3. Get total lessons in course for progress calculation
         const totalLessons = await Lesson.countDocuments({ course: course._id });
 
-        // 3. For each enrollment, get progress
+        // 4. For each enrollment, get progress
         const studentData = await Promise.all(enrollments.map(async (order) => {
             const progress = await Progress.findOne({ user: order.user._id, course: course._id });
             const completedCount = progress ? progress.completedLessons.length : 0;
@@ -72,7 +75,12 @@ export async function GET(request, { params }) {
             };
         }));
 
-        return NextResponse.json({ success: true, students: studentData, courseTitle: course.title });
+        return NextResponse.json({
+            success: true,
+            students: studentData,
+            courseTitle: course.title,
+            totalEarnings
+        });
     } catch (error) {
         return NextResponse.json({ success: false, error: error.message }, { status: 500 });
     }

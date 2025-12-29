@@ -19,7 +19,7 @@ export default function UserEnrollmentsPage({ params }) {
     const [enrollments, setEnrollments] = useState([]);
     const [userName, setUserName] = useState('');
     const [loading, setLoading] = useState(true);
-    const { toast } = useToast();
+    const toast = useToast();
 
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedEnrollment, setSelectedEnrollment] = useState(null);

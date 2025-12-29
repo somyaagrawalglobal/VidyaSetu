@@ -40,3 +40,14 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 env.local
+/public/uploads/*
+/public/uploads/courses/resources/*
+/public/uploads/courses/thumbnails/*
+
+# Uploaded files
+public/uploads/
+uploads/
+*.mp4
+*.mov
+*.avi
+

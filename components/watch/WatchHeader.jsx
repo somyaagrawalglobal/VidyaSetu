@@ -1,14 +1,20 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { ChevronLeft, Trophy } from 'lucide-react';
+import { ChevronLeft, Trophy, Menu } from 'lucide-react';
 
-export default function WatchHeader({ courseTitle, slug, progress }) {
+export default function WatchHeader({ courseTitle, slug, progress, onMenuToggle }) {
     const router = useRouter();
 
     return (
         <header className="h-16 bg-slate-900 border-b border-slate-800 flex items-center justify-between px-4 lg:px-6 sticky top-0 z-30">
-            <div className="flex items-center gap-4 min-w-0">
+            <div className="flex items-center gap-2 sm:gap-4 min-w-0">
+                <button
+                    onClick={onMenuToggle}
+                    className="p-2 lg:hidden hover:bg-slate-800 rounded-lg text-slate-400 hover:text-white transition-colors flex-shrink-0"
+                >
+                    <Menu className="w-5 h-5" />
+                </button>
                 <button
                     onClick={() => router.back()}
                     className="p-2 hover:bg-slate-800 rounded-lg text-slate-400 hover:text-white transition-colors flex-shrink-0"

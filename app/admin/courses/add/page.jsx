@@ -7,10 +7,13 @@ import Link from 'next/link';
 import ListInput from '@/components/ListInput';
 import Modal from '@/components/Modal';
 import VideoUploader from '@/components/admin/VideoUploader';
+import FileUploader from '@/components/admin/FileUploader';
+import { useToast } from '@/components/ToastContext';
 
 export default function AddCoursePage() {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
+    const toast = useToast();
     const [modalConfig, setModalConfig] = useState({
         isOpen: false,
         title: '',
@@ -76,6 +79,20 @@ export default function AddCoursePage() {
         e.preventDefault();
         setLoading(true);
 
+        // Curriculum Validation
+        if (!formData.modules || formData.modules.length === 0) {
+            openModal({ title: 'Curriculum Required', message: 'Please add at least one section to your course.', type: 'warning', showCancel: false });
+            setLoading(false);
+            return;
+        }
+
+        const totalLessons = formData.modules.reduce((acc, m) => acc + (m.lessons?.length || 0), 0);
+        if (totalLessons === 0) {
+            openModal({ title: 'Lessons Required', message: 'Your curriculum must have at least one lesson.', type: 'warning', showCancel: false });
+            setLoading(false);
+            return;
+        }
+
         console.log('[FRONTEND] Submitting course with modules:', formData.modules.length);
         if (formData.modules.length > 0 && formData.modules[0].lessons.length > 0) {
             console.log('[FRONTEND] First lesson sample:', {
@@ -101,9 +118,13 @@ export default function AddCoursePage() {
                 setFormData(data.course);
             }
 
+            if (data.message && data.message.includes('notified')) {
+                toast.success(data.message);
+            }
+
             openModal({
                 title: 'Success',
-                message: 'Course created successfully!',
+                message: data.message || 'Course created successfully!',
                 type: 'success',
                 confirmText: 'Go to List',
                 onConfirm: () => router.push('/admin/courses'),
@@ -244,15 +265,18 @@ export default function AddCoursePage() {
                             </div>
 
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">Thumbnail URL</label>
-                                <input
-                                    type="url"
-                                    required
-                                    placeholder="https://..."
-                                    className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all"
-                                    value={formData.thumbnail}
-                                    onChange={(e) => setFormData({ ...formData, thumbnail: e.target.value })}
+                                <label className="block text-sm font-semibold text-gray-700 mb-2">Course Thumbnail</label>
+                                <FileUploader
+                                    type="thumbnail"
+                                    initialUrl={formData.thumbnail}
+                                    onUploadSuccess={(url) => setFormData({ ...formData, thumbnail: url })}
+                                    accept="image/*"
                                 />
+                                {formData.thumbnail && (
+                                    <p className="mt-2 text-xs text-slate-400 break-all font-mono bg-slate-50 p-2 rounded-lg border border-slate-100">
+                                        URL: {formData.thumbnail}
+                                    </p>
+                                )}
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4">
@@ -393,17 +417,17 @@ export default function AddCoursePage() {
                                                                     setFormData({ ...formData, modules: newModules });
                                                                 }}
                                                             />
-                                                            <input
-                                                                type="url"
-                                                                placeholder="Link/URL"
-                                                                className="md:col-span-3 px-2 py-1.5 border border-gray-200 rounded-md text-xs font-mono"
-                                                                value={res.url}
-                                                                onChange={(e) => {
-                                                                    const newModules = structuredClone(formData.modules);
-                                                                    newModules[mIndex].lessons[lIndex].resources[rIndex].url = e.target.value;
-                                                                    setFormData({ ...formData, modules: newModules });
-                                                                }}
-                                                            />
+                                                            <div className="md:col-span-3">
+                                                                <FileUploader
+                                                                    type="resource"
+                                                                    initialUrl={res.url}
+                                                                    onUploadSuccess={(url) => {
+                                                                        const newModules = structuredClone(formData.modules);
+                                                                        newModules[mIndex].lessons[lIndex].resources[rIndex].url = url;
+                                                                        setFormData({ ...formData, modules: newModules });
+                                                                    }}
+                                                                />
+                                                            </div>
                                                             <button
                                                                 type="button"
                                                                 onClick={() => {

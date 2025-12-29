@@ -31,9 +31,16 @@ export async function middleware(req) {
         }
     }
 
+    // Protect legacy resource URLs by rewriting them to the branded viewer page
+    if (pathname.startsWith('/uploads/courses/resources/')) {
+        const filename = pathname.split('/').pop();
+        const viewerUrl = new URL(`/resources/${filename}`, req.url);
+        return NextResponse.rewrite(viewerUrl);
+    }
+
     return NextResponse.next();
 }
 
 export const config = {
-    matcher: ['/dashboard/:path*', '/profile/:path*'],
+    matcher: ['/dashboard/:path*', '/profile/:path*', '/uploads/courses/resources/:path*'],
 };

@@ -8,7 +8,7 @@ import GenericMultiSelect from '@/components/GenericMultiSelect';
 import Modal from '@/components/Modal';
 
 export default function AdminCouponsPage() {
-    const { toast } = useToast();
+    const toast = useToast();
     const [coupons, setCoupons] = useState([]);
     const [courses, setCourses] = useState([]);
     const [users, setUsers] = useState([]);
