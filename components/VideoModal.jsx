@@ -63,8 +63,9 @@ export default function VideoModal({ videoId }) {
                         <div className="relative pt-[56.25%] rounded-xl overflow-hidden shadow-2xl border-4 border-white">
                             <iframe
                                 className="absolute inset-0 w-full h-full"
-                                // Ensures the video starts playing automatically when the modal opens
-                                src={`https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`} 
+                                // UPDATED SOURCE: Keeping controls=0 (hides controls) and modestbranding=1 (hides logo) 
+                                // to achieve the most minimalist player possible under current YouTube API rules.
+                                src={`https://www.youtube.com/embed/${videoId}?autoplay=1&controls=0&modestbranding=1`} 
                                 title="Course Preview Video"
                                 frameBorder="0"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

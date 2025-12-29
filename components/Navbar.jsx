@@ -1,8 +1,10 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
-import { Menu, X, User, LogOut, ChevronDown } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { Menu, X, User, LogOut, ChevronDown, LayoutDashboard, Settings } from "lucide-react";
 import { useAuth } from "./AuthProvider";
 
 const navItems = [
@@ -17,6 +19,8 @@ export default function Navbar() {
   const [profileOpen, setProfileOpen] = useState(false);
   const { user, logout } = useAuth();
   const profileRef = useRef(null);
+
+  const pathname = usePathname();
 
   const toggleMenu = () => setOpen(!open);
 
@@ -36,147 +40,244 @@ export default function Navbar() {
   const handleLogout = async () => {
     await logout();
     setProfileOpen(false);
-    setOpen(false);
+    setOpen(false); // Close mobile menu upon logout
   };
 
   return (
-    <nav className="fixed w-full z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100 shadow-lg print:hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex justify-between items-center">
-        {/* Logo Section */}
-        <Link href="/" className="text-3xl font-extrabold tracking-tight transition-transform duration-300 hover:scale-[1.02]">
-          {/* Vidya<span className="text-indigo-600">-Setu</span> */}
-          COM<span className="text-indigo-600">-ED</span>
-        </Link>
+    // UI Improvement 1: Add backdrop-blur and a subtle shadow for a modern "glassy" sticky effect
+    <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-lg border-b border-slate-200/60 shadow-sm">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Adjusted h-16 (4rem) is standard and clean for h-18 was non-standard */}
+        <div className="flex justify-between items-center h-16"> 
 
-        {/* Desktop Navigation Links */}
-        <div className="hidden md:flex items-center space-x-8">
-          {navItems.map((item) => (
+          {/* Logo Section - *OPTIMIZED SIZE* */}
+          <div className="flex-shrink-0 flex items-center">
             <Link
-              key={item.name}
-              href={item.href}
-              className="text-gray-700 font-medium text-md relative group transition-colors duration-200 hover:text-indigo-600"
+              href="/"
+              className="flex items-center gap-2 group"
             >
-              {item.name}
-              <span className="absolute bottom-[-4px] left-0 w-full h-[2px] bg-indigo-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+              {/* *FIX*: Using w-12 h-12 (3rem) for a standard, clean logo size */}
+              <div className="relative w-12 h-12 flex items-center justify-center transition-all duration-300 transform group-hover:scale-105">
+                {/* Image component needs a parent with defined w/h for 'fill' */}
+                <Image
+                  src="/assets/images/brand-logo.png"
+                  alt="Vidya-Setu Logo"
+                  fill
+                  className="object-contain"
+                  priority
+                />
+              </div>
+
+              <span className="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-900">
+                Vidya<span className="text-indigo-600 font-bold">-Setu</span>
+              </span>
             </Link>
-          ))}
+          </div>
 
-          {/* Auth Section */}
-          {user ? (
-            <div className="relative ml-4" ref={profileRef}>
-              <button
-                onClick={() => setProfileOpen(!profileOpen)}
-                className="flex items-center gap-2 py-2 px-4 text-gray-700 hover:text-indigo-600 font-medium transition-colors"
-              >
-                <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600">
-                  <User size={18} />
-                </div>
-                <span>{user.firstName}</span>
-                <ChevronDown size={16} className={`transform transition-transform ${profileOpen ? 'rotate-180' : ''}`} />
-              </button>
+          {/* Desktop Navigation Links */}
+          <div className="hidden md:flex items-center space-x-1">
+            {navItems.map((item) => {
+              const isActive = item.href === pathname || (item.href !== '/' && pathname.startsWith(item.href));
 
-              {/* Dropdown Menu */}
-              {profileOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 py-1 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
-                  <div className="px-4 py-3 border-b border-gray-50 bg-gray-50/50">
-                    <p className="text-sm font-semibold text-gray-900">{user.firstName} {user.lastName}</p>
-                    <p className="text-xs text-gray-500 truncate">{user.email}</p>
+              // Refined active link styling (using a slightly bolder look)
+              const linkClasses = isActive
+                ? "px-4 py-2 text-sm font-bold text-indigo-700 bg-indigo-100 rounded-full transition-all duration-200"
+                : "px-4 py-2 text-sm font-medium text-slate-700 hover:text-indigo-600 hover:bg-indigo-50 rounded-full transition-all duration-200";
+
+              return (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className={linkClasses}
+                >
+                  {item.name}
+                </Link>
+              );
+            })}
+
+            <div className="h-6 w-px bg-slate-200 mx-4" />
+
+            {/* Auth Section */}
+            {user ? (
+              <div className="relative" ref={profileRef}>
+                {/* UI Improvement 3: Polished Profile Button (Removed lg:inline from name span for better consistency) */}
+                <button
+                  onClick={() => setProfileOpen(!profileOpen)}
+                  className={`flex items-center gap-2 py-1.5 pl-1 pr-3 rounded-full border transition-all duration-200 
+                    ${profileOpen
+                      ? "bg-indigo-50 border-indigo-300 ring-2 ring-indigo-200 shadow-md"
+                      : "border-gray-200 hover:bg-slate-50"
+                    }`}
+                >
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-white shadow-lg shadow-indigo-300/50">
+                    <span className="text-xs font-bold">{user.firstName?.charAt(0)}</span>
                   </div>
-                  <Link
-                    href="/profile"
-                    className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
-                    onClick={() => setProfileOpen(false)}
-                  >
-                    <User size={16} />
-                    My Profile
-                  </Link>
-                  <Link
-                    href="/dashboard"
-                    className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
-                    onClick={() => setProfileOpen(false)}
-                  >
-                    <User size={16} />
-                    {user.roles.includes('Admin') ? 'Admin Dashboard' :
-                      user.roles.includes('Instructor') ? 'Instructor Console' : 'Student Dashboard'}
-                  </Link>
+                  <div className="flex items-center gap-1">
+                    {/* User's full name visible on all desktop sizes (md and up) */}
+                    <span className="text-sm font-semibold text-slate-800">{user.firstName}</span>
+                    <ChevronDown size={14} className={`text-slate-500 transition-transform duration-200 ${profileOpen ? 'rotate-180' : ''}`} />
+                  </div>
+                </button>
 
-                  <button
-                    onClick={handleLogout}
-                    className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors text-left"
-                  >
-                    <LogOut size={16} />
-                    Sign out
-                  </button>
-                </div>
-              )}
-            </div>
-          ) : (
-            <button className="ml-4 py-2 px-6 text-white font-semibold bg-indigo-600 rounded-full shadow-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out transform hover:-translate-y-0.5">
-              <Link href={"/login"}>Get Started</Link>
-            </button>
-          )}
+                {/* Dropdown Menu (Animation utility included) */}
+                {profileOpen && (
+                  <div className="absolute right-0 mt-3 w-64 bg-white rounded-xl shadow-2xl ring-1 ring-black/5 focus:outline-none animate-in fade-in slide-in-from-top-2 duration-200 overflow-hidden">
 
+                    {/* User Header in Dropdown */}
+                    <div className="px-5 py-4 bg-indigo-50/50 border-b border-indigo-100">
+                      <p className="text-sm font-extrabold text-slate-900">{user.firstName} {user.lastName}</p>
+                      <p className="text-xs text-indigo-700 truncate mt-0.5">{user.email}</p>
+                    </div>
+
+                    <div className="p-2 space-y-1">
+                      <Link
+                        href="/profile"
+                        className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-slate-700 rounded-lg hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
+                        onClick={() => setProfileOpen(false)}
+                      >
+                        <User size={16} />
+                        My Profile
+                      </Link>
+
+                      <Link
+                        href="/dashboard"
+                        className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-slate-700 rounded-lg hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
+                        onClick={() => setProfileOpen(false)}
+                      >
+                        <LayoutDashboard size={16} />
+                        {user.roles && user.roles.includes('Admin') ? 'Admin Dashboard' :
+                          user.roles && user.roles.includes('Instructor') ? 'Instructor Console' : 'Student Dashboard'}
+                      </Link>
+                    </div>
+
+                    <div className="p-2 border-t border-slate-100">
+                      <button
+                        onClick={handleLogout}
+                        className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-red-600 rounded-lg hover:bg-red-50 transition-colors text-left"
+                      >
+                        <LogOut size={16} />
+                        Sign out
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              // UI Improvement 4: Use the premium button style for Get Started
+              <div className="flex items-center gap-4">
+                <Link
+                  href="/login"
+                  className="text-sm font-medium text-slate-700 hover:text-indigo-600 transition-colors"
+                >
+                  Log in
+                </Link>
+                <Link
+                  href="/register"
+                  className="px-5 py-2 text-sm font-semibold text-white bg-indigo-600 rounded-full shadow-lg shadow-indigo-300/50 hover:bg-indigo-700 transition-all duration-200 active:scale-[0.98]"
+                >
+                  Get Started
+                </Link>
+              </div>
+            )}
+          </div>
+
+          {/* Mobile Menu Button (No major change needed, already clean) */}
+          <button
+            onClick={toggleMenu}
+            className="md:hidden p-2 rounded-lg text-slate-700 hover:bg-slate-100 transition-colors"
+            aria-label="Toggle menu"
+          >
+            {open ? <X size={24} /> : <Menu size={24} />}
+          </button>
         </div>
-
-        {/* Mobile Menu Button */}
-        <button
-          onClick={toggleMenu}
-          className="md:hidden p-2 text-gray-700 hover:text-indigo-600 transition-colors duration-200"
-          aria-label="Toggle menu"
-        >
-          {open ? <X size={24} /> : <Menu size={24} />}
-        </button>
       </div>
 
-      {/* Mobile Menu Dropdown */}
+      {/* Mobile Menu Dropdown - *ANIMATION REFINED* */}
       <div
-        className={`md:hidden absolute w-full transition-all duration-300 ease-in-out overflow-hidden ${open ? "max-h-[500px] opacity-100 py-2 border-b border-gray-100 shadow-xl" : "max-h-0 opacity-0"
-          } bg-white`}
+        className={`md:hidden absolute w-full bg-white transition-all duration-300 ease-in-out ${open ? "max-h-[600px] opacity-100 shadow-xl border-t border-slate-200" : "max-h-0 opacity-0"
+          } overflow-hidden`}
       >
-        <div className="px-4 sm:px-6 space-y-3 flex flex-col pb-4">
-          {navItems.map((item) => (
-            <Link
-              key={item.name}
-              href={item.href}
-              onClick={toggleMenu}
-              className="text-gray-700 font-medium text-lg py-2 hover:bg-indigo-50/50 px-3 rounded-lg transition-colors duration-200"
-            >
-              {item.name}
-            </Link>
-          ))}
+        <div className="px-4 py-6 space-y-2">
+          {navItems.map((item) => {
+            const isActive = item.href === pathname || (item.href !== '/' && pathname.startsWith(item.href));
 
+            // Mobile link styling consistency
+            const mobileLinkClasses = isActive
+              ? "block px-4 py-3 text-base font-bold text-indigo-700 bg-indigo-100 rounded-xl transition-colors"
+              : "block px-4 py-3 text-base font-medium text-slate-700 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-colors";
+
+            return (
+              <Link
+                key={item.name}
+                href={item.href}
+                onClick={toggleMenu}
+                className={mobileLinkClasses}
+              >
+                {item.name}
+              </Link>
+            );
+          })}
+
+          {/* Auth Sections for Mobile */}
           {user ? (
-            <div className="mt-4 pt-4 border-t border-gray-100 space-y-2">
-              <div className="px-3 py-2 flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold">
+            <div className="mt-6 pt-6 border-t border-slate-200">
+              <div className="flex items-center gap-4 px-4 mb-4">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-white font-bold shadow-md">
                   {user.firstName[0]}
                 </div>
                 <div>
-                  <p className="font-semibold text-gray-900">{user.firstName} {user.lastName}</p>
-                  <p className="text-xs text-gray-500">{user.email}</p>
+                  <p className="font-semibold text-slate-900">{user.firstName} {user.lastName}</p>
+                  <p className="text-sm text-slate-500">{user.email}</p>
                 </div>
               </div>
-              <Link
-                href="/dashboard"
-                onClick={toggleMenu}
-                className="flex items-center gap-2 text-gray-700 font-medium text-lg py-2 hover:bg-indigo-50/50 px-3 rounded-lg transition-colors duration-200"
-              >
-                <User size={18} />
-                {user.roles.includes('Admin') ? 'Admin Dashboard' :
-                  user.roles.includes('Instructor') ? 'Instructor Console' : 'Student Dashboard'}
-              </Link>
-              <button
-                onClick={handleLogout}
-                className="w-full flex items-center gap-2 text-red-600 font-medium text-lg py-2 hover:bg-red-50 px-3 rounded-lg transition-colors duration-200 text-left"
-              >
-                <LogOut size={18} />
-                Sign Out
-              </button>
+
+              <div className="space-y-1">
+                {/* Mobile Link for Dashboard */}
+                <Link
+                  href="/dashboard"
+                  onClick={toggleMenu}
+                  className="flex items-center gap-3 px-4 py-3 text-base font-medium text-slate-700 hover:bg-indigo-50 rounded-xl hover:text-indigo-600"
+                >
+                  <LayoutDashboard size={18} />
+                  Dashboard
+                </Link>
+                {/* Mobile Link for Profile/Settings */}
+                <Link
+                  href="/profile"
+                  onClick={toggleMenu}
+                  className="flex items-center gap-3 px-4 py-3 text-base font-medium text-slate-700 hover:bg-indigo-50 rounded-xl hover:text-indigo-600"
+                >
+                  <Settings size={18} />
+                  Settings
+                </Link>
+                {/* Mobile Sign Out Button */}
+                <button
+                  onClick={handleLogout}
+                  className="w-full flex items-center gap-3 px-4 py-3 text-base font-medium text-red-600 hover:bg-red-50 rounded-xl text-left"
+                >
+                  <LogOut size={18} />
+                  Sign Out
+                </button>
+              </div>
             </div>
           ) : (
-            <button className="mt-2 w-full py-2 px-6 text-white font-semibold bg-indigo-600 rounded-lg shadow-md hover:bg-indigo-700 transition-colors duration-200">
-              <Link href={"/login"} onClick={toggleMenu} className="block w-full h-full">Get Started</Link>
-            </button>
+            // Mobile Auth Buttons (Style unified)
+            <div className="mt-6 pt-6 border-t border-slate-200 px-4 space-y-3">
+              <Link
+                href="/login"
+                onClick={toggleMenu}
+                className="block w-full py-3 text-center text-base font-semibold text-slate-700 bg-slate-100 rounded-xl hover:bg-slate-200 transition-colors"
+              >
+                Log in
+              </Link>
+              <Link
+                href="/register"
+                onClick={toggleMenu}
+                className="block w-full py-3 text-center text-base font-semibold text-white bg-indigo-600 rounded-xl shadow-lg shadow-indigo-300/50 hover:bg-indigo-700 transition-colors"
+              >
+                Get Started
+              </Link>
+            </div>
           )}
         </div>
       </div>
