@@ -54,6 +54,17 @@ export async function DELETE(req) {
 
         await dbConnect();
 
+        // Check if coupon exists and has usage
+        const existingCoupon = await Coupon.findById(id);
+        if (!existingCoupon) {
+            return NextResponse.json({ success: false, message: 'Coupon not found' }, { status: 404 });
+        }
+
+        if (existingCoupon.currentUses > 0) {
+            // If used, only allow deactivation (which might be handled via PUT, but here we block delete)
+            return NextResponse.json({ success: false, message: 'Cannot delete a coupon that has been used. Please mark it as expired instead.' }, { status: 400 });
+        }
+
         // Soft delete - set isDeleted flag and timestamp instead of removing
         const coupon = await Coupon.findByIdAndUpdate(
             id,

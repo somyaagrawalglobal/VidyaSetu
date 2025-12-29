@@ -69,7 +69,12 @@ export async function GET(request, { params }) {
             const instructorId = (course.instructor?._id || course.instructor || "").toString();
             isInstructor = instructorId === currentUser._id.toString();
 
-            const enrollment = await Order.findOne({ user: currentUser._id, course: course._id, status: 'completed' });
+            const enrollment = await Order.findOne({
+                user: currentUser._id,
+                course: course._id,
+                status: 'completed',
+                accessStatus: { $ne: 'blocked' }
+            });
             if (enrollment) isEnrolled = true;
         }
 

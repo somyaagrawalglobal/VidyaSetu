@@ -6,6 +6,7 @@ import { ChevronLeft, Plus, Trash2, Video, FileText, CheckCircle2 } from 'lucide
 import Link from 'next/link';
 import ListInput from '@/components/ListInput';
 import Modal from '@/components/Modal';
+import VideoUploader from '@/components/admin/VideoUploader';
 
 export default function EditCoursePage({ params }) {
     const { courseId } = use(params);
@@ -377,20 +378,19 @@ export default function EditCoursePage({ params }) {
                                             </div>
 
                                             <div className="flex-1 space-y-4 w-full">
-                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <div className="space-y-4">
                                                     <input
                                                         type="text"
                                                         placeholder="Lesson Title"
-                                                        className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-sm font-semibold"
+                                                        className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-sm font-bold"
                                                         value={lesson.title}
                                                         onChange={(e) => updateLesson(mIndex, lIndex, 'title', e.target.value)}
                                                     />
-                                                    <input
-                                                        type="text"
-                                                        placeholder="YouTube Video ID (e.g. dQw4w9WgXcQ)"
-                                                        className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-sm font-mono text-gray-600"
-                                                        value={lesson.videoId}
-                                                        onChange={(e) => updateLesson(mIndex, lIndex, 'videoId', e.target.value)}
+
+                                                    <VideoUploader
+                                                        courseId={courseId}
+                                                        initialVideoId={lesson.videoId}
+                                                        onVideoReady={(vid) => updateLesson(mIndex, lIndex, 'videoId', vid)}
                                                     />
                                                 </div>
 

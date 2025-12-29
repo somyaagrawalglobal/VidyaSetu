@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { Clock, Zap, BookOpen, User, ArrowRight, BarChart, CheckCircle } from 'lucide-react';
+import { Clock, Zap, BookOpen, User, ArrowRight, BarChart, CheckCircle, FileText } from 'lucide-react';
 
 export default function CourseCard({ course, enrolled = false }) {
     const formatPrice = (price) => {
@@ -114,8 +114,19 @@ export default function CourseCard({ course, enrolled = false }) {
                                 </span>
                             </>
                         ) : (
-                            <div className="flex items-center gap-2 text-emerald-600 font-bold text-xs uppercase tracking-widest bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-100">
-                                <CheckCircle className="w-3.5 h-3.5" /> Enrolled
+                            <div className="flex flex-col gap-2">
+                                <div className="flex items-center gap-2 text-emerald-600 font-bold text-[10px] uppercase tracking-widest bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-100 w-fit">
+                                    <CheckCircle className="w-3 h-3" /> Enrolled
+                                </div>
+                                {course.orderId && (
+                                    <Link
+                                        href={`/invoice/${course.orderId}`}
+                                        target="_blank"
+                                        className="text-[10px] font-bold text-slate-400 hover:text-indigo-600 transition-colors flex items-center gap-1 uppercase tracking-widest ml-1"
+                                    >
+                                        <FileText size={10} /> View Invoice
+                                    </Link>
+                                )}
                             </div>
                         )}
                     </div>

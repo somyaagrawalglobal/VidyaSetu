@@ -5,6 +5,7 @@ import Order from '@/models/Order';
 import Course from '@/models/Course';
 import { authenticateApi } from '@/lib/api-auth';
 import { sendPurchaseEmail } from '@/lib/email';
+import Counter from '@/models/Counter';
 
 export async function POST(request) {
     try {
@@ -24,12 +25,26 @@ export async function POST(request) {
         if (expectedSignature === razorpay_signature) {
             // Payment Successful
             await dbConnect();
+
+            // Generate Invoice Number Atomically
+            const year = new Date().getFullYear();
+            const counter = await Counter.findOneAndUpdate(
+                { id: `invoice_${year}` },
+                { $inc: { seq: 1 } },
+                { upsert: true, new: true }
+            );
+
+            const invoiceNumber = `VS-${year}-${counter.seq.toString().padStart(4, '0')}`;
+            const invoiceDate = new Date();
+
             const order = await Order.findOneAndUpdate(
                 { razorpayOrderId: razorpay_order_id },
                 {
                     status: 'completed',
                     razorpayPaymentId: razorpay_payment_id,
-                    razorpaySignature: razorpay_signature
+                    razorpaySignature: razorpay_signature,
+                    invoiceNumber,
+                    invoiceDate
                 },
                 { new: true }
             ).populate('course', 'title slug price');
@@ -79,9 +94,14 @@ export async function POST(request) {
                 }
             }
 
+            console.error('RAZORPAY VERIFICATION FAILED: Invalid Signature', {
+                razorpay_order_id,
+                razorpay_payment_id
+            });
             return NextResponse.json({ success: false, message: "Invalid Signature" }, { status: 400 });
         }
     } catch (error) {
+        console.error('PAYMENT VERIFICATION SYSTEM ERROR:', error);
         return NextResponse.json({ success: false, error: error.message }, { status: 500 });
     }
 }

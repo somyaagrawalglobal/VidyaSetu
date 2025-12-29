@@ -11,7 +11,8 @@ import {
     Eye,
     EyeOff,
     LayoutGrid,
-    List
+    List,
+    Users
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
@@ -205,6 +206,13 @@ export default function AdminCoursesPage() {
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                             <div className="flex items-center justify-end gap-3">
+                                                <Link
+                                                    href={`/admin/courses/${course._id}/students`}
+                                                    className="text-emerald-600 hover:text-emerald-900 bg-emerald-50 p-2 rounded-lg hover:bg-emerald-100 transition-colors"
+                                                    title="Manage Students"
+                                                >
+                                                    <Users className="w-4 h-4" />
+                                                </Link>
                                                 <Link
                                                     href={`/admin/courses/edit/${course._id}`}
                                                     className="text-indigo-600 hover:text-indigo-900 bg-indigo-50 p-2 rounded-lg hover:bg-indigo-100 transition-colors"

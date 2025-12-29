@@ -41,6 +41,16 @@ const CouponSchema = new mongoose.Schema({
         type: Date,
         default: null,
     },
+    applicableCourses: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'Course',
+        default: [], // Empty array means valid for ALL courses
+    },
+    applicableUsers: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'User',
+        default: [], // Empty array means valid for ALL users
+    },
 }, {
     timestamps: true,
 });

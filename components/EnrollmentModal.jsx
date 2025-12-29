@@ -3,8 +3,12 @@
 import { useState, useEffect } from 'react';
 import { X, CheckCircle, Loader2, CreditCard, Tag, ArrowRight, User, Mail, Phone, Lock } from 'lucide-react';
 import Image from 'next/image';
+import { useToast } from './ToastContext';
+import { useRouter } from 'next/navigation';
 
 export default function EnrollmentModal({ isOpen, onClose, course, onEnrollSuccess }) {
+    const toast = useToast();
+    const router = useRouter();
     const [step, setStep] = useState(1); // 1: Details, 2: Checkout/Summary
     const [formData, setFormData] = useState({
         firstName: '',
@@ -52,17 +56,20 @@ export default function EnrollmentModal({ isOpen, onClose, course, onEnrollSucce
             const res = await fetch('/api/coupons/validate', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ code: couponCode, amount: course.price }),
+                body: JSON.stringify({ code: couponCode, amount: course.price, courseId: course._id }),
             });
             const data = await res.json();
             if (data.success) {
                 setCouponData(data);
+                toast.success('Coupon applied successfully!');
             } else {
                 setCouponError(data.message);
                 setCouponData(null);
+                toast.error(data.message);
             }
         } catch (error) {
             setCouponError('Error validating coupon');
+            toast.error('Failed to validate coupon');
         } finally {
             setIsValidatingCoupon(false);
         }
@@ -84,9 +91,12 @@ export default function EnrollmentModal({ isOpen, onClose, course, onEnrollSucce
 
             if (data.success) {
                 if (data.isFree) {
+                    toast.success('Successfully enrolled in course!');
                     onEnrollSuccess();
                     onClose();
                     setLoading(false);
+                    // Redirect as requested
+                    router.push('/dashboard');
                 } else {
                     // Trigger Razorpay
                     const options = {
@@ -110,15 +120,19 @@ export default function EnrollmentModal({ isOpen, onClose, course, onEnrollSucce
                                 });
                                 const verifyData = await verifyRes.json();
                                 if (verifyData.success) {
+                                    toast.success('Payment successful! You are now enrolled.');
                                     onEnrollSuccess();
                                     onClose();
+                                    // Redirect as requested
+                                    router.push('/dashboard');
                                 } else {
-                                    alert('Payment verification failed');
+                                    console.error('PAYMENT VERIFICATION FAILED:', verifyData);
+                                    toast.error(verifyData.message || 'Payment verification failed');
                                     setLoading(false);
                                 }
                             } catch (err) {
                                 console.error(err);
-                                alert('Payment verification error');
+                                toast.error('Payment verification error');
                                 setLoading(false);
                             }
                         },
@@ -138,12 +152,12 @@ export default function EnrollmentModal({ isOpen, onClose, course, onEnrollSucce
                     rzp.open();
                 }
             } else {
-                alert(data.message || 'Error creating order');
+                toast.error(data.message || 'Error creating order');
                 setLoading(false);
             }
         } catch (error) {
             console.error(error);
-            alert('Failed to process enrollment');
+            toast.error('Failed to process enrollment');
             setLoading(false);
         }
         // Note: We do NOT set loading(false) in finally block because we want it to stay true 
