@@ -236,7 +236,7 @@ export default function About() {
                                 Our Leadership
                             </p>
                             <h2 className="text-4xl font-extrabold text-slate-900 mb-6">
-                                Meet Somya Sharma
+                                Meet Founder Name
                             </h2>
                             <h3 className="text-xl font-bold mb-4 text-slate-800">
                                 Founder & Visionary
@@ -252,12 +252,7 @@ export default function About() {
                                 </p>
                             </blockquote>
 
-                            <Link
-                                href="/team"
-                                className="mt-8 inline-flex items-center text-indigo-600 font-semibold hover:text-indigo-800 transition"
-                            >
-                                Meet the Full Team <ArrowRight className="w-4 h-4 ml-2" />
-                            </Link>
+                            
                         </div>
                     </div>
                 </div>

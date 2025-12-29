@@ -19,7 +19,7 @@ import PrimaryButton from "@/components/PrimaryButton";
 
 export default function Home() {
     return (
-        <main className="bg-white selection:bg-indigo-100 selection:text-indigo-900">
+        <main className="bg-white pt-25 lg:pt-0 selection:bg-indigo-100 selection:text-indigo-900">
             
             {/* 1. HERO SECTION: Modern Split with Pattern Background */}
             <section className="relative pb-20 lg:pt-30 lg:pb-28 overflow-hidden">
@@ -98,7 +98,7 @@ export default function Home() {
                         </p>
                     </div>
 
-                    <div className="grid md:grid-cols-3 gap-6">
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {/* Card 1 */}
                         <div className="p-8 rounded-2xl bg-slate-50 border border-slate-100 hover:border-indigo-100 hover:shadow-xl hover:shadow-indigo-100/50 transition-all duration-300 group">
                             <div className="w-12 h-12 bg-white rounded-xl shadow-sm border border-slate-100 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
