@@ -13,64 +13,92 @@ import {
     BookOpen,
     ArrowRight,
     Handshake,
-    ArrowLeft, // <--- Crucial FIX: ArrowLeft must be imported for the visual bridge
+    ArrowLeft,
 } from "lucide-react";
+
+// --- START: Reusable Components for Modularity and Design Consistency ---
 
 // Component for the new Core Pillars section
 const CorePillarCard = ({ Icon, title, description, colorClass }) => (
-    <div className="p-8 bg-white border border-gray-100 rounded-3xl shadow-xl transition duration-500 hover:shadow-2xl hover:border-indigo-200 group">
-        <div className={`w-14 h-14 ${colorClass} rounded-full flex items-center justify-center mb-6`}>
-            <Icon className="w-7 h-7 text-white" />
+    <div className="p-6 sm:p-8 bg-white border border-gray-100 rounded-3xl shadow-lg transition duration-500 hover:shadow-2xl hover:border-indigo-300 group transform hover:scale-[1.02] animate-in fade-in slide-in-from-bottom-8 duration-700">
+        <div className={`w-12 h-12 sm:w-14 sm:h-14 ${colorClass} rounded-full flex items-center justify-center mb-4 sm:mb-6 transition-all duration-500 group-hover:rotate-6`}>
+            <Icon className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
         </div>
-        <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-indigo-600 transition">
+        <h3 className="text-base font-bold text-slate-900 mb-2 group-hover:text-indigo-600 transition">
             {title}
         </h3>
-        <p className="text-slate-600">{description}</p>
+        <p className="text-sm sm:text-sm text-slate-600">{description}</p>
     </div>
 );
 
 // Component for the "Bridge" feature list
 const BridgeFeature = ({ title, description, Icon, colorClass, index }) => (
-    <div className="flex items-start space-x-4 border-l-4 border-indigo-200 pl-4 py-3 group hover:bg-indigo-50/50 rounded-r-lg transition duration-300">
-        <div className={`text-2xl font-extrabold text-indigo-600 flex-shrink-0 mt-1 transition-all duration-300 group-hover:scale-110`}>
+    <div className="flex items-start space-x-4 border-l-4 border-indigo-200 pl-4 py-3 group hover:bg-indigo-50/50 rounded-r-lg transition duration-300 transform hover:translate-x-1">
+        <div className={`text-xl sm:text-2xl font-extrabold text-indigo-600 flex-shrink-0 mt-1 transition-all duration-300 group-hover:scale-110`}>
             {index}
         </div>
         <div className="flex-1">
-            <h4 className="text-xl font-semibold text-slate-900 flex items-center space-x-2">
-                <Icon className={`w-5 h-5 ${colorClass} mr-2`} />
+            <h4 className="text-base sm:text-lg font-semibold text-slate-900 flex items-center space-x-2">
+                <Icon className={`w-4 h-4 sm:w-5 sm:h-5 ${colorClass} mr-2`} />
                 <span>{title}</span>
             </h4>
-            <p className="text-sm text-slate-500 mt-1">{description}</p>
+            <p className="text-xs sm:text-sm text-slate-500 mt-1">{description}</p>
         </div>
     </div>
 );
+
+// Separate component for the down arrow for clarity and re-use
+const ArrowDownIcon = (props) => (
+    <svg {...props} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+    </svg>
+);
+
+// --- END: Reusable Components ---
 
 export default function About() {
     // Custom classes for consistent brand colors
     const primaryColor = "indigo-600";
     const secondaryColor = "violet-500";
-    const gradientTextClass = `bg-clip-text text-transparent bg-gradient-to-r from-${primaryColor} to-${secondaryColor}`;
+    // Updated gradient class to match the Contact page's aesthetic
+    const gradientTextClass = `bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600`;
 
     return (
-        <main className="text-slate-800 bg-white">
-            {/* 1. Hero/Introduction - High Impact */}
-            <section className="pt-24 pb-20 bg-gray-50/70 border-b border-gray-100">
-                <div className="max-w-7xl mx-auto px-6 lg:px-8 text-center">
-                    <p className="text-sm font-semibold uppercase tracking-widest text-indigo-600 mb-3">
-                        Our Foundation
-                    </p>
-                    <h1 className="text-5xl sm:text-6xl md:text-7xl font-extrabold text-slate-900 mb-6">
+        <main className="text-slate-800 bg-[#F8FAFC] font-sans overflow-x-hidden min-h-screen">
+
+            {/* 1. Hero/Introduction - High Impact with Contact Page Aesthetic */}
+            <section className="relative pt-28 pb-10 overflow-hidden border-b border-gray-100">
+                
+                {/* Dynamic Background Elements for Smoothness and Visual Depth */}
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-gradient-to-b from-indigo-50/50 to-transparent rounded-full blur-[120px] -z-10"></div>
+                <div className="absolute -top-24 -right-24 w-96 h-96 bg-purple-100/40 rounded-full blur-[100px] -z-10 animate-pulse hidden md:block"></div>
+                <div className="absolute top-1/2 -left-24 w-80 h-80 bg-blue-100/30 rounded-full blur-[100px] -z-10 hidden md:block"></div>
+
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
+                    
+                    {/* Metadata Pill - Animated */}
+                    <div className="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-white/80 backdrop-blur-md border border-indigo-100 shadow-sm mb-6 sm:mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+                        <Sparkles className="w-4 h-4 text-indigo-500" />
+                        <span className="text-xs font-bold text-slate-600 uppercase tracking-widest">Our Foundation</span>
+                    </div>
+
+                    {/* Main Title - Responsive & Animated */}
+                    <h1 className="text-2xl md:text-4xl font-black font-bold text-slate-900 mb-6 leading-tight animate-in fade-in slide-in-from-bottom-6 duration-1000 delay-200">
                         Building the <span className={gradientTextClass}>Bridge</span>{" "}
                         to Future Careers
                     </h1>
-                    <p className="mt-6 text-xl text-slate-600 max-w-4xl mx-auto leading-relaxed">
+                    
+                    {/* Subtitle/Description - Responsive & Animated */}
+                    <p className="mt-4 sm:mt-6 text-base sm:text-md text-slate-600 max-w-4xl mx-auto leading-relaxed animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300">
                         Vidya-Setu exists to solve the employability crisis. We don't just educate—we build the professional
                         pipeline, connecting high-potential talent with guaranteed, job-aligned experience.
                     </p>
-                    <div className="mt-10">
+
+                    {/* CTA Button - Responsive & Animated */}
+                    <div className="mt-10 animate-in fade-in duration-1000 delay-500">
                         <Link
                             href="/careers"
-                            className="inline-flex items-center justify-center px-8 py-3 text-lg font-medium text-white bg-indigo-600 border border-transparent rounded-full shadow-lg hover:bg-indigo-700 transition duration-300 transform hover:scale-105"
+                            className="inline-flex items-center justify-center px-8 py-3 text-base font-medium text-white bg-indigo-600 border border-transparent rounded-full shadow-xl shadow-indigo-400/50 hover:bg-indigo-700 transition duration-300 transform hover:scale-[1.05] active:scale-100"
                         >
                             Explore Our Vision <ArrowRight className="w-5 h-5 ml-2" />
                         </Link>
@@ -78,24 +106,23 @@ export default function About() {
                 </div>
             </section>
 
-            {/* 2. The Problem/Solution (Bridge Metaphor) - Two Columns */}
-            <section className="py-24 bg-white">
-                <div className="max-w-7xl mx-auto px-6 lg:px-8">
+            {/* 2. The Problem/Solution (Bridge Metaphor) - Responsive Two Columns */}
+            <section className="py-20 sm:py-24 bg-white">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
 
-                        {/* Left: Solution Features - Enhanced with Icon and Subtle Background */}
-                        <div data-aos="fade-right" className="lg:sticky lg:top-8">
-                            <h2 className="text-4xl font-extrabold text-slate-900 mb-6 border-b-4 border-indigo-200 pb-2 flex items-center">
-                                {/* Assuming Workflow is a component/icon */}
-                                <svg className="w-10 h-10 text-indigo-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m8 0l3-3m-3 3l3 3"></path></svg>
+                        {/* Left: Solution Features - Sticky on Large Screens, Responsive Padding */}
+                        <div className="lg:sticky lg:top-8" >
+                            <h2 className="text-xl sm:text-2xl font-bold text-slate-900 mb-6 border-b-4 border-indigo-200 pb-2 flex items-center animate-in fade-in slide-in-from-left-8 duration-700">
+                                <svg className="w-7 h-7 sm:w-8 sm:h-8 text-indigo-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m8 0l3-3m-3 3l3 3"></path></svg>
                                 <span>From Academia to Industry Readiness</span>
                             </h2>
-                            <p className="text-xl text-slate-600 mb-10 border-l-4 border-indigo-400 pl-4 font-medium">
-                                The gap between theoretical knowledge and workplace competence is vast. **Vidya-Setu is the solution.** We provide the structured, project-driven pathway needed for real-world mastery.
+                            <p className="text-base sm:text-md text-slate-600 mb-10 border-l-4 border-indigo-400 pl-4 font-medium animate-in fade-in duration-1000 delay-300">
+                                The gap between theoretical knowledge and workplace competence is vast. Vidya-Setu is the solution. We provide the structured, project-driven pathway needed for real-world mastery.
                             </p>
 
-                            {/* Feature List - Now using an elevated, distinct container */}
-                            <div className="space-y-6 p-6 bg-indigo-50 rounded-2xl shadow-xl border border-indigo-100">
+                            {/* Feature List - Elevated, Distinct Container, Animated */}
+                            <div className="space-y-4 sm:space-y-6 p-6 sm:p-8 bg-indigo-50 rounded-2xl shadow-xl border border-indigo-100 animate-in fade-in slide-in-from-left-12 duration-1000 delay-500">
                                 <BridgeFeature
                                     index="01"
                                     title="Project-Centric Learning"
@@ -103,7 +130,6 @@ export default function About() {
                                     Icon={Lightbulb}
                                     colorClass="text-indigo-600"
                                 />
-
                                 <BridgeFeature
                                     index="02"
                                     title="Guaranteed OJT (On-the-Job Training)"
@@ -111,7 +137,6 @@ export default function About() {
                                     Icon={Handshake}
                                     colorClass="text-violet-600"
                                 />
-
                                 <BridgeFeature
                                     index="03"
                                     title="Employer-Verified Capability"
@@ -120,76 +145,70 @@ export default function About() {
                                     colorClass="text-emerald-600"
                                 />
                             </div>
-
                         </div>
 
-                        {/* Right: Visual Bridge Metaphor - Simplified Flow Diagram */}
-                        <div className="relative h-full min-h-[500px] w-full flex flex-col items-center justify-center p-4" data-aos="fade-left">
+                        {/* Right: Visual Bridge Metaphor - Simplified Flow Diagram, Animated */}
+                        <div className="relative h-full min-h-[500px] w-full flex flex-col items-center justify-center p-4 lg:p-0 animate-in fade-in slide-in-from-right-8 duration-700">
 
-                            <h3 className="text-2xl font-bold text-slate-700 mb-8 tracking-tight">The Three-Stage Transformation</h3>
+                            <h3 className="text-xl font-bold text-slate-700 mb-8 tracking-tight">The Three-Stage Transformation</h3>
 
-                            <div className="flex flex-col items-center space-y-8 w-full max-w-md">
+                            <div className="flex flex-col items-center space-y-6 sm:space-y-8 w-full max-w-sm sm:max-w-md">
 
                                 {/* 1. ACADEMIA Stage */}
-                                <div className="w-full p-6 bg-white rounded-xl shadow-lg border border-gray-100 text-center transform transition duration-300 hover:shadow-2xl hover:scale-[1.02]">
+                                <div className="w-full p-4 sm:p-6 bg-white rounded-xl shadow-lg border border-gray-100 text-center transform transition duration-300 hover:shadow-2xl hover:scale-[1.02]">
                                     <div className="flex items-center justify-center mb-3">
-                                        {/* Assuming BookOpen icon component */}
-                                        <svg className="w-12 h-12 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13c-2.029 0-3.996 1.096-5.064 2.923-1.068 1.827-1.068 4.093 0 5.92m10.128 0c1.068-1.827 1.068-4.093 0-5.92"></path></svg>
+                                        <BookOpen className="w-8 h-8 sm:w-10 sm:h-10 text-indigo-500" />
                                     </div>
-                                    <p className="text-xl font-extrabold text-slate-900">ACADEMIA</p>
-                                    <p className="text-sm text-red-600 font-semibold mt-1 uppercase tracking-wider">Theory & Knowledge Base</p>
+                                    <p className="text-base sm:text-lg font-extrabold text-slate-900">ACADEMIA</p>
+                                    <p className="text-xs sm:text-sm text-red-600 font-semibold mt-1 uppercase tracking-wider">Theory & Knowledge Base</p>
                                 </div>
 
                                 {/* Transition Arrow 1 */}
                                 <div className="relative">
-                                    <svg className="w-10 h-10 text-indigo-500 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                                    <ArrowDownIcon className="w-8 h-8 sm:w-10 sm:h-10 text-indigo-500 animate-bounce" />
                                 </div>
 
                                 {/* 2. THE BRIDGE (VIDYA-SETU) Stage - Highlighted */}
-                                <div className="w-full p-6 bg-indigo-600 rounded-xl shadow-2xl shadow-indigo-500/50 text-center transform transition duration-500 hover:shadow-3xl hover:scale-[1.05] relative z-10">
-                                    <p className="text-3xl font-black text-white tracking-widest uppercase">
+                                <div className="w-full p-6 sm:p-8 bg-indigo-600 rounded-xl shadow-2xl shadow-indigo-500/50 text-center transform transition duration-500 hover:shadow-3xl hover:scale-[1.05] relative z-10">
+                                    <p className="text-lg sm:text-2xl font-black text-white tracking-widest uppercase">
                                         VIDYA-SETU
                                     </p>
-                                    <p className="text-lg text-indigo-200 font-medium mt-1">
+                                    <p className="text-sm sm:text-base text-indigo-200 font-medium mt-1">
                                         Skill Bridge & Practical Application
                                     </p>
                                 </div>
 
                                 {/* Transition Arrow 2 */}
                                 <div className="relative">
-                                    <svg className="w-10 h-10 text-emerald-500 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                                    <ArrowDownIcon className="w-8 h-8 sm:w-10 sm:h-10 text-emerald-500 animate-bounce" />
                                 </div>
 
                                 {/* 3. INDUSTRY Stage */}
-                                <div className="w-full p-6 bg-white rounded-xl shadow-lg border border-gray-100 text-center transform transition duration-300 hover:shadow-2xl hover:scale-[1.02]">
+                                <div className="w-full p-4 sm:p-6 bg-white rounded-xl shadow-lg border border-gray-100 text-center transform transition duration-300 hover:shadow-2xl hover:scale-[1.02]">
                                     <div className="flex items-center justify-center mb-3">
-                                        {/* Assuming Briefcase icon component */}
-                                        <svg className="w-12 h-12 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 13.255A23.504 23.504 0 0112 15c-3.189 0-6.236-.61-9-1.745M16 4h2a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"></path></svg>
+                                        <Briefcase className="w-8 h-8 sm:w-10 sm:h-10 text-emerald-500" />
                                     </div>
-                                    <p className="text-xl font-extrabold text-slate-900">INDUSTRY</p>
-                                    <p className="text-sm text-green-600 font-semibold mt-1 uppercase tracking-wider">Competence & Placement</p>
+                                    <p className="text-base sm:text-lg font-extrabold text-slate-900">INDUSTRY</p>
+                                    <p className="text-xs sm:text-sm text-green-600 font-semibold mt-1 uppercase tracking-wider">Competence & Placement</p>
                                 </div>
 
                             </div>
-
                         </div>
                     </div>
                 </div>
             </section>
 
-            {/* Note: The BridgeFeature component definition and icon components (Workflow, Lightbulb, Handshake, TrendingUp, BookOpen, Briefcase) are assumed to exist and are not provided here. They should wrap the content in a div with appropriate styling. */}
-
-            {/* 3. Core Pillars/Values - Grid Layout */}
-            <section className="py-24 bg-slate-50 border-t border-b border-gray-100">
-                <div className="max-w-7xl mx-auto px-6 lg:px-8 text-center">
-                    <p className="text-sm font-semibold uppercase tracking-widest text-violet-600 mb-3">
+            {/* 3. Core Pillars/Values - Responsive Grid Layout */}
+            <section className="py-20 sm:py-24 bg-slate-50 border-t border-b border-gray-100">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                    <p className="text-sm font-semibold uppercase tracking-widest text-violet-600 mb-3 animate-in fade-in duration-700">
                         Our DNA
                     </p>
-                    <h2 className="text-4xl font-bold text-slate-900 mb-14">
+                    <h2 className="text-xl sm:text-2xl font-bold text-slate-900 mb-12 sm:mb-16 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300">
                         The Three Pillars of Success
                     </h2>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-10">
                         <CorePillarCard
                             Icon={Workflow}
                             title="Outcome-Oriented"
@@ -212,13 +231,14 @@ export default function About() {
                 </div>
             </section>
 
-            {/* 4. Founder/Leadership Story - Simplified and Focused */}
-            <section className="py-24 bg-white">
-                <div className="max-w-7xl mx-auto px-6 lg:px-8">
-                    <div className="flex flex-col md:flex-row items-center gap-16">
-                        {/* Image */}
-                        <div className="md:w-1/2" data-aos="fade-right">
-                            <div className="relative w-full h-[400px] md:h-[500px] rounded-3xl overflow-hidden shadow-2xl shadow-gray-300/50 border-8 border-white">
+            {/* 4. Founder/Leadership Story - Responsive Two-Column Layout */}
+            <section className="py-20 sm:py-24 bg-white">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="flex flex-col md:flex-row items-center gap-12 sm:gap-16">
+                        
+                        {/* Image - Responsive Size and Animated */}
+                        <div className="md:w-1/2 w-full animate-in fade-in slide-in-from-left-8 duration-1000">
+                            <div className="relative w-full h-[350px] sm:h-[450px] md:h-[500px] rounded-3xl overflow-hidden shadow-2xl shadow-gray-300/50 border-8 border-white transform transition duration-500 hover:shadow-indigo-300/50">
                                 <Image
                                     src="/assets/images/hero-img.jpeg" // Reusing the founder image
                                     alt="Founder of Vidya-Setu"
@@ -230,34 +250,31 @@ export default function About() {
                             </div>
                         </div>
 
-                        {/* Content */}
-                        <div className="md:w-1/2" data-aos="fade-left">
+                        {/* Content - Responsive Text and Animated */}
+                        <div className="md:w-1/2 w-full animate-in fade-in slide-in-from-right-8 duration-1000 delay-300">
                             <p className="text-sm font-semibold uppercase tracking-widest text-indigo-600 mb-3">
                                 Our Leadership
                             </p>
-                            <h2 className="text-4xl font-extrabold text-slate-900 mb-6">
+                            <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 mb-6">
                                 Meet Founder Name
                             </h2>
-                            <h3 className="text-xl font-bold mb-4 text-slate-800">
+                            <h3 className="text-base sm:text-md font-bold mb-4 text-slate-800">
                                 Founder & Visionary
                             </h3>
 
-                            <p className="text-slate-600 mb-6 leading-relaxed text-lg">
+                            <p className="text-slate-600 mb-6 leading-relaxed text-sm sm:text-base">
                                 Somya's journey began with a frustration: seeing highly educated graduates unable to secure quality jobs due to a lack of practical skills. This realization fueled the inception of Vidya-Setu.
                             </p>
 
-                            <blockquote className="p-4 border-l-4 border-violet-400 bg-violet-50/50 italic text-slate-700 text-md rounded-lg">
+                            <blockquote className="p-4 border-l-4 border-violet-400 bg-violet-50/50 italic text-slate-700 text-xs sm:text-sm rounded-lg transition duration-300 hover:border-violet-600">
                                 <p>
                                     "We believe education must be accountable. If a student puts in the effort, we guarantee the outcome—real job capability verified by industry standards."
                                 </p>
                             </blockquote>
-
-                            
                         </div>
                     </div>
                 </div>
             </section>
-
         </main>
     );
 }

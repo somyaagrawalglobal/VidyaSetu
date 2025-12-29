@@ -25,7 +25,7 @@ const ContactInfoCard = ({ icon: Icon, title, content, link, linkText, bgColor, 
         </div>
 
         <div className="ml-5">
-            <h3 className="text-xl font-bold text-slate-900 mb-1">{title}</h3>
+            <h3 className="text-lg font-bold text-slate-900 mb-1">{title}</h3>
             <p className="text-slate-500 text-base mb-2">{content}</p>
             {link && (
                 <a
@@ -57,7 +57,7 @@ export default function ContactPage() {
         <main className="bg-[#F8FAFC] text-slate-800 font-sans overflow-x-hidden min-h-screen">
 
             {/* Header Section: Replicating Courses Header Aesthetic */}
-            <section className="relative pt-32 pb-20 overflow-hidden border-b border-gray-100">
+            <section className="relative pt-32 pb-10 overflow-hidden border-b border-gray-100">
                 {/* Dynamic Background Elements - As per the Courses component */}
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-gradient-to-b from-indigo-50/50 to-transparent rounded-full blur-[120px] -z-10"></div>
                 <div className="absolute -top-24 -right-24 w-96 h-96 bg-purple-100/40 rounded-full blur-[100px] -z-10 animate-pulse"></div>
@@ -72,11 +72,11 @@ export default function ContactPage() {
                     </div>
 
                     {/* Main Title - Using font-black and gradientTextClass */}
-                    <h1 className="text-3xl md:text-5xl font-black text-slate-900 mb-6 tracking-tight leading-[1.1] animate-in fade-in slide-in-from-bottom-6 duration-1000 delay-200">
+                    <h1 className="text-2xl md:text-4xl font-black font-bold text-slate-900 mb-6 leading-tight animate-in fade-in slide-in-from-bottom-6 duration-1000 delay-200">
                         Ready to Start Your <span className={gradientTextClass}>Journey</span>? <br className="hidden md:block" />
                         Get in Touch with Our Team.
                     </h1>
-                    <p className="mt-4 text-lg text-slate-600 max-w-3xl mx-auto leading-relaxed animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300">
+                    <p className="mt-4 text-base sm:text-md text-slate-600 max-w-3xl mx-auto leading-relaxed animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300">
                         We provide personalized guidance on course enrollment, career paths, and technical support.
                     </p>
                 </div>
@@ -88,10 +88,10 @@ export default function ContactPage() {
 
         {/* Contact Info (Left Column) - Focus on Cards and Clarity */}
         <div className="lg:col-span-1 space-y-10">
-            <h2 className="text-4xl font-extrabold text-slate-900 mb-4">
+            <h2 className="text-2xl font-bold text-slate-900 mb-4">
                 Let's Connect
             </h2>
-            <p className="text-xl text-slate-500">
+            <p className="text-base md:text-lg text-slate-500">
                 Choose a channel to start a conversation. We guarantee a prompt response during our business hours.
             </p>
 
@@ -117,16 +117,6 @@ export default function ContactPage() {
                     linkText="Send an Email"
                     {...emailStyles}
                 />
-                
-                {/* 3. Phone Card */}
-                <GradientContactCard
-                    icon={Phone}
-                    title="Direct Phone Line"
-                    content="Speak directly to our guidance counselor for course details."
-                    link="tel:+919876543210"
-                    linkText="+91 98765 43210"
-                    {...phoneStyles}
-                />
             </div>
 
         </div>
@@ -134,7 +124,7 @@ export default function ContactPage() {
         {/* Contact Form (Right Column) - Highly Elevated and Modernized */}
         <div className={`lg:col-span-2 bg-white p-6 md:p-14 rounded-3xl shadow-2xl shadow-indigo-300/40 border border-gray-100`}>
             
-            <h2 className="text-3xl font-bold text-slate-900 mb-4">
+            <h2 className="text-2xl font-bold text-slate-900 mb-4">
                 Send a Quick Inquiry
             </h2>
             <p className="text-slate-500 mb-8">
