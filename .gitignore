@@ -45,9 +45,8 @@ env.local
 /public/uploads/courses/thumbnails/*
 
 # Uploaded files
-public/uploads/
-uploads/
 *.mp4
 *.mov
 *.avi
+*.pdf
 
