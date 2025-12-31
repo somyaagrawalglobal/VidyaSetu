@@ -294,7 +294,7 @@ export default function AddCoursePage() {
                                 <FileUploader
                                     type="thumbnail"
                                     initialUrl={formData.thumbnail}
-                                    onUploadSuccess={(url) => setFormData({ ...formData, thumbnail: url })}
+                                    onUploadSuccess={(url) => setFormData(prev => ({ ...prev, thumbnail: url }))}
                                     accept="image/*"
                                 />
                                 {formData.thumbnail && (

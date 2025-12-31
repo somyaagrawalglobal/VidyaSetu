@@ -1,10 +1,13 @@
 import { NextResponse } from 'next/server';
 import { put, del } from '@vercel/blob';
 import { authenticateApi } from '@/lib/api-auth';
+import fs from 'fs/promises';
+import path from 'path';
 
 /**
  * API Route to handle file uploads for course thumbnails and resources.
  * Uses Vercel Blob Storage for production (serverless-compatible).
+ * Falls back to local filesystem for development if token is missing.
  * Method: POST
  * Body: FormData with 'file' and 'type' ('thumbnail' | 'resource')
  */
@@ -32,32 +35,53 @@ export async function POST(request) {
 
         // 3. Prepare file metadata
         const extension = file.name.split('.').pop();
-        const filename = `${type}/${Date.now()}-${Math.random().toString(36).substring(2, 9)}.${extension}`;
+        const timestamp = Date.now();
+        const randomStr = Math.random().toString(36).substring(2, 9);
+        const filename = `${type}/${timestamp}-${randomStr}.${extension}`;
 
-        // 4. Upload to Vercel Blob
-        const blob = await put(filename, file, {
-            access: type === 'thumbnail' ? 'public' : 'public', // Both public for now
-            addRandomSuffix: false,
-        });
+        let url = '';
 
-        console.log(`[UPLOAD] File uploaded to Vercel Blob: ${blob.url}`);
+        // 4. Upload Logic
+        if (process.env.BLOB_READ_WRITE_TOKEN) {
+            // Production: Vercel Blob
+            const blob = await put(filename, file, {
+                access: 'public',
+                addRandomSuffix: false,
+            });
+            url = blob.url;
+            console.log(`[UPLOAD] File uploaded to Vercel Blob: ${url}`);
 
-        // 5. Delete previous file if it exists and is a blob URL
-        if (previousUrl && previousUrl.includes('blob.vercel-storage.com')) {
-            try {
-                await del(previousUrl);
-                console.log(`[UPLOAD] Previous blob deleted: ${previousUrl}`);
-            } catch (delError) {
-                console.warn(`[UPLOAD_WARNING] Failed to delete previous blob: ${previousUrl}`, delError.message);
-                // Don't fail the upload just because deletion failed
+            // Delete previous if it's a blob URL
+            if (previousUrl && previousUrl.includes('blob.vercel-storage.com')) {
+                try {
+                    await del(previousUrl);
+                } catch (e) {
+                    console.warn('[UPLOAD_WARNING] Previous blob deletion failed', e.message);
+                }
             }
+        } else {
+            // Development: Local Filesystem Fallback
+            console.log('[UPLOAD] Local dev detected (No Blob Token). Using local fallback.');
+
+            const bytes = await file.arrayBuffer();
+            const buffer = Buffer.from(bytes);
+
+            // Ensure directory exists
+            const uploadDir = path.join(process.cwd(), 'public', 'uploads', type);
+            await fs.mkdir(uploadDir, { recursive: true });
+
+            const localFilePath = path.join(uploadDir, `${timestamp}-${randomStr}.${extension}`);
+            await fs.writeFile(localFilePath, buffer);
+
+            url = `/uploads/${type}/${timestamp}-${randomStr}.${extension}`;
+            console.log(`[UPLOAD] File saved locally: ${url}`);
         }
 
-        // 6. Return blob URL
+        // 5. Return success result
         return NextResponse.json({
             success: true,
             message: 'File uploaded successfully',
-            url: blob.url
+            url: url
         });
 
     } catch (error) {
