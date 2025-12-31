@@ -126,8 +126,8 @@ export default function AddCoursePage() {
                 title: 'Success',
                 message: data.message || 'Course created successfully!',
                 type: 'success',
-                confirmText: 'Go to List',
-                onConfirm: () => router.push('/admin/courses'),
+                confirmText: 'View Course',
+                onConfirm: () => router.push(`/courses/${data.course.slug}`),
                 showCancel: false
             });
         } catch (error) {
