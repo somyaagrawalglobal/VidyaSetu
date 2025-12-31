@@ -5,7 +5,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Clock, Zap, DollarSign, BookOpen, User, Loader2 } from "lucide-react";
 // Assuming ProgramBadge is a separate component and properly styled for responsiveness
-import ProgramBadge from "./ProgramBadge"; 
+import ProgramBadge from "./ProgramBadge";
+import Loader from "./Loader";
 
 const formatPrice = (price) => {
     if (price === 0) return 'Free';
@@ -30,14 +31,14 @@ export default function FeaturedProgramsSection() {
         async function fetchCourses() {
             try {
                 // Fetching only 3 courses for the "Featured" section
-                const response = await fetch('/api/courses?published=true&limit=3'); 
+                const response = await fetch('/api/courses?published=true&limit=3');
                 const data = await response.json();
                 if (data.success) {
                     // Using the uploaded image for placeholders if the course data doesn't provide one
-                    const defaultImagePath = "/assets/images/redesigned-hero-image.png"; 
+                    const defaultImagePath = "/assets/images/redesigned-hero-image.png";
                     const coursesWithThumbnails = data.courses.slice(0, 3).map(course => ({
                         ...course,
-                        thumbnail: course.thumbnail || defaultImagePath 
+                        thumbnail: course.thumbnail || defaultImagePath
                     }));
                     setCourses(coursesWithThumbnails);
                 }
@@ -51,22 +52,17 @@ export default function FeaturedProgramsSection() {
     }, []);
 
     if (loading) {
-        return (
-            <div className="py-20 flex justify-center items-center h-64">
-                {/* Enhanced loading spinner for better visual feedback */}
-                <Loader2 className="w-8 h-8 text-indigo-600 animate-spin transition-all duration-300" />
-            </div>
-        );
+        return <Loader text="Loading programs..." />;
     }
 
     // Only render if there are courses to show
     if (courses.length === 0) return null;
 
     return (
-        // *RESPONSIVE FIX*: Ensure generous vertical padding on mobile (py-12)
-        <section className="py-6 md:py-15 bg-slate-50 border-t border-slate-100"> 
+        // Standard vertical padding: py-16 on mobile, py-24 on desktop
+        <section className="py-16 md:py-24 bg-slate-50 border-t border-slate-100">
             {/* *RESPONSIVE FIX*: Ensure standard horizontal padding on small screens (px-4) */}
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"> 
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
                 {/* Header and CTA */}
                 {/* *RESPONSIVE FIX*: Ensure items stack nicely on small screens (flex-col) and align text center before sm breakpoint */}
@@ -86,7 +82,7 @@ export default function FeaturedProgramsSection() {
                             Industry-aligned certification programs designed by experts to make you job-ready in weeks.
                         </p>
                     </div>
-                    
+
                     {/* CTA Link - Removed data-aos="fade-left", added md: to limit hover animation */}
                     <Link
                         href="/courses"
@@ -103,25 +99,25 @@ export default function FeaturedProgramsSection() {
                         const price = formatPrice(program.price);
                         const originalPrice = program.originalPrice ? formatPrice(program.originalPrice) : null;
                         // Use a dummy discount badge if not available, for consistency
-                        const discountBadge = program.discount || "50% OFF"; 
+                        const discountBadge = program.discount || "50% OFF";
 
                         return (
                             <div
                                 key={program._id || index}
                                 // Card Hover Effect: subtle lift and stronger shadow restricted to md: and up
                                 className="bg-white rounded-xl overflow-hidden shadow-md md:hover:shadow-2xl md:hover:-translate-y-1 transition-all duration-300 flex flex-col group border border-slate-200 md:hover:border-indigo-300 h-full relative"
-                                // Removed data-aos and data-aos-delay
+                            // Removed data-aos and data-aos-delay
                             >
                                 {/* --- 1. Top Graphic Header Section --- */}
                                 {/* Ensure image container is reasonably sized on mobile */}
-                                <div className="relative h-40 sm:h-48 flex items-center justify-center overflow-hidden"> 
+                                <div className="relative h-40 sm:h-48 flex items-center justify-center overflow-hidden">
                                     <Image
                                         src={program.thumbnail} // Use the course's thumbnail or the default set in useEffect
                                         alt={program.title}
                                         fill
                                         style={{ objectFit: 'cover' }}
                                         // Smoother hover effect on image restricted to md: and up
-                                        className="transition-transform duration-500 group-hover:md:scale-105" 
+                                        className="transition-transform duration-500 group-hover:md:scale-105"
                                         sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                                     />
                                     <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 to-transparent"></div>
@@ -135,7 +131,7 @@ export default function FeaturedProgramsSection() {
 
                                 {/* --- 2. Content Body Section --- */}
                                 {/* *RESPONSIVE FIX*: Using flex-1 to push the footer to the bottom and ensure uniform card height */}
-                                <div className="p-4 sm:p-5 flex flex-col flex-1"> 
+                                <div className="p-4 sm:p-5 flex flex-col flex-1">
                                     {/* Topic Badge & Career Track */}
                                     {/* Adjusted font size for better mobile fit */}
                                     <div className="mb-3 flex items-center gap-2 flex-wrap">

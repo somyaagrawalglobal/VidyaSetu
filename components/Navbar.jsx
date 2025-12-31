@@ -48,7 +48,7 @@ export default function Navbar() {
     <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-lg border-b border-slate-200/60 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Adjusted h-16 (4rem) is standard and clean for h-18 was non-standard */}
-        <div className="flex justify-between items-center h-16"> 
+        <div className="flex justify-between items-center h-16">
 
           {/* Logo Section - *OPTIMIZED SIZE* */}
           <div className="flex-shrink-0 flex items-center">
@@ -125,8 +125,18 @@ export default function Navbar() {
 
                     {/* User Header in Dropdown */}
                     <div className="px-5 py-4 bg-indigo-50/50 border-b border-indigo-100">
-                      <p className="text-sm font-extrabold text-slate-900">{user.firstName} {user.lastName}</p>
-                      <p className="text-xs text-indigo-700 truncate mt-0.5">{user.email}</p>
+                      <div className="flex items-center justify-between mb-1">
+                        <p className="text-sm font-extrabold text-slate-900">{user.firstName} {user.lastName}</p>
+                        {user.roles && (
+                          <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-md border uppercase tracking-wider ${user.roles.includes('Admin') ? 'bg-purple-50 text-purple-600 border-purple-100' :
+                              user.roles.includes('Instructor') ? 'bg-indigo-50 text-indigo-600 border-indigo-100' :
+                                'bg-slate-50 text-slate-600 border-slate-100'
+                            }`}>
+                            {user.roles.includes('Admin') ? 'Admin' : user.roles.includes('Instructor') ? 'Instructor' : 'Student'}
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-xs text-indigo-700 truncate">{user.email}</p>
                     </div>
 
                     <div className="p-2 space-y-1">

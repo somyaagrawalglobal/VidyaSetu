@@ -204,10 +204,7 @@ export default function Home() {
             </section>
 
             {/* 5. FEATURED PROGRAMS (Existing Component) */}
-            {/* Adjusted Vertical Padding for better rhythm */}
-            <div className="py-16 md:py-24 bg-slate-50">
-                <FeaturedProgramsSection />
-            </div>
+            <FeaturedProgramsSection />
 
             {/* 3. WHY CHOOSE US */}
             <section className="py-16 md:py-24 bg-white">

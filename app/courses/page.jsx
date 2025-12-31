@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo } from "react";
 import CourseCard from "@/components/CourseCard";
 import { Zap, Search, Filter, SlidersHorizontal, ChevronDown, BookOpen, Sparkles, GraduationCap } from "lucide-react";
+import Loader from "@/components/Loader";
 
 export default function Courses() {
     const [courses, setCourses] = useState([]);
@@ -66,9 +67,8 @@ export default function Courses() {
                             <span className="text-xs font-bold text-slate-600 uppercase tracking-widest">Premium Learning Experience</span>
                         </div>
 
-                        <h1 className="text-2xl md:text-4xl font-black font-bold text-slate-00 mb-4 tracking-tight leading-[1.1] animate-in fade-in slide-in-from-bottom-6 duration-1000 delay-200">
-                            Elevate Your <span className={gradientTextClass}>Skillset</span> With Industry Experts <br className="hidden md:block" />
-
+                        <h1 className="text-3xl md:text-5xl font-black text-slate-900 mb-6 tracking-tight leading-[1.1] animate-in fade-in slide-in-from-bottom-6 duration-1000 delay-200">
+                            Elevate Your <span className={gradientTextClass}>Skillset</span> With Industry Experts
                         </h1>
 
                         <p className="max-w-2xl mx-auto text-md text-slate-500 leading-relaxed mb-6 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300">
@@ -90,9 +90,9 @@ export default function Courses() {
             </section>
 
             {/* --- FILTER & SEARCH HUD --- */}
-            <div className="sticky top-20 z-40 px-4 mb-12">
-                <div className="max-w-5xl mx-auto bg-white/90 backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.06)] rounded-[1.2rem] md:rounded-[2.2rem] p-2 transition-all duration-500 hover:shadow-[0_20px_48px_rgba(79,70,229,0.1)]">
-                    <div className="flex flex-col lg:flex-row items-center gap-3">
+            <div className="sticky top-[72px] md:top-20 z-40 px-4 mb-12">
+                <div className="max-w-6xl mx-auto bg-white/95 backdrop-blur-xl border border-indigo-50/50 shadow-[0_8px_32px_rgba(0,0,0,0.06)] rounded-2xl md:rounded-[2.5rem] p-2 md:p-3 transition-all duration-500 hover:shadow-[0_20px_48px_rgba(79,70,229,0.1)]">
+                    <div className="flex flex-col lg:flex-row items-center gap-2 md:gap-3">
 
                         {/* Search Input Container */}
                         <div className="relative flex-1 w-full lg:w-auto">
@@ -135,7 +135,7 @@ export default function Courses() {
                                 <select
                                     value={selectedLevel}
                                     onChange={(e) => setSelectedLevel(e.target.value)}
-                                    className="appearance-none bg-slate-50 hover:bg-white border-none text-slate-700 py-2 pl-10 pr-10 rounded-full text-sm font-bold cursor-pointer focus:ring-2 focus:ring-indigo-500/20 transition-all min-w-[160px]"
+                                    className="appearance-none bg-slate-50/80 hover:bg-white border-none text-slate-700 py-3 pl-10 pr-10 rounded-full text-sm font-bold cursor-pointer focus:ring-2 focus:ring-indigo-500/20 transition-all w-full md:w-auto md:min-w-[160px]"
                                 >
                                     <option value="All">All Levels</option>
                                     <option value="Beginner">Beginner</option>
@@ -153,15 +153,7 @@ export default function Courses() {
             <section className="pb-24 px-4 overflow-hidden">
                 <div className="max-w-7xl mx-auto">
                     {loading ? (
-                        <div className="flex flex-col items-center justify-center py-32 space-y-4">
-                            <div className="relative">
-                                <div className="w-16 h-16 border-4 border-indigo-100 border-t-indigo-600 rounded-full animate-spin"></div>
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                    <GraduationCap className="w-6 h-6 text-indigo-600" />
-                                </div>
-                            </div>
-                            <p className="text-slate-500 font-bold tracking-widest text-xs uppercase">Curating the best content...</p>
-                        </div>
+                        <Loader text="Curating the best content..." />
                     ) : (
                         <>
                             <div className="flex items-center justify-between mb-12 px-2">
@@ -174,7 +166,7 @@ export default function Courses() {
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 lg:gap-10">
                                 {filteredCourses.length > 0 ? (
                                     filteredCourses.map((course, index) => (
                                         <div

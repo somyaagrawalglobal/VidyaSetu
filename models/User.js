@@ -71,6 +71,13 @@ const UserSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
+    payoutDetails: {
+        bankName: String,
+        accountNumber: String,
+        accountHolderName: String,
+        ifscCode: String,
+        upiId: String,
+    }
 }, {
     timestamps: { createdAt: 'createdOn', updatedAt: 'updatedOn' }
 });

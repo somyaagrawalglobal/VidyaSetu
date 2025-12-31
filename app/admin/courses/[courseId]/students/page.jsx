@@ -114,9 +114,17 @@ export default function CourseStudentsPage({ params }) {
 
             <div className="max-w-6xl mx-auto">
                 {/* Breadcrumbs/Back */}
-                <Link href="/admin/courses" className="inline-flex items-center gap-2 text-slate-500 hover:text-indigo-600 font-medium text-sm mb-8 transition-colors">
-                    <ArrowLeft size={16} /> Back to Courses
-                </Link>
+                <div className="flex items-center gap-4 mb-8">
+                    <Link href="/admin/courses" className="p-2 bg-white border border-slate-200 rounded-lg text-slate-400 hover:text-indigo-600 transition-all">
+                        <ArrowLeft className="w-5 h-5" />
+                    </Link>
+                    <div>
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-emerald-50 text-emerald-700 text-[10px] font-bold uppercase tracking-wider mb-2 border border-emerald-100/50">
+                            Student Management
+                        </div>
+                        <h1 className="text-3xl font-bold text-slate-900 tracking-tight">{courseTitle}</h1>
+                    </div>
+                </div>
 
                 {/* Header */}
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
@@ -133,7 +141,7 @@ export default function CourseStudentsPage({ params }) {
                         <input
                             type="text"
                             placeholder="Search students..."
-                            className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/20 outline-none transition-all shadow-sm"
+                            className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500/20 outline-none transition-all shadow-sm"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
@@ -142,26 +150,26 @@ export default function CourseStudentsPage({ params }) {
 
                 {/* Stats Row */}
                 <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-8">
-                    <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                    <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
                         <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Total Enrolled</p>
-                        <p className="text-2xl font-black text-slate-900">{students.length}</p>
+                        <p className="text-2xl font-bold text-slate-900">{students.length}</p>
                     </div>
-                    <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                    <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
                         <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Total Earnings</p>
-                        <p className="text-2xl font-black text-indigo-600">₹{totalEarnings.toLocaleString('en-IN')}</p>
+                        <p className="text-2xl font-bold text-indigo-600">₹{totalEarnings.toLocaleString('en-IN')}</p>
                     </div>
-                    <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                    <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
                         <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Active Students</p>
-                        <p className="text-2xl font-black text-emerald-600">{students.filter(s => s.accessStatus !== 'blocked').length}</p>
+                        <p className="text-2xl font-bold text-emerald-600">{students.filter(s => s.accessStatus !== 'blocked').length}</p>
                     </div>
-                    <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                    <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
                         <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Blocked Access</p>
-                        <p className="text-2xl font-black text-red-600">{students.filter(s => s.accessStatus === 'blocked').length}</p>
+                        <p className="text-2xl font-bold text-red-600">{students.filter(s => s.accessStatus === 'blocked').length}</p>
                     </div>
                 </div>
 
                 {/* Students Table */}
-                <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+                <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
                     <div className="overflow-x-auto">
                         <table className="w-full text-left">
                             <thead className="bg-slate-50 border-b border-slate-100">
@@ -213,7 +221,7 @@ export default function CourseStudentsPage({ params }) {
                                                 <div className="w-48">
                                                     <div className="flex justify-between items-center mb-1.5">
                                                         <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tight">Completion</span>
-                                                        <span className="text-[10px] font-black text-indigo-600">{student.progressPercent}%</span>
+                                                        <span className="text-[10px] font-bold text-indigo-600">{student.progressPercent}%</span>
                                                     </div>
                                                     <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
                                                         <div
@@ -225,11 +233,11 @@ export default function CourseStudentsPage({ params }) {
                                             </td>
                                             <td className="px-6 py-4">
                                                 {student.accessStatus === 'blocked' ? (
-                                                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-red-50 text-red-600 text-[10px] font-black uppercase tracking-widest border border-red-100 cursor-default">
+                                                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-red-50 text-red-600 text-[10px] font-bold uppercase tracking-widest border border-red-100 cursor-default">
                                                         <ShieldAlert size={10} /> Blocked
                                                     </span>
                                                 ) : (
-                                                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-emerald-50 text-emerald-600 text-[10px] font-black uppercase tracking-widest border border-emerald-100 cursor-default">
+                                                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-emerald-50 text-emerald-600 text-[10px] font-bold uppercase tracking-widest border border-emerald-100 cursor-default">
                                                         <ShieldCheck size={10} /> Active
                                                     </span>
                                                 )}

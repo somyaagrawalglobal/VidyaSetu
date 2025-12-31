@@ -22,9 +22,14 @@ export async function GET(request, { params }) {
         const { userId } = await params;
         await dbConnect();
 
-        const user = await User.findById(userId).select('firstName lastName email profileImage');
+        const user = await User.findById(userId).select('firstName lastName email profileImage roles');
         if (!user) {
             return NextResponse.json({ success: false, message: 'User not found' }, { status: 404 });
+        }
+
+        // Check if user is a student
+        if (!user.roles.includes('Student')) {
+            return NextResponse.json({ success: false, message: 'Enrollment management is only available for students' }, { status: 400 });
         }
 
         // Get all completed orders for this user
@@ -33,8 +38,11 @@ export async function GET(request, { params }) {
             status: 'completed'
         }).populate('course', 'title thumbnail');
 
+        // Filter out orders where course might have been deleted
+        const validEnrollments = enrollments.filter(order => order.course);
+
         // Calculate progress for each enrollment
-        const enrollmentData = await Promise.all(enrollments.map(async (order) => {
+        const enrollmentData = await Promise.all(validEnrollments.map(async (order) => {
             const courseId = order.course._id;
 
             // Total lessons in course

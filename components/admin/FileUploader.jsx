@@ -140,7 +140,7 @@ export default function FileUploader({ type, initialUrl, onUploadSuccess, accept
                         </div>
                     )}
 
-                    {preview && status !== 'uploading' && (
+                    {preview && (
                         <div className="relative aspect-video max-h-48 rounded-lg overflow-hidden border border-slate-100 bg-white mx-auto">
                             {isImage ? (
                                 <img src={preview} alt="Preview" className="w-full h-full object-cover" />
@@ -153,48 +153,44 @@ export default function FileUploader({ type, initialUrl, onUploadSuccess, accept
                                 </div>
                             )}
 
-                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                                <button
-                                    type="button"
-                                    onClick={() => fileInputRef.current.click()}
-                                    className="p-2 bg-white rounded-full text-slate-700 hover:text-indigo-600 transition-colors"
-                                    title="Change"
-                                >
-                                    <Upload size={18} />
-                                </button>
-                                <button
-                                    type="button"
-                                    onClick={clearFile}
-                                    className="p-2 bg-white rounded-full text-slate-700 hover:text-red-600 transition-colors"
-                                    title="Remove"
-                                >
-                                    <X size={18} />
-                                </button>
-                            </div>
+                            {status !== 'uploading' && (
+                                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                                    <button
+                                        type="button"
+                                        onClick={() => fileInputRef.current.click()}
+                                        className="p-2 bg-white rounded-full text-slate-700 hover:text-indigo-600 transition-colors"
+                                        title="Change"
+                                    >
+                                        <Upload size={18} />
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={clearFile}
+                                        className="p-2 bg-white rounded-full text-slate-700 hover:text-red-600 transition-colors"
+                                        title="Remove"
+                                    >
+                                        <X size={18} />
+                                    </button>
+                                </div>
+                            )}
 
                             {status === 'success' && (
-                                <div className="absolute top-2 right-2 p-1 bg-emerald-500 rounded-full text-white shadow-lg">
+                                <div className="absolute top-2 right-2 p-1 bg-emerald-500 rounded-full text-white shadow-lg z-20">
                                     <CheckCircle size={14} />
                                 </div>
                             )}
-                        </div>
-                    )}
 
-                    {status === 'uploading' && (
-                        <div className="py-8 flex flex-col items-center justify-center">
-                            <div className="relative mb-4">
-                                <Loader2 className="w-10 h-10 text-indigo-500 animate-spin" />
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                    <span className="text-[10px] font-bold text-indigo-700">{progress}%</span>
+                            {status === 'uploading' && (
+                                <div className="absolute inset-0 bg-white/60 backdrop-blur-[2px] z-10 flex flex-col items-center justify-center">
+                                    <div className="relative mb-2">
+                                        <Loader2 className="w-8 h-8 text-indigo-500 animate-spin" />
+                                        <div className="absolute inset-0 flex items-center justify-center">
+                                            <span className="text-[8px] font-black text-indigo-700">{progress}%</span>
+                                        </div>
+                                    </div>
+                                    <p className="text-[10px] font-black text-indigo-900 uppercase tracking-widest animate-pulse">Uploading...</p>
                                 </div>
-                            </div>
-                            <p className="text-sm font-bold text-indigo-900 animate-pulse">Uploading file...</p>
-                            <div className="mt-4 w-48 h-1.5 bg-indigo-100 rounded-full overflow-hidden">
-                                <div
-                                    className="h-full bg-indigo-500 transition-all duration-300"
-                                    style={{ width: `${progress}%` }}
-                                />
-                            </div>
+                            )}
                         </div>
                     )}
 

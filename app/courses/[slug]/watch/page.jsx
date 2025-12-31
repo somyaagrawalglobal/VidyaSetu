@@ -5,6 +5,7 @@ import { Lock } from 'lucide-react';
 import WatchHeader from '@/components/watch/WatchHeader';
 import WatchSidebar from '@/components/watch/WatchSidebar';
 import WatchContent from '@/components/watch/WatchContent';
+import Loader from '@/components/Loader';
 
 export default function WatchCoursePage({ params }) {
     const { slug } = use(params);
@@ -74,12 +75,7 @@ export default function WatchCoursePage({ params }) {
         return Math.round((completedLessons.length / totalLessons) * 100);
     };
 
-    if (loading) return (
-        <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center space-y-4">
-            <div className="w-14 h-14 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin" />
-            <p className="text-slate-300 font-semibold text-sm">Preparing your classroom...</p>
-        </div>
-    );
+    if (loading) return <Loader text="Preparing your classroom..." />;
 
 
     if (error) return (

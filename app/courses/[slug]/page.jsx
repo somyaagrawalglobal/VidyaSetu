@@ -14,11 +14,13 @@ import {
     BarChart,
     User,
     Share2,
-    Heart
+    Heart,
+    Edit3
 } from 'lucide-react';
 
 import VideoPlayerModal from '@/components/VideoPlayerModal';
 import EnrollmentModal from '@/components/EnrollmentModal';
+import Loader from '@/components/Loader';
 
 const loadRazorpay = () => {
     return new Promise((resolve) => {
@@ -42,6 +44,7 @@ export default function CourseDetails({ params }) {
     const [loading, setLoading] = useState(true);
     const [isEnrolled, setIsEnrolled] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
+    const [isInstructor, setIsInstructor] = useState(false);
     const [activeModule, setActiveModule] = useState(0);
     const [previewModal, setPreviewModal] = useState({ isOpen: false, videoId: '', title: '' });
     const [isEnrollModalOpen, setIsEnrollModalOpen] = useState(false);
@@ -60,6 +63,7 @@ export default function CourseDetails({ params }) {
                     setCourse(data.course);
                     setIsEnrolled(data.isEnrolled);
                     setIsAdmin(data.isAdmin);
+                    setIsInstructor(data.isInstructor);
                 }
             } catch (error) {
                 console.error('Error:', error);
@@ -84,11 +88,7 @@ export default function CourseDetails({ params }) {
         alert('Course link copied to clipboard!');
     };
 
-    if (loading) return (
-        <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
-        </div>
-    );
+    if (loading) return <Loader text="Unlocking course secrets..." />;
 
     if (!course) return (
         <div className="min-h-screen bg-slate-50 pt-24 text-center">
@@ -319,6 +319,16 @@ export default function CourseDetails({ params }) {
                                     </button>
                                 )}
 
+                                {(isAdmin || isInstructor) && (
+                                    <button
+                                        onClick={() => router.push(`/admin/courses/edit/${course._id}`)}
+                                        className="w-full bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 text-sm font-bold py-3 rounded-xl mb-3 flex items-center justify-center gap-2 transition-all"
+                                    >
+                                        <Edit3 className="w-4 h-4" />
+                                        Edit Course
+                                    </button>
+                                )}
+
                                 <p className="text-center text-xs text-gray-500 mb-6">30-Day Money-Back Guarantee</p>
 
                                 <div className="space-y-3 text-sm text-gray-600 font-medium">
@@ -382,6 +392,6 @@ export default function CourseDetails({ params }) {
                 videoId={previewModal.videoId}
                 title={previewModal.title}
             />
-        </div>
+        </div >
     );
 }

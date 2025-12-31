@@ -28,10 +28,10 @@ const CorePillarCard = ({ Icon, title, description, colorClass }) => (
         <div className={`w-10 h-10 sm:w-11 sm:h-11 ${colorClass} rounded-xl flex items-center justify-center mb-3 sm:mb-4 transition-all duration-500 group-hover:rotate-6 group-hover:scale-110 shadow-lg`}>
             <Icon className="w-5 h-5 sm:w-5 sm:h-5 text-white" />
         </div>
-        <h3 className="text-sm font-black text-slate-900 mb-1.5 group-hover:text-indigo-600 transition">
+        <h3 className="text-sm font-bold text-slate-900 mb-1.5 group-hover:text-indigo-600 transition">
             {title}
         </h3>
-        <p className="text-xs text-slate-600 font-medium leading-relaxed">{description}</p>
+        <p className="text-xs text-slate-600 font-semibold leading-relaxed">{description}</p>
     </div>
 );
 
@@ -42,15 +42,15 @@ const BridgeFeature = ({ title, description, Icon, colorClass, index }) => (
         data-aos="fade-right"
         data-aos-duration="500"
     >
-        <div className={`text-lg font-black text-indigo-200 flex-shrink-0 mt-0.5 transition-all duration-300 group-hover:text-indigo-600 group-hover:scale-125`}>
+        <div className={`text-lg font-bold text-indigo-400 flex-shrink-0 mt-0.5 transition-all duration-300 group-hover:text-indigo-600 group-hover:scale-125`}>
             {index}
         </div>
         <div className="flex-1">
-            <h4 className="text-sm font-bold text-slate-900 flex items-center space-x-2">
+            <h4 className="text-sm font-semibold text-slate-900 flex items-center space-x-2">
                 <Icon className={`w-4 h-4 ${colorClass} mr-1.5 transition-transform group-hover:scale-110`} />
                 <span>{title}</span>
             </h4>
-            <p className="text-xs text-slate-600 font-medium mt-1 leading-relaxed">{description}</p>
+            <p className="text-xs text-slate-600 font-semibold mt-1 leading-relaxed">{description}</p>
         </div>
     </div>
 );
@@ -91,12 +91,12 @@ export default function About() {
                         data-aos-duration="600"
                     >
                         <Sparkles className="w-3.5 h-3.5 text-indigo-500" />
-                        <span className="text-[10px] sm:text-xs font-extrabold text-slate-600 uppercase tracking-widest">Our Foundation</span>
+                        <span className="text-[10px] sm:text-xs font-bold text-slate-600 uppercase tracking-widest">Our Foundation</span>
                     </div>
 
                     {/* Main Title - Responsive & Animated */}
                     <h1
-                        className="text-xl sm:text-2xl md:text-3xl font-black text-slate-900 mb-4 sm:mb-5 leading-tight"
+                        className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-4 sm:mb-6 leading-[1.1]"
                         data-aos="fade-up"
                         data-aos-duration="800"
                     >
@@ -124,7 +124,7 @@ export default function About() {
                     >
                         <Link
                             href="/careers"
-                            className="inline-flex items-center justify-center px-6 py-2.5 text-sm sm:text-base font-bold text-white bg-indigo-600 border border-transparent rounded-full shadow-xl shadow-indigo-400/50 hover:bg-indigo-700 transition-all duration-500 ease-out transform hover:scale-[1.05] active:scale-100"
+                            className="inline-flex items-center justify-center px-6 py-2.5 text-sm sm:text-base font-semibold text-white bg-indigo-600 border border-transparent rounded-full shadow-xl shadow-indigo-400/50 hover:bg-indigo-700 transition-all duration-500 ease-out transform hover:scale-[1.05] active:scale-100"
                         >
                             Explore Our Vision <ArrowRight className="w-4 h-4 ml-1.5" />
                         </Link>
@@ -140,7 +140,7 @@ export default function About() {
                         {/* Left: Solution Features - Sticky on Large Screens, Responsive Padding */}
                         <div className="lg:sticky lg:top-8" >
                             <h2
-                                className="text-lg sm:text-xl font-black text-slate-900 mb-4 sm:mb-5 border-b-4 border-indigo-200 pb-2 flex items-center"
+                                className="text-lg sm:text-xl font-bold text-slate-800 mb-4 sm:mb-5 border-b-4 border-indigo-200 pb-2 flex items-center"
                                 data-aos="fade-right"
                                 data-aos-duration="700"
                             >
@@ -148,7 +148,7 @@ export default function About() {
                                 <span>From Academia to Industry Readiness</span>
                             </h2>
                             <p
-                                className="text-xs sm:text-sm text-slate-600 mb-6 sm:mb-8 border-l-4 border-indigo-400 pl-3 font-bold leading-relaxed"
+                                className="text-xs sm:text-sm text-slate-600 mb-6 sm:mb-8 border-l-4 border-indigo-400 pl-3 font-semibold leading-relaxed"
                                 data-aos="fade-right"
                                 data-aos-duration="700"
                                 data-aos-delay="200"
@@ -191,7 +191,7 @@ export default function About() {
                         <div className="relative h-full min-h-[500px] w-full flex flex-col items-center justify-center p-4 lg:p-0">
 
                             <h3
-                                className="text-base sm:text-lg font-black text-slate-700 mb-6 sm:mb-7 tracking-tight"
+                                className="text-base sm:text-lg font-bold text-slate-700 mb-6 sm:mb-7 tracking-tight"
                                 data-aos="fade-left"
                                 data-aos-duration="700"
                             >The Three-Stage Transformation</h3>
@@ -209,8 +209,8 @@ export default function About() {
                                             <BookOpen className="w-6 h-6 sm:w-7 sm:h-7 text-indigo-500" />
                                         </div>
                                     </div>
-                                    <p className="text-sm font-black text-slate-900 uppercase tracking-tight">ACADEMIA</p>
-                                    <p className="text-[10px] text-slate-500 font-bold mt-1 uppercase tracking-widest">Theoretical Knowledge</p>
+                                    <p className="text-sm font-bold text-slate-900 uppercase tracking-tight">ACADEMIA</p>
+                                    <p className="text-[10px] text-slate-500 font-semibold mt-1 uppercase tracking-widest">Theoretical Knowledge</p>
                                 </div>
 
                                 {/* Transition Arrow 1 */}
@@ -225,11 +225,11 @@ export default function About() {
                                     data-aos-duration="700"
                                 >
                                     <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(255,255,255,0.2),transparent)] opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
-                                    <p className="text-xl sm:text-2xl font-black text-white tracking-[0.2em] uppercase mb-1">
+                                    <p className="text-xl sm:text-2xl font-bold text-white tracking-[0.2em] uppercase mb-1">
                                         VIDYA-SETU
                                     </p>
                                     <div className="h-1 w-12 bg-indigo-400/50 mx-auto rounded-full mb-2"></div>
-                                    <p className="text-xs sm:text-sm text-indigo-100 font-bold uppercase tracking-widest">
+                                    <p className="text-xs sm:text-sm text-indigo-100 font-semibold uppercase tracking-widest">
                                         Skill Bridge & practical Application
                                     </p>
                                 </div>
@@ -250,8 +250,8 @@ export default function About() {
                                             <Briefcase className="w-6 h-6 sm:w-7 sm:h-7 text-emerald-500" />
                                         </div>
                                     </div>
-                                    <p className="text-sm font-black text-slate-900 uppercase tracking-tight">INDUSTRY</p>
-                                    <p className="text-[10px] text-slate-500 font-bold mt-1 uppercase tracking-widest">Placement & Competence</p>
+                                    <p className="text-sm font-bold text-slate-900 uppercase tracking-tight">INDUSTRY</p>
+                                    <p className="text-[10px] text-slate-500 font-semibold mt-1 uppercase tracking-widest">Placement & Competence</p>
                                 </div>
 
                             </div>
@@ -266,12 +266,12 @@ export default function About() {
 
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
                     <div className="inline-block px-4 py-1.5 rounded-full bg-indigo-50 border border-indigo-100 mb-4" data-aos="fade-down">
-                        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-600">
+                        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-indigo-600">
                             Our Core DNA
                         </p>
                     </div>
                     <h2
-                        className="text-xl sm:text-2xl md:text-3xl font-black text-slate-900 mb-12"
+                        className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-900 mb-12"
                         data-aos="fade-up"
                         data-aos-duration="700"
                     >
@@ -322,8 +322,8 @@ export default function About() {
                                     priority
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-8">
-                                    <p className="text-white font-black text-lg">Somya Agrawal</p>
-                                    <p className="text-indigo-200 text-sm font-bold uppercase tracking-widest">Founder & CEO</p>
+                                    <p className="text-white font-bold text-lg">Somya Agrawal</p>
+                                    <p className="text-indigo-200 text-sm font-semibold uppercase tracking-widest">Founder & CEO</p>
                                 </div>
                             </div>
                         </div>
@@ -336,11 +336,11 @@ export default function About() {
                             data-aos-delay="200"
                         >
                             <div className="inline-block px-4 py-1.5 rounded-full bg-violet-50 border border-violet-100 mb-4">
-                                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-violet-600">
+                                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-violet-600">
                                     Our Leadership
                                 </p>
                             </div>
-                            <h2 className="text-xl sm:text-2xl font-black text-slate-900 mb-6 leading-tight">
+                            <h2 className="text-xl sm:text-2xl font-bold text-slate-900 mb-6 leading-tight">
                                 Meet our visionary founder, <span className={gradientTextClass}>Somya Agrawal</span>
                             </h2>
 
@@ -348,7 +348,7 @@ export default function About() {
                                 Somya's journey began with a frustration: seeing highly educated graduates unable to secure quality jobs due to a lack of practical skills. This realization fueled the inception of Vidya-Setu.
                             </p>
 
-                            <blockquote className="p-6 border-l-4 border-violet-500 bg-gradient-to-r from-violet-50 to-white italic text-slate-800 font-bold text-xs sm:text-sm rounded-r-2xl shadow-sm relative overflow-hidden group">
+                            <blockquote className="p-6 border-l-4 border-violet-500 bg-gradient-to-r from-violet-50 to-white italic text-slate-800 font-semibold text-xs sm:text-sm rounded-r-2xl shadow-sm relative overflow-hidden group">
                                 <div className="absolute -right-4 -bottom-4 opacity-[0.05] transition-transform group-hover:scale-110">
                                     <Sparkles className="w-24 h-24 text-violet-900" />
                                 </div>
