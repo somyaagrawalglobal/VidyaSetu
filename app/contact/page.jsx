@@ -25,12 +25,12 @@ const ContactInfoCard = ({ icon: Icon, title, content, link, linkText, bgColor, 
         </div>
 
         <div className="ml-4">
-            <h3 className="text-sm font-black text-slate-900 mb-0.5">{title}</h3>
+            <h3 className="text-sm font-bold text-slate-800 mb-0.5">{title}</h3>
             <p className="text-slate-600 font-medium text-xs mb-1.5 leading-relaxed">{content}</p>
             {link && (
                 <a
                     href={link}
-                    className={`${textColor.replace('-100', '-600').replace('bg-', 'text-')} font-bold text-xs inline-flex items-center hover:translate-x-1 transition-transform`}
+                    className={`${textColor.replace('-100', '-600').replace('bg-', 'text-')} font-semibold text-xs inline-flex items-center hover:translate-x-1 transition-transform`}
                     target="_blank"
                     rel="noopener noreferrer"
                 >
@@ -72,12 +72,12 @@ export default function ContactPage() {
                         data-aos-duration="600"
                     >
                         <Sparkles className="w-3.5 h-3.5 text-indigo-500" />
-                        <span className="text-[10px] sm:text-xs font-extrabold text-slate-600 uppercase tracking-widest">We're Here To Listen</span>
+                        <span className="text-[10px] sm:text-xs font-bold text-slate-600 uppercase tracking-widest">We're Here To Listen</span>
                     </div>
 
-                    {/* Main Title - Using font-black and gradientTextClass */}
+                    {/* Main Title - Using font-bold and gradientTextClass */}
                     <h1
-                        className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 mb-4 sm:mb-6 leading-[1.1]"
+                        className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-4 sm:mb-6 leading-[1.1]"
                         data-aos="fade-up"
                         data-aos-duration="800"
                     >
@@ -105,7 +105,7 @@ export default function ContactPage() {
                         data-aos="fade-right"
                         data-aos-duration="700"
                     >
-                        <h2 className="text-base sm:text-lg font-black text-slate-900 mb-2">
+                        <h2 className="text-base sm:text-lg font-bold text-slate-800 mb-2">
                             Let's Connect
                         </h2>
                         <p className="text-xs sm:text-sm text-slate-600 font-medium leading-relaxed">
@@ -144,12 +144,12 @@ export default function ContactPage() {
 
                     {/* Contact Form (Right Column) - Minimal, Glassmorphic, Premium */}
                     <div
-                        className="lg:col-span-2 bg-white/70 backdrop-blur-2xl p-6 sm:p-8 rounded-2xl shadow-2xl shadow-indigo-200/40 border border-white/80"
+                        className="lg:col-span-2 bg-white/70 backdrop-blur-2xl p-6 sm:p-8 rounded-2xl shadow-2xl shadow-indigo-200/40 border border-white/80 hover:-translate-y-1 transition-all duration-500"
                         data-aos="fade-left"
                         data-aos-duration="700"
                     >
                         <div className="mb-6">
-                            <h2 className="text-lg font-black text-slate-900 mb-1 flex items-center">
+                            <h2 className="text-lg font-bold text-slate-800 mb-1 flex items-center">
                                 <Send className="w-4 h-4 mr-2 text-indigo-600" />
                                 Send a Quick Inquiry
                             </h2>
@@ -163,7 +163,7 @@ export default function ContactPage() {
                             {/* Name and Email - Fieldset */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-slate-700 font-bold mb-1.5 text-[11px]">Full Name</label>
+                                    <label className="block text-slate-700 font-semibold mb-1.5 text-[11px]">Full Name</label>
                                     <div className="relative group">
                                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                             <User className="h-3.5 w-3.5 text-slate-400 group-focus-within:text-indigo-500 transition-colors duration-500" />
@@ -177,7 +177,7 @@ export default function ContactPage() {
                                     </div>
                                 </div>
                                 <div>
-                                    <label className="block text-slate-700 font-bold mb-1.5 text-[11px]">Email Address</label>
+                                    <label className="block text-slate-700 font-semibold mb-1.5 text-[11px]">Email Address</label>
                                     <div className="relative group">
                                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                             <Mail className="h-3.5 w-3.5 text-slate-400 group-focus-within:text-indigo-500 transition-colors duration-500" />
@@ -194,7 +194,7 @@ export default function ContactPage() {
 
                             {/* Subject */}
                             <div>
-                                <label className="block text-slate-700 font-bold mb-1.5 text-[11px]">Subject/Topic</label>
+                                <label className="block text-slate-700 font-semibold mb-1.5 text-[11px]">Subject/Topic</label>
                                 <div className="relative group">
                                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                         <Type className="h-3.5 w-3.5 text-slate-400 group-focus-within:text-indigo-500 transition-colors duration-500" />
@@ -210,7 +210,7 @@ export default function ContactPage() {
 
                             {/* Message */}
                             <div>
-                                <label className="block text-slate-700 font-bold mb-1.5 text-[11px]">Your Message</label>
+                                <label className="block text-slate-700 font-semibold mb-1.5 text-[11px]">Your Message</label>
                                 <textarea
                                     placeholder="I'm interested in..."
                                     className="w-full px-4 py-3 text-xs rounded-xl bg-slate-50/50 border border-gray-200 focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-100 outline-none h-32 resize-none transition-all duration-500 ease-out placeholder-slate-400"
@@ -221,7 +221,7 @@ export default function ContactPage() {
                             {/* Submit Button */}
                             <button
                                 type="submit"
-                                className="w-full group relative overflow-hidden bg-slate-900 text-white font-bold text-xs py-3 rounded-xl shadow-xl shadow-slate-200 hover:shadow-indigo-200 hover:scale-[1.01] transition-all duration-500 ease-out"
+                                className="w-full group relative overflow-hidden bg-slate-900 text-white font-semibold text-xs py-3 rounded-xl shadow-xl shadow-slate-200 hover:shadow-indigo-200 hover:scale-[1.01] transition-all duration-500 ease-out"
                             >
                                 <span className="relative z-10 flex items-center justify-center">
                                     Send Your Message
