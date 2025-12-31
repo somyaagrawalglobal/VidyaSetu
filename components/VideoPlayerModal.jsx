@@ -14,6 +14,7 @@ export default function VideoPlayerModal({ isOpen, onClose, videoId, title }) {
         }
     }, [isOpen]);
 
+
     if (!isOpen && !animate) return null;
 
     // Construct YouTube embed URL
