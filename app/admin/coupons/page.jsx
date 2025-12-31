@@ -2,10 +2,11 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { Plus, Tag, Calendar, Users, Trash2, Loader2, AlertCircle, CheckCircle2, Edit, Ban } from 'lucide-react';
+import { Plus, Tag, Calendar, Users, Trash2, Loader2, AlertCircle, CheckCircle2, Edit, Ban, Lock, GraduationCap } from 'lucide-react';
 import { useToast } from '@/components/ToastContext';
 import GenericMultiSelect from '@/components/GenericMultiSelect';
 import Modal from '@/components/Modal';
+import Loader from '@/components/Loader';
 
 export default function AdminCouponsPage() {
     const toast = useToast();
@@ -189,6 +190,32 @@ export default function AdminCouponsPage() {
             toast.error('An error occurred');
         }
     };
+
+    // Loading State
+    if (loading) {
+        return <Loader text="Loading Coupon Management..." />;
+    }
+
+    // Access Denied State
+    if (!isAuthorized) {
+        return (
+            <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 p-6 text-center">
+                <div className="w-24 h-24 bg-red-500/10 rounded-3xl flex items-center justify-center mb-8 shadow-xl shadow-red-500/5">
+                    <Lock className="w-12 h-12 text-red-400" />
+                </div>
+                <h1 className="text-3xl font-bold text-slate-900 mb-3">Access Denied</h1>
+                <p className="text-slate-500 max-w-md mb-8 leading-relaxed">
+                    You don't have permission to access this page. Only administrators can manage coupons.
+                </p>
+                <Link
+                    href="/dashboard"
+                    className="bg-indigo-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-100"
+                >
+                    Return to Dashboard
+                </Link>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-slate-50 pt-24 pb-16 px-4">
