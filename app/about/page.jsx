@@ -1,194 +1,280 @@
 "use client";
 
 import Image from "next/image";
-import { Eye, Target, CheckCircle, Award, Users, Lightbulb, Sparkles } from "lucide-react";
+import Link from "next/link";
+import {
+    Users,
+    Briefcase,
+    Workflow,
+    Sparkles,
+    Lightbulb,
+    TrendingUp,
+    Zap,
+    BookOpen,
+    ArrowRight,
+    Handshake,
+    ArrowLeft,
+} from "lucide-react";
+
+// --- START: Reusable Components for Modularity and Design Consistency ---
+
+// Component for the new Core Pillars section
+const CorePillarCard = ({ Icon, title, description, colorClass }) => (
+    <div className="p-6 sm:p-8 bg-white border border-gray-100 rounded-3xl shadow-lg transition duration-500 hover:shadow-2xl hover:border-indigo-300 group transform hover:scale-[1.02] animate-in fade-in slide-in-from-bottom-8 duration-700">
+        <div className={`w-12 h-12 sm:w-14 sm:h-14 ${colorClass} rounded-full flex items-center justify-center mb-4 sm:mb-6 transition-all duration-500 group-hover:rotate-6`}>
+            <Icon className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
+        </div>
+        <h3 className="text-base font-bold text-slate-900 mb-2 group-hover:text-indigo-600 transition">
+            {title}
+        </h3>
+        <p className="text-sm sm:text-sm text-slate-600">{description}</p>
+    </div>
+);
+
+// Component for the "Bridge" feature list
+const BridgeFeature = ({ title, description, Icon, colorClass, index }) => (
+    <div className="flex items-start space-x-4 border-l-4 border-indigo-200 pl-4 py-3 group hover:bg-indigo-50/50 rounded-r-lg transition duration-300 transform hover:translate-x-1">
+        <div className={`text-xl sm:text-2xl font-extrabold text-indigo-600 flex-shrink-0 mt-1 transition-all duration-300 group-hover:scale-110`}>
+            {index}
+        </div>
+        <div className="flex-1">
+            <h4 className="text-base sm:text-lg font-semibold text-slate-900 flex items-center space-x-2">
+                <Icon className={`w-4 h-4 sm:w-5 sm:h-5 ${colorClass} mr-2`} />
+                <span>{title}</span>
+            </h4>
+            <p className="text-xs sm:text-sm text-slate-500 mt-1">{description}</p>
+        </div>
+    </div>
+);
+
+// Separate component for the down arrow for clarity and re-use
+const ArrowDownIcon = (props) => (
+    <svg {...props} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+    </svg>
+);
+
+// --- END: Reusable Components ---
 
 export default function About() {
     // Custom classes for consistent brand colors
-    const primaryColor = 'indigo-600';
-    const secondaryColor = 'violet-500';
-    const gradientTextClass = `bg-clip-text text-transparent bg-gradient-to-r from-${primaryColor} to-${secondaryColor}`;
+    const primaryColor = "indigo-600";
+    const secondaryColor = "violet-500";
+    // Updated gradient class to match the Contact page's aesthetic
+    const gradientTextClass = `bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600`;
 
     return (
-        <main className="text-slate-800">
+        <main className="text-slate-800 bg-[#F8FAFC] font-sans overflow-x-hidden min-h-screen">
 
-            {/* 1. Header - Clean & Focused */}
-            <section className={`pt-30 pb-16 relative overflow-hidden bg-gradient-to-b from-white to-indigo-50/50 border-b border-indigo-100`}>
-                <div className="max-w-7xl mx-auto px-4 text-center">
+            {/* 1. Hero/Introduction - High Impact with Contact Page Aesthetic */}
+            <section className="relative pt-28 pb-10 overflow-hidden border-b border-gray-100">
+                
+                {/* Dynamic Background Elements for Smoothness and Visual Depth */}
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-gradient-to-b from-indigo-50/50 to-transparent rounded-full blur-[120px] -z-10"></div>
+                <div className="absolute -top-24 -right-24 w-96 h-96 bg-purple-100/40 rounded-full blur-[100px] -z-10 animate-pulse hidden md:block"></div>
+                <div className="absolute top-1/2 -left-24 w-80 h-80 bg-blue-100/30 rounded-full blur-[100px] -z-10 hidden md:block"></div>
 
-                    <h1 className="text-2xl md:text-4xl font-bold text-slate-900 mb-4" data-aos="fade-down" data-aos-delay="100">
-                        The Com-<span className={gradientTextClass}>ED</span> Difference
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
+                    
+                    {/* Metadata Pill - Animated */}
+                    <div className="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-white/80 backdrop-blur-md border border-indigo-100 shadow-sm mb-6 sm:mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+                        <Sparkles className="w-4 h-4 text-indigo-500" />
+                        <span className="text-xs font-bold text-slate-600 uppercase tracking-widest">Our Foundation</span>
+                    </div>
+
+                    {/* Main Title - Responsive & Animated */}
+                    <h1 className="text-2xl md:text-4xl font-black font-bold text-slate-900 mb-6 leading-tight animate-in fade-in slide-in-from-bottom-6 duration-1000 delay-200">
+                        Building the <span className={gradientTextClass}>Bridge</span>{" "}
+                        to Future Careers
                     </h1>
-                    <p className="my-4 text-md text-slate-600 max-w-3xl mx-auto leading-relaxed" data-aos="fade-up" data-aos-delay="200">
-                        Empowering the next generation with real skills for real careers. We are committed to building the bridge between academic potential and industry success.
+                    
+                    {/* Subtitle/Description - Responsive & Animated */}
+                    <p className="mt-4 sm:mt-6 text-base sm:text-md text-slate-600 max-w-4xl mx-auto leading-relaxed animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300">
+                        Vidya-Setu exists to solve the employability crisis. We don't just educate—we build the professional
+                        pipeline, connecting high-potential talent with guaranteed, job-aligned experience.
                     </p>
 
-                    <div className="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-white/80 backdrop-blur-md border border-indigo-100 shadow-sm mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-                        <Sparkles className="w-4 h-4 text-indigo-500" />
-                        <span className="text-xs font-bold text-slate-600 uppercase tracking-widest">Our Story, Our Purpose</span>
+                    {/* CTA Button - Responsive & Animated */}
+                    <div className="mt-10 animate-in fade-in duration-1000 delay-500">
+                        <Link
+                            href="/careers"
+                            className="inline-flex items-center justify-center px-8 py-3 text-base font-medium text-white bg-indigo-600 border border-transparent rounded-full shadow-xl shadow-indigo-400/50 hover:bg-indigo-700 transition duration-300 transform hover:scale-[1.05] active:scale-100"
+                        >
+                            Explore Our Vision <ArrowRight className="w-5 h-5 ml-2" />
+                        </Link>
                     </div>
                 </div>
             </section>
 
-            {/* 2. Vision & Mission - Dedicated Section with Clean Blocks */}
-            <section className="py-12 bg-slate-50">
-                <div className="max-w-7xl mx-auto px-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+            {/* 2. The Problem/Solution (Bridge Metaphor) - Responsive Two Columns */}
+            <section className="py-20 sm:py-24 bg-white">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
 
-                        {/* Vision Block */}
-                        <div className="bg-white p-10 lg:p-12 rounded-2xl shadow-2xl shadow-indigo-100/50 border border-indigo-100 h-full" data-aos="fade-right">
-                            <div className={`w-16 h-16 bg-indigo-50 rounded-full flex items-center justify-center mb-6 text-${primaryColor} border-4 border-indigo-100`}>
-                                <Eye className="w-8 h-8" />
-                            </div>
-
-                            <h2 className="text-3xl font-bold text-slate-900 mb-4">Our Vision</h2>
-
-                            <p className="text-slate-600 leading-relaxed text-md">
-                                To build an outcome-driven ed-tech platform where learners do not
-                                just gain certificates, but **real skills, real experience,** and
-                                real career opportunities through structured learning and
-                                guaranteed On-the-Job Training.
-                            </p>
-                        </div>
-
-                        {/* Mission Block */}
-                        <div className="bg-white p-10 lg:p-12 rounded-2xl shadow-2xl shadow-purple-100/50 border border-purple-100 h-full" data-aos="fade-left">
-                            <div className={`w-16 h-16 bg-purple-50 rounded-full flex items-center justify-center mb-6 text-purple-600 border-4 border-purple-100`}>
-                                <Target className="w-8 h-8" />
-                            </div>
-
-                            <h2 className="text-3xl font-bold text-slate-900 mb-4">Our Mission</h2>
-
-                            <ul className="space-y-4 text-slate-600 text-md">
-                                <li className="flex items-start">
-                                    <CheckCircle className={`w-6 h-6 text-${primaryColor} flex-shrink-0 mr-3 mt-1`} />
-                                    Bridge the critical gap between academic training and industry demands.
-                                </li>
-                                <li className="flex items-start">
-                                    <CheckCircle className={`w-6 h-6 text-${primaryColor} flex-shrink-0 mr-3 mt-1`} />
-                                    Provide a project-based ecosystem that fosters job-aligned capability.
-                                </li>
-                                <li className="flex items-start">
-                                    <CheckCircle className={`w-6 h-6 text-${primaryColor} flex-shrink-0 mr-3 mt-1`} />
-                                    Enable students and companies to grow together through effective skill transfer.
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* 3. Founder Story - Modern Two-Column Layout */}
-            <section className="py-24 bg-white border-t border-gray-100">
-                <div className="max-w-7xl mx-auto px-4">
-                    <div className="flex flex-col md:flex-row items-center gap-16">
-
-                        {/* Content */}
-                        <div className="md:w-1/2 md:order-2" data-aos="fade-left">
-                            <h2 className="text-4xl font-bold text-slate-900 mb-6">
-                                Meet the <span className={gradientTextClass}>Founder</span>
+                        {/* Left: Solution Features - Sticky on Large Screens, Responsive Padding */}
+                        <div className="lg:sticky lg:top-8" >
+                            <h2 className="text-xl sm:text-2xl font-bold text-slate-900 mb-6 border-b-4 border-indigo-200 pb-2 flex items-center animate-in fade-in slide-in-from-left-8 duration-700">
+                                <svg className="w-7 h-7 sm:w-8 sm:h-8 text-indigo-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m8 0l3-3m-3 3l3 3"></path></svg>
+                                <span>From Academia to Industry Readiness</span>
                             </h2>
-
-                            <h3 className="text-2xl font-bold mb-4 text-slate-800">
-                                Founder Name
-                            </h3>
-                            <p className={`text-sm font-semibold mb-6 text-${primaryColor} uppercase tracking-widest`}>
-                                Founder & CEO, Company
+                            <p className="text-base sm:text-md text-slate-600 mb-10 border-l-4 border-indigo-400 pl-4 font-medium animate-in fade-in duration-1000 delay-300">
+                                The gap between theoretical knowledge and workplace competence is vast. Vidya-Setu is the solution. We provide the structured, project-driven pathway needed for real-world mastery.
                             </p>
 
-                            <p className="text-slate-600 mb-6 leading-relaxed text-md border-l-4 border-indigo-200 pl-4">
-                                Somya identified a critical gap: students were graduating with
-                                degrees but without immediate employability. The traditional model
-                                focused on certification, neglecting real-world capability.
-                            </p>
-
-                            <p className="text-slate-600 mb-8 leading-relaxed text-md">
-                                Driven by a vision to change this, she founded Vidya-Setu.
-                                Her goal is to create a single, seamless ecosystem where learning meets
-                                practice, and verified practice leads directly to hiring.
-                            </p>
-
-                            <div className={`bg-gray-50 p-6 rounded-xl border border-gray-200 shadow-inner`}>
-                                <p className="italic text-slate-700 text-md">
-                                    "We are building a future where your skills define your worth,
-                                    not just your degree."
-                                </p>
+                            {/* Feature List - Elevated, Distinct Container, Animated */}
+                            <div className="space-y-4 sm:space-y-6 p-6 sm:p-8 bg-indigo-50 rounded-2xl shadow-xl border border-indigo-100 animate-in fade-in slide-in-from-left-12 duration-1000 delay-500">
+                                <BridgeFeature
+                                    index="01"
+                                    title="Project-Centric Learning"
+                                    description="All courses revolve around solving actual, large-scale business problems in a simulated environment."
+                                    Icon={Lightbulb}
+                                    colorClass="text-indigo-600"
+                                />
+                                <BridgeFeature
+                                    index="02"
+                                    title="Guaranteed OJT (On-the-Job Training)"
+                                    description="Verified performance in projects leads directly to real, compensated industry experience with hiring partners."
+                                    Icon={Handshake}
+                                    colorClass="text-violet-600"
+                                />
+                                <BridgeFeature
+                                    index="03"
+                                    title="Employer-Verified Capability"
+                                    description="Our platform tracks skills validated directly by industry experts, not just arbitrary tests or scores."
+                                    Icon={TrendingUp}
+                                    colorClass="text-emerald-600"
+                                />
                             </div>
                         </div>
 
-                        {/* Image - Clean Profile Look */}
-                        <div className="md:w-1/2 md:order-1" data-aos="fade-right">
-                            <div className="relative w-full h-[550px] rounded-2xl overflow-hidden shadow-2xl border-4 border-white transform hover:scale-[1.01] transition duration-500">
+                        {/* Right: Visual Bridge Metaphor - Simplified Flow Diagram, Animated */}
+                        <div className="relative h-full min-h-[500px] w-full flex flex-col items-center justify-center p-4 lg:p-0 animate-in fade-in slide-in-from-right-8 duration-700">
+
+                            <h3 className="text-xl font-bold text-slate-700 mb-8 tracking-tight">The Three-Stage Transformation</h3>
+
+                            <div className="flex flex-col items-center space-y-6 sm:space-y-8 w-full max-w-sm sm:max-w-md">
+
+                                {/* 1. ACADEMIA Stage */}
+                                <div className="w-full p-4 sm:p-6 bg-white rounded-xl shadow-lg border border-gray-100 text-center transform transition duration-300 hover:shadow-2xl hover:scale-[1.02]">
+                                    <div className="flex items-center justify-center mb-3">
+                                        <BookOpen className="w-8 h-8 sm:w-10 sm:h-10 text-indigo-500" />
+                                    </div>
+                                    <p className="text-base sm:text-lg font-extrabold text-slate-900">ACADEMIA</p>
+                                    <p className="text-xs sm:text-sm text-red-600 font-semibold mt-1 uppercase tracking-wider">Theory & Knowledge Base</p>
+                                </div>
+
+                                {/* Transition Arrow 1 */}
+                                <div className="relative">
+                                    <ArrowDownIcon className="w-8 h-8 sm:w-10 sm:h-10 text-indigo-500 animate-bounce" />
+                                </div>
+
+                                {/* 2. THE BRIDGE (VIDYA-SETU) Stage - Highlighted */}
+                                <div className="w-full p-6 sm:p-8 bg-indigo-600 rounded-xl shadow-2xl shadow-indigo-500/50 text-center transform transition duration-500 hover:shadow-3xl hover:scale-[1.05] relative z-10">
+                                    <p className="text-lg sm:text-2xl font-black text-white tracking-widest uppercase">
+                                        VIDYA-SETU
+                                    </p>
+                                    <p className="text-sm sm:text-base text-indigo-200 font-medium mt-1">
+                                        Skill Bridge & Practical Application
+                                    </p>
+                                </div>
+
+                                {/* Transition Arrow 2 */}
+                                <div className="relative">
+                                    <ArrowDownIcon className="w-8 h-8 sm:w-10 sm:h-10 text-emerald-500 animate-bounce" />
+                                </div>
+
+                                {/* 3. INDUSTRY Stage */}
+                                <div className="w-full p-4 sm:p-6 bg-white rounded-xl shadow-lg border border-gray-100 text-center transform transition duration-300 hover:shadow-2xl hover:scale-[1.02]">
+                                    <div className="flex items-center justify-center mb-3">
+                                        <Briefcase className="w-8 h-8 sm:w-10 sm:h-10 text-emerald-500" />
+                                    </div>
+                                    <p className="text-base sm:text-lg font-extrabold text-slate-900">INDUSTRY</p>
+                                    <p className="text-xs sm:text-sm text-green-600 font-semibold mt-1 uppercase tracking-wider">Competence & Placement</p>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* 3. Core Pillars/Values - Responsive Grid Layout */}
+            <section className="py-20 sm:py-24 bg-slate-50 border-t border-b border-gray-100">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                    <p className="text-sm font-semibold uppercase tracking-widest text-violet-600 mb-3 animate-in fade-in duration-700">
+                        Our DNA
+                    </p>
+                    <h2 className="text-xl sm:text-2xl font-bold text-slate-900 mb-12 sm:mb-16 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300">
+                        The Three Pillars of Success
+                    </h2>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-10">
+                        <CorePillarCard
+                            Icon={Workflow}
+                            title="Outcome-Oriented"
+                            description="We measure our success by the job placements and career advancements of our learners, not just completion rates."
+                            colorClass="bg-indigo-600"
+                        />
+                        <CorePillarCard
+                            Icon={Users}
+                            title="Community & Mentorship"
+                            description="A network of industry professionals and peers ensures continuous learning and a supportive environment for growth."
+                            colorClass="bg-violet-600"
+                        />
+                        <CorePillarCard
+                            Icon={Zap}
+                            title="Relevant Technology"
+                            description="Our curriculum is fluid, constantly updating to reflect the cutting-edge tools and in-demand skills of the market."
+                            colorClass="bg-emerald-600"
+                        />
+                    </div>
+                </div>
+            </section>
+
+            {/* 4. Founder/Leadership Story - Responsive Two-Column Layout */}
+            <section className="py-20 sm:py-24 bg-white">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="flex flex-col md:flex-row items-center gap-12 sm:gap-16">
+                        
+                        {/* Image - Responsive Size and Animated */}
+                        <div className="md:w-1/2 w-full animate-in fade-in slide-in-from-left-8 duration-1000">
+                            <div className="relative w-full h-[350px] sm:h-[450px] md:h-[500px] rounded-3xl overflow-hidden shadow-2xl shadow-gray-300/50 border-8 border-white transform transition duration-500 hover:shadow-indigo-300/50">
                                 <Image
-                                    src="/assets/images/hero-img.jpeg"
-                                    alt="Founder of Company"
+                                    src="/assets/images/hero-img.jpeg" // Reusing the founder image
+                                    alt="Founder of Vidya-Setu"
                                     fill
-                                    style={{ objectFit: 'cover' }}
-                                    className="object-top filter grayscale hover:grayscale-0 transition duration-700"
+                                    style={{ objectFit: "cover" }}
+                                    className="object-top"
                                     priority
                                 />
                             </div>
                         </div>
 
-                    </div>
-                </div>
-            </section>
+                        {/* Content - Responsive Text and Animated */}
+                        <div className="md:w-1/2 w-full animate-in fade-in slide-in-from-right-8 duration-1000 delay-300">
+                            <p className="text-sm font-semibold uppercase tracking-widest text-indigo-600 mb-3">
+                                Our Leadership
+                            </p>
+                            <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 mb-6">
+                                Meet Founder Name
+                            </h2>
+                            <h3 className="text-base sm:text-md font-bold mb-4 text-slate-800">
+                                Founder & Visionary
+                            </h3>
 
-            {/* 4. Core Values - Modern Icon-Based Section */}
-            <section className="py-24 bg-slate-50">
-                <div className="max-w-7xl mx-auto px-4 text-center" data-aos="fade-up">
-                    <h2 className="text-4xl font-bold text-slate-900 mb-12">Our Guiding Principles</h2>
+                            <p className="text-slate-600 mb-6 leading-relaxed text-sm sm:text-base">
+                                Somya's journey began with a frustration: seeing highly educated graduates unable to secure quality jobs due to a lack of practical skills. This realization fueled the inception of Vidya-Setu.
+                            </p>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-
-                        <ValueCard
-                            Icon={Award}
-                            title="Excellence"
-                            description="Committing to the highest standards of quality in education, mentorship, and project delivery."
-                            color="indigo"
-                        />
-                        <ValueCard
-                            Icon={Users}
-                            title="Community"
-                            description="Fostering a supportive ecosystem where learners and industry partners grow together."
-                            color="purple"
-                        />
-                        <ValueCard
-                            Icon={Lightbulb}
-                            title="Innovation"
-                            description="Constantly updating our curriculum to reflect the latest tools and trends in technology."
-                            color="teal"
-                        />
+                            <blockquote className="p-4 border-l-4 border-violet-400 bg-violet-50/50 italic text-slate-700 text-xs sm:text-sm rounded-lg transition duration-300 hover:border-violet-600">
+                                <p>
+                                    "We believe education must be accountable. If a student puts in the effort, we guarantee the outcome—real job capability verified by industry standards."
+                                </p>
+                            </blockquote>
+                        </div>
                     </div>
                 </div>
             </section>
         </main>
     );
 }
-
-// Helper Component for Core Values
-const ValueCard = ({ Icon, title, description, color }) => {
-    let iconClasses = '';
-    let textClasses = '';
-
-    if (color === 'indigo') {
-        iconClasses = 'bg-indigo-100 text-indigo-600';
-        textClasses = 'text-indigo-600';
-    } else if (color === 'purple') {
-        iconClasses = 'bg-purple-100 text-purple-600';
-        textClasses = 'text-purple-600';
-    } else if (color === 'teal') {
-        iconClasses = 'bg-teal-100 text-teal-600';
-        textClasses = 'text-teal-600';
-    }
-
-    return (
-        <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-100 h-full transition duration-300 hover:shadow-2xl hover:border-gray-300">
-            <div className={`w-16 h-16 ${iconClasses} rounded-full flex items-center justify-center mx-auto mb-6`}>
-                <Icon className="w-8 h-8" />
-            </div>
-            <h3 className={`text-lg font-bold mb-3 ${textClasses}`}>{title}</h3>
-            <p className="text-slate-600">{description}</p>
-        </div>
-    );
-};

@@ -4,6 +4,12 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
+        hostname: 'api.dicebear.com',
+        port: '', // Leave empty if default port (443 for https)
+        pathname: '/7.x/avataaars/svg/**', // Or use '/**' to allow all paths
+      },
+      {
+        protocol: 'https',
         hostname: 'lwfiles.mycourse.app',
       },
       {
