@@ -232,20 +232,20 @@ export default function AdminCoursesPage() {
                             </div>
                         </div>
 
-                        <div className="flex flex-wrap items-center gap-3">
+                        <div className="flex flex-wrap items-center gap-2">
                             <Link
                                 href="/admin/payouts"
-                                className="flex-1 sm:flex-none inline-flex items-center justify-center bg-white border border-slate-200 text-slate-700 px-6 py-3 rounded-xl font-bold text-sm transition-all hover:bg-slate-50 hover:border-slate-300 active:scale-[0.98] shadow-sm shadow-slate-100"
+                                className="flex-1 sm:flex-none inline-flex items-center justify-center bg-white border border-slate-200 text-slate-700 px-4 py-2 rounded-xl font-bold text-xs transition-all hover:bg-slate-50 hover:border-slate-300 active:scale-[0.98] shadow-sm shadow-slate-100"
                             >
-                                <DollarSign className="w-4 h-4 mr-2 text-emerald-500" />
-                                Payout Status
+                                <DollarSign className="w-3.5 h-3.5 mr-1.5 text-emerald-500" />
+                                Payouts
                             </Link>
                             <Link
                                 href="/admin/courses/add"
-                                className="flex-1 sm:flex-none inline-flex items-center justify-center bg-slate-900 border border-transparent text-white px-6 py-3 rounded-xl font-bold text-sm transition-all hover:bg-slate-800 active:scale-[0.98] shadow-xl shadow-slate-200"
+                                className="flex-1 sm:flex-none inline-flex items-center justify-center bg-slate-900 border border-transparent text-white px-4 py-2 rounded-xl font-bold text-xs transition-all hover:bg-slate-800 active:scale-[0.98] shadow-xl shadow-slate-200"
                             >
-                                <Plus className="w-4 h-4 mr-2" />
-                                Add New Course
+                                <Plus className="w-3.5 h-3.5 mr-1.5" />
+                                New Course
                             </Link>
                         </div>
                     </div>
@@ -254,18 +254,18 @@ export default function AdminCoursesPage() {
                 {/* Filters Section */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
                     {/* Tabs */}
-                    <div className="lg:col-span-8 flex p-1.5 bg-slate-200/50 backdrop-blur-sm rounded-xl w-full overflow-x-auto no-scrollbar">
+                    <div className="lg:col-span-8 flex p-1 bg-slate-200/50 backdrop-blur-sm rounded-xl w-full overflow-x-auto no-scrollbar">
                         {['all', 'pending', 'approved', 'rejected'].map((tab) => (
                             <button
                                 key={tab}
                                 onClick={() => setActiveTab(tab)}
-                                className={`flex-1 sm:flex-none px-6 py-2.5 rounded-lg text-xs font-bold transition-all duration-300 uppercase tracking-widest flex items-center justify-center gap-2 ${activeTab === tab
+                                className={`flex-1 sm:flex-none px-4 py-2 rounded-lg text-[10px] font-bold transition-all duration-300 uppercase tracking-widest flex items-center justify-center gap-2 ${activeTab === tab
                                     ? 'bg-white text-indigo-600 shadow-md ring-1 ring-slate-200/50'
                                     : 'text-slate-500 hover:text-slate-800 hover:bg-white/50'
                                     }`}
                             >
                                 {tab}
-                                <span className={`px-1.5 py-0.5 rounded-md text-[9px] ${activeTab === tab ? 'bg-indigo-50 text-indigo-600' : 'bg-slate-300/50 text-slate-500'
+                                <span className={`px-1.5 py-0.5 rounded-md text-[8px] ${activeTab === tab ? 'bg-indigo-50 text-indigo-600' : 'bg-slate-300/50 text-slate-500'
                                     }`}>
                                     {courses.filter(c => tab === 'all' ? true : (tab === 'pending' ? (c.approvalStatus === 'pending' || !c.approvalStatus) : c.approvalStatus === tab)).length}
                                 </span>

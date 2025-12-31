@@ -167,33 +167,57 @@ export default function UserManagementPage() {
             <div className="max-w-7xl mx-auto space-y-6">
 
                 {/* Header Section */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-xl border border-slate-200">
-                    <div className="flex items-center gap-4">
-                        <Link href="/dashboard" className="p-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-400 hover:text-indigo-600 transition-all">
-                            <ChevronLeft className="w-5 h-5" />
-                        </Link>
-                        <div>
-                            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">User Management</h1>
-                            <p className="text-slate-500 mt-1 font-medium text-xs uppercase tracking-widest">Access Control & Members</p>
+                <div className="relative overflow-hidden bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm">
+                    {/* Background Decorative Elements */}
+                    <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-indigo-50 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
+                    <div className="absolute bottom-0 left-0 -ml-16 -mb-16 w-64 h-64 bg-amber-50 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
+
+                    <div className="relative flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+                        <div className="flex items-start gap-4">
+                            <Link
+                                href="/dashboard"
+                                className="mt-1 p-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-400 hover:text-indigo-600 hover:border-indigo-100 hover:bg-indigo-50 transition-all duration-300 group"
+                            >
+                                <ChevronLeft className="w-5 h-5 group-hover:-translate-x-0.5 transition-transform" />
+                            </Link>
+                            <div>
+                                <div className="flex items-center gap-2 mb-1">
+                                    <span className="px-2 py-0.5 bg-indigo-50 text-indigo-600 text-[10px] font-bold uppercase tracking-wider rounded-md border border-indigo-100">Access Control</span>
+                                    <span className="w-1 h-1 bg-slate-300 rounded-full"></span>
+                                    <span className="text-slate-400 text-[10px] font-bold uppercase tracking-wider">{users.length} Registered Members</span>
+                                </div>
+                                <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
+                                    User <span className="text-indigo-600">Database</span>
+                                </h1>
+                                <p className="text-slate-500 mt-1 font-medium text-sm">
+                                    Manage member privileges, roles, and platform permissions.
+                                </p>
+                            </div>
                         </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                        <div className="px-4 py-2 bg-indigo-50 text-indigo-700 rounded-lg font-bold text-sm border border-indigo-100">
-                            Total: {users.length}
+
+                        <div className="flex items-center gap-3">
+                            <div className="px-4 py-2 bg-white border border-slate-200 rounded-xl flex flex-col items-center justify-center min-w-[80px] shadow-sm">
+                                <span className="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">Total Members</span>
+                                <span className="text-lg font-black text-slate-800">{users.length}</span>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                {/* Filters */}
-                <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-                    <div className="relative w-full sm:max-md">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <Search className="h-5 w-5 text-gray-400" />
+                {/* Filters & Search */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
+                    <div className="lg:col-span-8">
+                        {/* Placeholder for future tabs if needed (e.g. active, banned, roles) */}
+                    </div>
+
+                    <div className="lg:col-span-4 relative group">
+                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                            <Search className="h-4 w-4 text-slate-400 group-focus-within:text-indigo-500 transition-colors" />
                         </div>
                         <input
                             type="text"
-                            placeholder="Find user by name or email..."
-                            className="block w-full pl-10 pr-3 py-3 border border-slate-200 rounded-lg bg-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all text-sm shadow-sm"
+                            placeholder="Find member by name or email..."
+                            className="block w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl bg-white placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-indigo-500/5 focus:border-indigo-500 text-sm transition-all shadow-sm"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
