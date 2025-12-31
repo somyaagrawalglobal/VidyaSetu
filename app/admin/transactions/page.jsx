@@ -179,14 +179,14 @@ export default function AdminTransactionsPage() {
     if (!isAuthorized) {
         return (
             <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
-                <div className="bg-white max-w-md w-full p-8 rounded-2xl border border-slate-200 shadow-xl text-center">
+                <div className="bg-white max-w-md w-full p-8 rounded-xl border border-slate-200 text-center">
                     <div className="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6">
                         <AlertCircle className="text-red-500" size={32} />
                     </div>
-                    <h1 className="text-2xl font-black text-slate-900 mb-2">Access Denied</h1>
-                    <p className="text-slate-500 mb-8">You do not have permission to view this financial data. This area is restricted to administrators only.</p>
-                    <Link href="/" className="inline-block w-full py-3 bg-slate-900 text-white rounded-xl font-bold hover:bg-slate-800 transition-colors">
-                        Return to Home
+                    <h1 className="text-2xl font-bold text-slate-900 mb-2">Access Denied</h1>
+                    <p className="text-slate-500 mb-8 font-medium">You do not have permission to view this financial data. This area is restricted to administrators only.</p>
+                    <Link href="/dashboard" className="inline-flex items-center justify-center gap-2 w-full py-3 bg-slate-900 text-white rounded-lg font-bold hover:bg-slate-800 transition-colors">
+                        <ChevronLeft size={18} /> Return to Dashboard
                     </Link>
                 </div>
             </div>
@@ -198,18 +198,23 @@ export default function AdminTransactionsPage() {
             <div className="max-w-7xl mx-auto">
                 {/* Header */}
                 <div className="mb-10">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-indigo-50 text-indigo-700 text-[10px] font-bold uppercase tracking-wider mb-3 border border-indigo-100/50">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-indigo-50 text-indigo-700 text-[10px] font-bold uppercase tracking-wider mb-3 border border-indigo-100/50">
                         Financial Overview
                     </div>
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-                        <div>
-                            <h1 className="text-3xl font-black text-slate-900 tracking-tight">Transactions Tracking</h1>
-                            <p className="text-slate-500 text-sm mt-1 font-medium">Monitor all successful and failed payment activities across the platform.</p>
+                        <div className="flex items-center gap-4">
+                            <Link href="/dashboard" className="p-2 bg-white border border-slate-200 rounded-lg text-slate-400 hover:text-indigo-600 transition-all">
+                                <ChevronLeft className="w-5 h-5" />
+                            </Link>
+                            <div>
+                                <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Transactions Tracking</h1>
+                                <p className="text-slate-500 text-sm mt-1 font-medium">Platform-wide payment reconciliation and order monitoring.</p>
+                            </div>
                         </div>
                         <div className="flex gap-3">
                             <button
                                 onClick={exportToCSV}
-                                className="flex items-center gap-2 px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-50 transition-all"
+                                className="flex items-center gap-2 px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-xs font-bold text-slate-700 hover:bg-slate-50 transition-all"
                             >
                                 <Download size={16} /> Export CSV
                             </button>
@@ -218,7 +223,7 @@ export default function AdminTransactionsPage() {
                 </div>
 
                 {/* Filters */}
-                <div className="bg-white p-4 rounded-2xl border border-slate-200 mb-8 flex flex-col md:flex-row gap-4 shadow-sm">
+                <div className="bg-white p-4 rounded-xl border border-slate-200 mb-8 flex flex-col md:flex-row gap-4">
                     <div className="relative flex-1">
                         <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
                         <input
@@ -226,14 +231,14 @@ export default function AdminTransactionsPage() {
                             placeholder="Search by user, email, course or order ID..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full pl-11 pr-4 py-2.5 bg-slate-50 border border-transparent rounded-xl text-sm focus:bg-white focus:border-indigo-500 outline-none transition-all font-medium"
+                            className="w-full pl-11 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:bg-white focus:border-indigo-500 outline-none transition-all font-medium"
                         />
                     </div>
                     <div className="flex gap-2">
                         <select
                             value={filterStatus}
                             onChange={(e) => setFilterStatus(e.target.value)}
-                            className="px-4 py-2.5 bg-slate-50 border border-transparent rounded-xl text-sm font-bold text-slate-600 outline-none focus:bg-white focus:border-indigo-500 transition-all"
+                            className="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm font-bold text-slate-600 outline-none focus:bg-white focus:border-indigo-500 transition-all"
                         >
                             <option value="all">All Status</option>
                             <option value="completed">Completed</option>
@@ -245,7 +250,7 @@ export default function AdminTransactionsPage() {
                 </div>
 
                 {/* Transactions Table */}
-                <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+                <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
                     <div className="overflow-x-auto">
                         <table className="w-full text-left border-collapse">
                             <thead>
@@ -291,10 +296,10 @@ export default function AdminTransactionsPage() {
                                             </div>
                                         </td>
                                         <td className="px-6 py-4 text-right">
-                                            <span className="text-sm font-black text-slate-900">₹{order.amount?.toLocaleString()}</span>
+                                            <span className="text-sm font-bold text-slate-900">₹{order.amount?.toLocaleString()}</span>
                                         </td>
                                         <td className="px-6 py-4 text-center">
-                                            <div className={`px-2 py-1 rounded-md border text-[9px] font-black uppercase tracking-widest inline-flex items-center gap-1.5 ${getStatusStyle(order.status)} shadow-sm`}>
+                                            <div className={`px-2 py-1 rounded-md border text-[9px] font-bold uppercase tracking-widest inline-flex items-center gap-1.5 ${getStatusStyle(order.status)} shadow-sm`}>
                                                 {order.status === 'completed' ? <CheckCircle2 size={12} /> :
                                                     order.status === 'failed' ? <AlertCircle size={12} /> :
                                                         order.status === 'refunded' ? <RefreshCcw size={12} /> : null}
@@ -305,14 +310,14 @@ export default function AdminTransactionsPage() {
                                             <div className="flex items-center justify-center gap-2">
                                                 <Link
                                                     href={`/admin/transactions/${order._id}`}
-                                                    className="p-2 text-gray-400 hover:text-indigo-600 transition-colors bg-gray-50 rounded-lg"
+                                                    className="p-2 text-slate-400 hover:text-indigo-600 transition-colors bg-slate-50 border border-slate-200 rounded-md"
                                                     title="View Full Details"
                                                 >
                                                     <Eye size={16} />
                                                 </Link>
                                                 <Link
                                                     href={`/invoice/${order._id}`}
-                                                    className="p-2 text-gray-400 hover:text-emerald-600 transition-colors bg-gray-50 rounded-lg"
+                                                    className="p-2 text-slate-400 hover:text-emerald-600 transition-colors bg-slate-50 border border-slate-200 rounded-md"
                                                     title="View Invoice"
                                                     target="_blank"
                                                 >
@@ -321,7 +326,7 @@ export default function AdminTransactionsPage() {
                                                 {order.status === 'completed' && (
                                                     <button
                                                         onClick={() => handleRefundClick(order)}
-                                                        className="p-2 text-gray-400 hover:text-rose-600 transition-colors bg-gray-50 rounded-lg disabled:opacity-50"
+                                                        className="p-2 text-slate-400 hover:text-rose-600 transition-colors bg-slate-50 border border-slate-200 rounded-md disabled:opacity-50"
                                                         title="Process Refund"
                                                         disabled={refundingId === order._id}
                                                     >

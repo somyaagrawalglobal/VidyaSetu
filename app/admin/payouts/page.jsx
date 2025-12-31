@@ -218,11 +218,11 @@ export default function AdminPayoutsPage() {
                 {/* Header */}
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div className="flex items-center gap-4">
-                        <Link href="/admin/courses" className="p-2 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 text-slate-400 hover:text-indigo-600 transition-all shadow-sm">
+                        <Link href="/admin/courses" className="p-2 bg-white border border-slate-200 rounded-md hover:bg-slate-50 text-slate-400 hover:text-indigo-600 transition-all">
                             <ChevronLeft className="w-5 h-5" />
                         </Link>
                         <div>
-                            <h1 className="text-2xl font-black text-slate-900 tracking-tight">
+                            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
                                 {isAdmin ? 'Payouts & Revenue' : 'My Earnings & Payouts'}
                             </h1>
                             <p className="text-slate-500 text-sm font-medium">
@@ -233,7 +233,7 @@ export default function AdminPayoutsPage() {
                     <div className="flex items-center gap-3">
                         <button
                             onClick={handleExport}
-                            className="flex items-center gap-2 bg-white border border-slate-200 px-4 py-2.5 rounded-xl text-sm font-bold text-slate-700 hover:bg-slate-50 transition-all active:scale-95 shadow-sm"
+                            className="flex items-center gap-2 bg-white border border-slate-200 px-4 py-2.5 rounded-md text-sm font-bold text-slate-700 hover:bg-slate-50 transition-all active:scale-95"
                         >
                             <Download className="w-4 h-4 text-indigo-600" /> Export CSV
                         </button>
@@ -242,30 +242,30 @@ export default function AdminPayoutsPage() {
 
                 {/* Global Stats Bar */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm overflow-hidden relative group">
+                    <div className="bg-white p-6 rounded-md border border-slate-200 overflow-hidden relative group">
                         <div className="absolute -right-4 -top-4 p-8 bg-indigo-50 rounded-full opacity-20 group-hover:scale-110 transition-transform duration-500"></div>
-                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Total Gross Revenue</p>
+                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Total Gross Revenue</p>
                         <div className="flex items-end gap-2">
-                            <p className="text-2xl font-black text-slate-900 leading-none">₹{totalRevenue.toLocaleString()}</p>
+                            <p className="text-2xl font-bold text-slate-900 leading-none">₹{totalRevenue.toLocaleString()}</p>
                             <span className="text-xs text-emerald-500 font-bold flex items-center mb-0.5"><ArrowUpRight className="w-3 h-3" /> 12%</span>
                         </div>
                     </div>
                     {isAdmin && (
-                        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm overflow-hidden relative group">
+                        <div className="bg-white p-6 rounded-md border border-slate-200 overflow-hidden relative group">
                             <div className="absolute -right-4 -top-4 p-8 bg-emerald-50 rounded-full opacity-20 group-hover:scale-110 transition-transform duration-500"></div>
-                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Platform Earnings (40%)</p>
-                            <p className="text-2xl font-black text-emerald-600 leading-none">₹{totalPlatformEarnings.toLocaleString()}</p>
+                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Platform Earnings (40%)</p>
+                            <p className="text-2xl font-bold text-emerald-600 leading-none">₹{totalPlatformEarnings.toLocaleString()}</p>
                         </div>
                     )}
-                    <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm overflow-hidden relative group">
+                    <div className="bg-white p-6 rounded-md border border-slate-200 overflow-hidden relative group">
                         <div className="absolute -right-4 -top-4 p-8 bg-purple-50 rounded-full opacity-20 group-hover:scale-110 transition-transform duration-500"></div>
-                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">{isAdmin ? 'Settled Payouts' : 'Already Paid'}</p>
-                        <p className="text-2xl font-black text-emerald-600 leading-none">₹{totalPaid.toLocaleString()}</p>
+                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">{isAdmin ? 'Settled Payouts' : 'Already Paid'}</p>
+                        <p className="text-2xl font-bold text-emerald-600 leading-none">₹{totalPaid.toLocaleString()}</p>
                     </div>
-                    <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm overflow-hidden relative group">
+                    <div className="bg-white p-6 rounded-md border border-slate-200 overflow-hidden relative group">
                         <div className="absolute -right-4 -top-4 p-8 bg-amber-50 rounded-full opacity-20 group-hover:scale-110 transition-transform duration-500"></div>
-                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">{isAdmin ? 'Pending Payouts' : 'Pending Settlement'}</p>
-                        <p className="text-2xl font-black text-amber-600 leading-none">₹{totalPending.toLocaleString()}</p>
+                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">{isAdmin ? 'Pending Payouts' : 'Pending Settlement'}</p>
+                        <p className="text-2xl font-bold text-amber-600 leading-none">₹{totalPending.toLocaleString()}</p>
                     </div>
                 </div>
 
@@ -276,31 +276,31 @@ export default function AdminPayoutsPage() {
                         <input
                             type="text"
                             placeholder="Search by course or instructor..."
-                            className="w-full pl-11 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all shadow-sm"
+                            className="w-full pl-11 pr-4 py-3 bg-white border border-slate-200 rounded-md text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
                     </div>
                     <div className="flex items-center gap-2">
-                        <button className="p-3 bg-white border border-slate-200 rounded-xl text-slate-400 hover:text-slate-600 transition-all shadow-sm">
+                        <button className="p-3 bg-white border border-slate-200 rounded-md text-slate-400 hover:text-slate-600 transition-all">
                             <Filter className="w-4 h-4" />
                         </button>
                     </div>
                 </div>
 
                 {/* Table Content */}
-                <div className="bg-white rounded-3xl border border-slate-200 shadow-xl shadow-slate-200/50 overflow-hidden">
+                <div className="bg-white rounded-md border border-slate-200 overflow-hidden">
                     <div className="overflow-x-auto">
                         <table className="w-full text-left">
                             <thead className="bg-slate-50 border-b border-slate-100">
                                 <tr>
-                                    <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Course Particulars</th>
-                                    {isAdmin && <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Instructor</th>}
-                                    <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Total Revenue</th>
-                                    {isAdmin && <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Platform (40%)</th>}
-                                    <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right text-indigo-600">{isAdmin ? 'Instructor (60%)' : 'My Share (60%)'}</th>
-                                    <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Status</th>
-                                    <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">{isAdmin ? 'Settlement' : 'Action'}</th>
+                                    <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Course Particulars</th>
+                                    {isAdmin && <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Instructor</th>}
+                                    <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-right">Total Revenue</th>
+                                    {isAdmin && <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-right">Platform (40%)</th>}
+                                    <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-right text-indigo-600">{isAdmin ? 'Instructor (60%)' : 'My Share (60%)'}</th>
+                                    <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center">Status</th>
+                                    <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-right">{isAdmin ? 'Settlement' : 'Action'}</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-50 font-sans">
@@ -308,7 +308,7 @@ export default function AdminPayoutsPage() {
                                     <tr key={course._id} className="hover:bg-slate-50/50 transition-all group">
                                         <td className="px-6 py-5">
                                             <div>
-                                                <p className="font-extrabold text-slate-800 text-sm leading-tight mb-0.5">{course.title}</p>
+                                                <p className="font-bold text-slate-800 text-sm leading-tight mb-0.5">{course.title}</p>
                                                 <div className="flex items-center gap-2">
                                                     <span className="text-[10px] font-bold text-indigo-400">{course.enrollmentCount} Enrollments</span>
                                                     {course.payoutTransactionId && (
@@ -329,7 +329,7 @@ export default function AdminPayoutsPage() {
                                             </td>
                                         )}
                                         <td className="px-6 py-5 text-right">
-                                            <p className="text-sm font-black text-slate-700 font-mono">₹{course.totalRevenue.toLocaleString()}</p>
+                                            <p className="text-sm font-bold text-slate-700 font-mono">₹{course.totalRevenue.toLocaleString()}</p>
                                         </td>
                                         {isAdmin && (
                                             <td className="px-6 py-5 text-right">
@@ -337,11 +337,11 @@ export default function AdminPayoutsPage() {
                                             </td>
                                         )}
                                         <td className="px-6 py-5 text-right">
-                                            <p className="text-sm font-black text-indigo-600 font-mono">₹{course.instructorShare.toLocaleString()}</p>
+                                            <p className="text-sm font-bold text-indigo-600 font-mono">₹{course.instructorShare.toLocaleString()}</p>
                                         </td>
                                         <td className="px-6 py-5">
                                             <div className="flex justify-center">
-                                                <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${course.payoutStatus === 'Paid'
+                                                <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border ${course.payoutStatus === 'Paid'
                                                     ? 'bg-emerald-50 text-emerald-600 border-emerald-100'
                                                     : 'bg-amber-50 text-amber-600 border-amber-100'
                                                     }`}>
@@ -354,7 +354,7 @@ export default function AdminPayoutsPage() {
                                             {isAdmin && course.totalRevenue > 0 && course.payoutStatus !== 'Paid' ? (
                                                 <button
                                                     onClick={() => handlePayInstructor(course)}
-                                                    className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-lg shadow-indigo-100 active:scale-95"
+                                                    className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-xs font-bold transition-all active:scale-95"
                                                 >
                                                     <CreditCard size={14} /> Pay Now
                                                 </button>
@@ -372,7 +372,7 @@ export default function AdminPayoutsPage() {
                                                     <DollarSign size={40} />
                                                 </div>
                                                 <div>
-                                                    <p className="text-slate-900 font-black text-lg">No Financial Data</p>
+                                                    <p className="text-slate-900 font-bold text-lg">No Financial Data</p>
                                                     <p className="text-slate-500 text-sm font-medium">Try adjusting your search criteria.</p>
                                                 </div>
                                             </div>
@@ -387,14 +387,14 @@ export default function AdminPayoutsPage() {
                         <div className="flex items-center gap-8">
                             <div>
                                 <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">{isAdmin ? 'Total Network Volume' : 'My Total Volume'}</p>
-                                <p className="text-xl font-black">₹{totalRevenue.toLocaleString()}</p>
+                                <p className="text-xl font-bold">₹{totalRevenue.toLocaleString()}</p>
                             </div>
                             {isAdmin && (
                                 <>
                                     <div className="w-px h-8 bg-slate-800"></div>
                                     <div>
                                         <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">Company Net Profit</p>
-                                        <p className="text-xl font-black text-emerald-400">₹{totalPlatformEarnings.toLocaleString()}</p>
+                                        <p className="text-xl font-bold text-emerald-400">₹{totalPlatformEarnings.toLocaleString()}</p>
                                     </div>
                                 </>
                             )}
@@ -403,7 +403,7 @@ export default function AdminPayoutsPage() {
                                     <div className="w-px h-8 bg-slate-800"></div>
                                     <div>
                                         <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">Total Net Earnings</p>
-                                        <p className="text-xl font-black text-indigo-400">₹{(totalRevenue * 0.6).toLocaleString()}</p>
+                                        <p className="text-xl font-bold text-indigo-400">₹{(totalRevenue * 0.6).toLocaleString()}</p>
                                     </div>
                                 </>
                             )}
@@ -414,7 +414,7 @@ export default function AdminPayoutsPage() {
                                     setTransactionId('');
                                     setIsBatchModalOpen(true);
                                 }}
-                                className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-500 text-white px-8 py-3 rounded-xl font-black text-sm transition-all shadow-xl shadow-indigo-500/20 active:scale-95"
+                                className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-500 text-white px-8 py-3 rounded-md font-bold text-sm transition-all active:scale-95"
                             >
                                 Process Batch Payouts
                             </button>
@@ -426,39 +426,39 @@ export default function AdminPayoutsPage() {
             {/* Payout Modal */}
             {isPayoutModalOpen && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300">
-                    <div className="bg-white rounded-3xl w-full max-w-md overflow-hidden shadow-2xl animate-in zoom-in-95 duration-300">
+                    <div className="bg-white rounded-lg w-full max-w-md overflow-hidden shadow-md animate-in zoom-in-95 duration-300">
                         <div className="p-8">
-                            <div className="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mb-6">
+                            <div className="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-md flex items-center justify-center mb-6">
                                 <CreditCard size={32} />
                             </div>
-                            <h2 className="text-2xl font-black text-slate-900 mb-2">Settle Payout</h2>
+                            <h2 className="text-2xl font-bold text-slate-900 mb-2">Settle Payout</h2>
                             <p className="text-slate-500 text-sm font-medium mb-6">
-                                Recording payout of <span className="text-indigo-600 font-black">₹{selectedCourse?.instructorShare.toLocaleString()}</span> for course <span className="font-bold">"{selectedCourse?.title}"</span>.
+                                Recording payout of <span className="text-indigo-600 font-bold">₹{selectedCourse?.instructorShare.toLocaleString()}</span> for course <span className="font-bold">"{selectedCourse?.title}"</span>.
                             </p>
 
                             {/* Instructor Payout Details */}
                             <div className="mb-6 p-4 bg-slate-50 rounded-xl border border-slate-100">
-                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Payout Destination</p>
+                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Payout Destination</p>
                                 {selectedCourse?.instructorPayoutDetails ? (
                                     <div className="space-y-2">
                                         <div className="grid grid-cols-2 gap-4">
                                             <div>
                                                 <p className="text-[9px] text-slate-400 font-bold uppercase">Bank</p>
-                                                <p className="text-xs font-black text-slate-800 truncate">{selectedCourse.instructorPayoutDetails.bankName || 'N/A'}</p>
+                                                <p className="text-xs font-bold text-slate-800 truncate">{selectedCourse.instructorPayoutDetails.bankName || 'N/A'}</p>
                                             </div>
                                             <div>
                                                 <p className="text-[9px] text-slate-400 font-bold uppercase">A/C No.</p>
-                                                <p className="text-xs font-black text-slate-800">{selectedCourse.instructorPayoutDetails.accountNumber || 'N/A'}</p>
+                                                <p className="text-xs font-bold text-slate-800">{selectedCourse.instructorPayoutDetails.accountNumber || 'N/A'}</p>
                                             </div>
                                         </div>
                                         <div className="grid grid-cols-2 gap-4">
                                             <div>
                                                 <p className="text-[9px] text-slate-400 font-bold uppercase">IFSC</p>
-                                                <p className="text-xs font-black text-slate-800">{selectedCourse.instructorPayoutDetails.ifscCode || 'N/A'}</p>
+                                                <p className="text-xs font-bold text-slate-800">{selectedCourse.instructorPayoutDetails.ifscCode || 'N/A'}</p>
                                             </div>
                                             <div>
                                                 <p className="text-[9px] text-slate-400 font-bold uppercase">UPI ID</p>
-                                                <p className="text-xs font-black text-indigo-600 truncate">{selectedCourse.instructorPayoutDetails.upiId || 'N/A'}</p>
+                                                <p className="text-xs font-bold text-indigo-600 truncate">{selectedCourse.instructorPayoutDetails.upiId || 'N/A'}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -473,10 +473,10 @@ export default function AdminPayoutsPage() {
 
                             <div className="space-y-4">
                                 <div>
-                                    <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Transaction / Reference ID</label>
+                                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Transaction / Reference ID</label>
                                     <input
                                         type="text"
-                                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-mono"
+                                        className="w-full px-4 py-3 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-mono"
                                         placeholder="e.g. PAY-89230492"
                                         value={transactionId}
                                         onChange={(e) => setTransactionId(e.target.value)}
@@ -488,14 +488,14 @@ export default function AdminPayoutsPage() {
                             <div className="grid grid-cols-2 gap-3 mt-8">
                                 <button
                                     onClick={() => setIsPayoutModalOpen(false)}
-                                    className="px-6 py-3 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-50 transition-all active:scale-95"
+                                    className="px-6 py-3 rounded-lg text-sm font-bold text-slate-500 hover:bg-slate-50 transition-all active:scale-95"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     onClick={confirmPayout}
                                     disabled={isProcessing}
-                                    className="px-6 py-3 bg-indigo-600 text-white rounded-xl text-sm font-black hover:bg-indigo-700 transition-all flex items-center justify-center gap-2 active:scale-95 shadow-lg shadow-indigo-200 disabled:opacity-50"
+                                    className="px-6 py-3 bg-indigo-600 text-white rounded-lg text-sm font-bold hover:bg-indigo-700 transition-all flex items-center justify-center gap-2 active:scale-95 disabled:opacity-50"
                                 >
                                     {isProcessing ? <Loader2 className="animate-spin w-4 h-4" /> : 'Confirm Payment'}
                                 </button>
@@ -508,23 +508,23 @@ export default function AdminPayoutsPage() {
             {/* Batch Payout Modal */}
             {isBatchModalOpen && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300">
-                    <div className="bg-white rounded-3xl w-full max-w-md overflow-hidden shadow-2xl animate-in zoom-in-95 duration-300">
+                    <div className="bg-white rounded-lg w-full max-w-md overflow-hidden shadow-md animate-in zoom-in-95 duration-300">
                         <div className="p-8">
-                            <div className="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mb-6">
+                            <div className="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-md flex items-center justify-center mb-6">
                                 <RefreshCcw size={32} />
                             </div>
-                            <h2 className="text-2xl font-black text-slate-900 mb-2">Batch Settlement</h2>
+                            <h2 className="text-2xl font-bold text-slate-900 mb-2">Batch Settlement</h2>
                             <p className="text-slate-500 text-sm font-medium mb-6">
                                 You are about to settle <span className="font-bold text-slate-900">{filteredData.filter(c => c.payoutStatus !== 'Paid' && c.totalRevenue > 0).length}</span> pending payouts.
-                                Total settlement: <span className="text-emerald-600 font-black">₹{filteredData.filter(c => c.payoutStatus !== 'Paid' && c.totalRevenue > 0).reduce((acc, curr) => acc + curr.instructorShare, 0).toLocaleString()}</span>
+                                Total settlement: <span className="text-emerald-600 font-bold">₹{filteredData.filter(c => c.payoutStatus !== 'Paid' && c.totalRevenue > 0).reduce((acc, curr) => acc + curr.instructorShare, 0).toLocaleString()}</span>
                             </p>
 
                             <div className="space-y-4">
                                 <div>
-                                    <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Batch Reference ID</label>
+                                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Batch Reference ID</label>
                                     <input
                                         type="text"
-                                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-mono"
+                                        className="w-full px-4 py-3 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-mono"
                                         placeholder="e.g. BATCH-JAN-01"
                                         value={transactionId}
                                         onChange={(e) => setTransactionId(e.target.value)}
@@ -536,14 +536,14 @@ export default function AdminPayoutsPage() {
                             <div className="grid grid-cols-2 gap-3 mt-8">
                                 <button
                                     onClick={() => setIsBatchModalOpen(false)}
-                                    className="px-6 py-3 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-50 transition-all active:scale-95"
+                                    className="px-6 py-3 rounded-lg text-sm font-bold text-slate-500 hover:bg-slate-50 transition-all active:scale-95"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     onClick={handleBatchPayout}
                                     disabled={isProcessing}
-                                    className="px-6 py-3 bg-emerald-600 text-white rounded-xl text-sm font-black hover:bg-emerald-700 transition-all flex items-center justify-center gap-2 active:scale-95 shadow-lg shadow-emerald-200 disabled:opacity-50"
+                                    className="px-6 py-3 bg-emerald-600 text-white rounded-lg text-sm font-bold hover:bg-emerald-700 transition-all flex items-center justify-center gap-2 active:scale-95 disabled:opacity-50"
                                 >
                                     {isProcessing ? <Loader2 className="animate-spin w-4 h-4" /> : 'Settle All'}
                                 </button>

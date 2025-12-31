@@ -105,29 +105,28 @@ export default function UserEnrollmentsPage({ params }) {
 
             <div className="max-w-5xl mx-auto">
                 {/* Back Link */}
-                <Link href="/admin/users" className="inline-flex items-center gap-2 text-slate-500 hover:text-emerald-600 font-medium text-sm mb-8 transition-colors">
-                    <ArrowLeft size={16} /> Back to Users
-                </Link>
-
-                {/* Header */}
-                <div className="mb-10">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-emerald-50 text-emerald-700 text-[10px] font-bold uppercase tracking-wider mb-3 border border-emerald-100/50">
-                        Enrollment Management
+                <div className="flex items-center gap-4 mb-8">
+                    <Link href="/admin/users" className="p-2 bg-white border border-slate-200 rounded-lg text-slate-400 hover:text-indigo-600 transition-all">
+                        <ArrowLeft className="w-5 h-5" />
+                    </Link>
+                    <div>
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-emerald-50 text-emerald-700 text-[10px] font-bold uppercase tracking-wider mb-2 border border-emerald-100/50">
+                            Enrollment Management
+                        </div>
+                        <h1 className="text-3xl font-bold text-slate-900 tracking-tight">{userName}</h1>
                     </div>
-                    <h1 className="text-3xl font-black text-slate-900 tracking-tight">{userName}</h1>
-                    <p className="text-slate-500 text-sm mt-1 font-medium">Viewing all course enrollments and progress for this student.</p>
                 </div>
 
                 {/* Enrollment Cards */}
                 <div className="grid grid-cols-1 gap-6">
                     {enrollments.length === 0 ? (
-                        <div className="bg-white rounded-3xl border border-dashed border-slate-300 py-20 text-center">
+                        <div className="bg-white rounded-xl border border-dashed border-slate-200 py-20 text-center">
                             <BookOpen className="mx-auto text-slate-200 mb-4" size={48} />
-                            <p className="text-slate-500 font-bold uppercase tracking-widest text-xs">No course enrollments found</p>
+                            <p className="text-slate-500 font-bold uppercase tracking-widest text-[10px]">No course enrollments found</p>
                         </div>
                     ) : (
                         enrollments.map((enrollment) => (
-                            <div key={enrollment.orderId} className="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col md:flex-row items-stretch">
+                            <div key={enrollment.orderId} className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col md:flex-row items-stretch">
                                 {/* Thumbnail */}
                                 <div className="w-full md:w-64 h-40 md:h-auto relative bg-slate-100 border-r border-slate-50">
                                     {enrollment.courseThumbnail ? (
@@ -143,13 +142,13 @@ export default function UserEnrollmentsPage({ params }) {
                                 <div className="flex-1 p-6 md:p-8 flex flex-col justify-between">
                                     <div>
                                         <div className="flex justify-between items-start mb-2">
-                                            <h3 className="text-xl font-black text-slate-900 leading-tight">{enrollment.courseTitle}</h3>
+                                            <h3 className="text-xl font-bold text-slate-900 leading-tight">{enrollment.courseTitle}</h3>
                                             {enrollment.accessStatus === 'blocked' ? (
-                                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-red-50 text-red-600 text-[10px] font-black uppercase tracking-widest border border-red-100">
+                                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-red-50 text-red-600 text-[10px] font-bold uppercase tracking-widest border border-red-100">
                                                     <ShieldAlert size={10} /> Access Blocked
                                                 </span>
                                             ) : (
-                                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-emerald-50 text-emerald-600 text-[10px] font-black uppercase tracking-widest border border-emerald-100">
+                                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-600 text-[10px] font-bold uppercase tracking-widest border border-emerald-100">
                                                     <ShieldCheck size={10} /> Active Access
                                                 </span>
                                             )}
@@ -165,7 +164,7 @@ export default function UserEnrollmentsPage({ params }) {
                                         <div className="max-w-sm">
                                             <div className="flex justify-between items-center mb-1.5">
                                                 <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Progress</span>
-                                                <span className="text-sm font-black text-indigo-600">{enrollment.progressPercent}%</span>
+                                                <span className="text-sm font-bold text-indigo-600">{enrollment.progressPercent}%</span>
                                             </div>
                                             <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
                                                 <div
@@ -181,14 +180,14 @@ export default function UserEnrollmentsPage({ params }) {
                                         {enrollment.accessStatus === 'blocked' ? (
                                             <button
                                                 onClick={() => handleActionClick(enrollment, 'unblock')}
-                                                className="px-6 py-2.5 bg-emerald-50 text-emerald-600 rounded-xl text-xs font-bold hover:bg-emerald-600 hover:text-white transition-all border border-emerald-100 shadow-sm"
+                                                className="px-6 py-2.5 bg-emerald-50 text-emerald-600 rounded-lg text-xs font-bold hover:bg-emerald-600 hover:text-white transition-all border border-emerald-100 shadow-sm"
                                             >
                                                 Unblock Access
                                             </button>
                                         ) : (
                                             <button
                                                 onClick={() => handleActionClick(enrollment, 'block')}
-                                                className="px-6 py-2.5 bg-red-50 text-red-600 rounded-xl text-xs font-bold hover:bg-red-600 hover:text-white transition-all border border-red-100 shadow-sm"
+                                                className="px-6 py-2.5 bg-red-50 text-red-600 rounded-lg text-xs font-bold hover:bg-red-600 hover:text-white transition-all border border-red-100 shadow-sm"
                                             >
                                                 Block Access
                                             </button>

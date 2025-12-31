@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/components/AuthProvider';
-import { User as UserIcon, Mail, Phone, Calendar, Loader2, Edit2, Save, X, CheckCircle } from 'lucide-react';
+import { User as UserIcon, Mail, Phone, Calendar, Loader2, Edit2, Save, X, CheckCircle, ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
 import Loader from '@/components/Loader';
 
@@ -79,18 +79,23 @@ export default function Profile() {
     return (
         <div className="min-h-screen bg-[#F9FAFB] pt-24 pb-16 px-4 sm:px-6 lg:px-8 font-sans">
             <div className="max-w-4xl mx-auto">
-                <div className="flex justify-between items-end mb-8" data-aos="fade-in">
-                    <div>
-                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-indigo-50 text-indigo-700 text-[11px] font-bold uppercase tracking-wider mb-2 border border-indigo-100/50">
-                            <UserIcon className="w-3.5 h-3.5" />
-                            Account Profile
+                <div className="flex justify-between items-end mb-8">
+                    <div className="flex items-center gap-4">
+                        <Link href="/dashboard" className="p-2 bg-white border border-slate-200 rounded-lg text-slate-400 hover:text-indigo-600 transition-all">
+                            <ChevronLeft className="w-5 h-5" />
+                        </Link>
+                        <div>
+                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-indigo-50 text-indigo-700 text-[11px] font-bold uppercase tracking-wider mb-2 border border-indigo-100/50">
+                                <UserIcon className="w-3.5 h-3.5" />
+                                Account Profile
+                            </div>
+                            <h1 className="text-3xl font-bold text-slate-800 tracking-tight">Personal <span className="text-indigo-600 font-bold">Settings</span></h1>
                         </div>
-                        <h1 className="text-3xl font-bold text-slate-800 tracking-tight">Personal <span className="text-indigo-600">Settings</span></h1>
                     </div>
                     {!isEditing && (
                         <button
                             onClick={() => setIsEditing(true)}
-                            className="flex items-center gap-2 px-6 py-2 bg-slate-800 text-white rounded-lg hover:bg-slate-700 transition-all duration-300 shadow-sm font-bold text-xs"
+                            className="flex items-center gap-2 px-6 py-2 bg-slate-800 text-white rounded-lg hover:bg-slate-700 transition-all duration-300 font-bold text-xs"
                         >
                             <Edit2 size={16} />
                             Edit Profile
@@ -99,7 +104,7 @@ export default function Profile() {
                 </div>
 
                 {message.text && (
-                    <div className={`mb-6 p-4 rounded-xl flex items-center gap-3 animate-in fade-in slide-in-from-top-2 duration-300 border ${message.type === 'success' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-red-50 text-red-700 border-red-200'}`}>
+                    <div className={`mb-6 p-4 rounded-lg flex items-center gap-3 animate-in fade-in slide-in-from-top-2 duration-300 border ${message.type === 'success' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-red-50 text-red-700 border-red-200'}`}>
                         <div className={`p-1.5 rounded-full ${message.type === 'success' ? 'bg-emerald-100' : 'bg-red-100'}`}>
                             {message.type === 'success' ? <CheckCircle size={18} /> : <X size={18} />}
                         </div>
@@ -107,7 +112,7 @@ export default function Profile() {
                     </div>
                 )}
 
-                <div className="bg-white shadow-sm rounded-xl overflow-hidden border border-slate-200" data-aos="fade-up">
+                <div className="bg-white shadow-sm rounded-lg overflow-hidden border border-slate-200" data-aos="fade-up">
                     {/* Compact Header */}
                     <div className="bg-slate-50 border-b border-slate-200 px-8 py-8">
                         <div className="flex items-center gap-6">
@@ -172,7 +177,7 @@ export default function Profile() {
 
                                 {user.roles?.includes('Instructor') && (
                                     <div className="pt-6 border-t border-slate-100">
-                                        <h3 className="text-sm font-black text-slate-800 mb-4 flex items-center gap-2">
+                                        <h3 className="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2">
                                             <div className="w-1 h-4 bg-indigo-600 rounded-full"></div>
                                             Payout Information (For Settlements)
                                         </h3>
@@ -288,7 +293,7 @@ export default function Profile() {
 
                                 {user.roles?.includes('Instructor') && user.payoutDetails && (
                                     <div className="mt-8 pt-8 border-t border-slate-100">
-                                        <h3 className="text-sm font-black text-slate-800 mb-6 flex items-center gap-2">
+                                        <h3 className="text-sm font-bold text-slate-800 mb-6 flex items-center gap-2">
                                             <div className="w-1 h-4 bg-indigo-600 rounded-full"></div>
                                             Payout Information
                                         </h3>

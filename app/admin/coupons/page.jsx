@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { Plus, Tag, Calendar, Users, Trash2, Loader2, AlertCircle, CheckCircle2, Edit, Ban, Lock, GraduationCap } from 'lucide-react';
+import { Plus, Tag, Calendar, Users, Trash2, Loader2, AlertCircle, CheckCircle2, Edit, Ban, Lock, GraduationCap, ChevronLeft } from 'lucide-react';
 import { useToast } from '@/components/ToastContext';
 import GenericMultiSelect from '@/components/GenericMultiSelect';
 import Modal from '@/components/Modal';
@@ -200,18 +200,18 @@ export default function AdminCouponsPage() {
     if (!isAuthorized) {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 p-6 text-center">
-                <div className="w-24 h-24 bg-red-500/10 rounded-3xl flex items-center justify-center mb-8 shadow-xl shadow-red-500/5">
+                <div className="w-24 h-24 bg-red-500/10 rounded-xl flex items-center justify-center mb-8">
                     <Lock className="w-12 h-12 text-red-400" />
                 </div>
                 <h1 className="text-3xl font-bold text-slate-900 mb-3">Access Denied</h1>
-                <p className="text-slate-500 max-w-md mb-8 leading-relaxed">
+                <p className="text-slate-500 max-w-md mb-8 leading-relaxed font-medium">
                     You don't have permission to access this page. Only administrators can manage coupons.
                 </p>
                 <Link
                     href="/dashboard"
-                    className="bg-indigo-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-100"
+                    className="inline-flex items-center justify-center gap-2 bg-slate-900 text-white px-8 py-3 rounded-lg font-bold hover:bg-slate-800 transition-all shadow-lg shadow-indigo-100"
                 >
-                    Return to Dashboard
+                    <ChevronLeft size={18} /> Return to Dashboard
                 </Link>
             </div>
         );
@@ -239,23 +239,28 @@ export default function AdminCouponsPage() {
             />
             <div className="max-w-6xl mx-auto">
                 <div className="flex justify-between items-end mb-10">
-                    <div>
-                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-indigo-50 text-indigo-700 text-[10px] font-bold uppercase tracking-wider mb-3 border border-indigo-100/50">
-                            Marketing Tools
+                    <div className="flex items-center gap-4">
+                        <Link href="/dashboard" className="p-2 bg-white border border-slate-200 rounded-lg text-slate-400 hover:text-indigo-600 transition-all">
+                            <ChevronLeft className="w-5 h-5" />
+                        </Link>
+                        <div>
+                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-indigo-50 text-indigo-700 text-[10px] font-bold uppercase tracking-wider mb-2 border border-indigo-100/50">
+                                Marketing Tools
+                            </div>
+                            <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Coupon Management</h1>
+                            <p className="text-slate-500 text-sm mt-1 font-medium">Create and manage discount offers for your courses.</p>
                         </div>
-                        <h1 className="text-3xl font-black text-slate-900 tracking-tight">Coupon Management</h1>
-                        <p className="text-slate-500 text-sm mt-1 font-medium">Create and manage discount offers for your courses.</p>
                     </div>
                     <button
                         onClick={() => setIsCreating(!isCreating)}
-                        className="bg-indigo-600 text-white px-6 py-3 rounded-xl font-bold text-sm flex items-center gap-2 hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-100"
+                        className="bg-indigo-600 text-white px-6 py-3 rounded-lg font-bold text-sm flex items-center gap-2 hover:bg-indigo-700 transition-all shadow-md shadow-indigo-100"
                     >
                         <Plus size={18} /> {isCreating ? 'Cancel' : 'New Coupon'}
                     </button>
                 </div>
 
                 {isCreating && (
-                    <div className="bg-white rounded-2xl border border-slate-200 p-8 mb-10 shadow-sm animate-in fade-in slide-in-from-top-4 duration-300">
+                    <div className="bg-white rounded-xl border border-slate-200 p-8 mb-10 shadow-sm animate-in fade-in slide-in-from-top-4 duration-300">
                         <form onSubmit={handleCreate} className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <div className="space-y-1.5">
                                 <label className="text-[10px] uppercase font-bold text-slate-400 tracking-widest ml-1">Coupon Code</label>
@@ -265,7 +270,7 @@ export default function AdminCouponsPage() {
                                     placeholder="SUMMER50"
                                     value={newCoupon.code}
                                     onChange={(e) => setNewCoupon({ ...newCoupon, code: e.target.value.toUpperCase() })}
-                                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/20 outline-none transition-all font-bold tracking-widest"
+                                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-md text-sm focus:ring-2 focus:ring-indigo-500/20 outline-none transition-all font-bold tracking-widest"
                                 />
                             </div>
                             <div className="space-y-1.5">
@@ -273,7 +278,7 @@ export default function AdminCouponsPage() {
                                 <select
                                     value={newCoupon.discountType}
                                     onChange={(e) => setNewCoupon({ ...newCoupon, discountType: e.target.value })}
-                                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/20 outline-none transition-all font-bold"
+                                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500/20 outline-none transition-all font-bold"
                                 >
                                     <option value="percentage">Percentage (%)</option>
                                     <option value="fixed">Fixed Amount (₹)</option>
@@ -287,7 +292,7 @@ export default function AdminCouponsPage() {
                                     placeholder="50"
                                     value={newCoupon.discountValue}
                                     onChange={(e) => setNewCoupon({ ...newCoupon, discountValue: e.target.value })}
-                                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/20 outline-none transition-all font-bold"
+                                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500/20 outline-none transition-all font-bold"
                                 />
                             </div>
                             <div className="space-y-1.5">
@@ -297,7 +302,7 @@ export default function AdminCouponsPage() {
                                     type="date"
                                     value={newCoupon.expiryDate}
                                     onChange={(e) => setNewCoupon({ ...newCoupon, expiryDate: e.target.value })}
-                                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/20 outline-none transition-all font-bold text-slate-600"
+                                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-md text-sm focus:ring-2 focus:ring-indigo-500/20 outline-none transition-all font-bold text-slate-600"
                                 />
                             </div>
                             <div className="space-y-1.5">
@@ -307,14 +312,14 @@ export default function AdminCouponsPage() {
                                     type="number"
                                     value={newCoupon.maxUses}
                                     onChange={(e) => setNewCoupon({ ...newCoupon, maxUses: e.target.value })}
-                                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/20 outline-none transition-all font-bold text-slate-600"
+                                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-md text-sm focus:ring-2 focus:ring-indigo-500/20 outline-none transition-all font-bold text-slate-600"
                                 />
                             </div>
 
                             {/* New Fields: Course & User Selection */}
                             <div className="md:col-span-1">
                                 <GenericMultiSelect
-                                    label="Restricted to Courses (Optional)"
+                                    label="Restricted to Courses"
                                     placeholder="All Courses"
                                     options={courses}
                                     selectedIds={newCoupon.applicableCourses}
@@ -325,7 +330,7 @@ export default function AdminCouponsPage() {
                             </div>
                             <div className="md:col-span-1">
                                 <GenericMultiSelect
-                                    label="Restricted to Users (Optional)"
+                                    label="Restricted to Users"
                                     placeholder="All Users"
                                     options={users}
                                     selectedIds={newCoupon.applicableUsers}
@@ -336,7 +341,7 @@ export default function AdminCouponsPage() {
                             </div>
 
                             <div className="flex items-end">
-                                <button type="submit" className="w-full bg-slate-800 text-white py-3 rounded-xl font-bold text-sm hover:bg-slate-900 transition-all">
+                                <button type="submit" className="w-full bg-slate-800 text-white py-3 rounded-lg font-bold text-sm hover:bg-slate-900 transition-all">
                                     Create Coupon
                                 </button>
                             </div>
@@ -346,13 +351,13 @@ export default function AdminCouponsPage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {coupons.length === 0 ? (
-                        <div className="col-span-full py-20 text-center bg-white rounded-3xl border border-dashed border-slate-300">
+                        <div className="col-span-full py-20 text-center bg-white rounded-xl border border-dashed border-slate-300">
                             <Tag className="mx-auto text-slate-300 mb-4" size={48} />
-                            <p className="text-slate-500 font-bold uppercase tracking-widest text-xs">No coupons created yet</p>
+                            <p className="text-slate-500 font-bold uppercase tracking-widest text-[10px]">No coupons created yet</p>
                         </div>
                     ) : (
                         coupons.map(coupon => (
-                            <div key={coupon._id} className="bg-white rounded-2xl border border-slate-200 p-6 hover:shadow-lg transition-all group relative overflow-hidden">
+                            <div key={coupon._id} className="bg-white rounded-xl border border-slate-200 p-6 hover:shadow-md transition-all group relative overflow-hidden">
                                 <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
                                     <Link href={`/admin/coupons/${coupon._id}`} className="text-slate-300 hover:text-indigo-600 transition-colors">
                                         <Edit size={18} />
@@ -372,7 +377,7 @@ export default function AdminCouponsPage() {
                                         <Tag size={20} />
                                     </div>
                                     <div>
-                                        <h3 className="font-black text-slate-800 tracking-widest text-lg leading-tight uppercase">{coupon.code}</h3>
+                                        <h3 className="font-bold text-slate-800 tracking-widest text-lg leading-tight uppercase">{coupon.code}</h3>
                                         <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-tighter">
                                             {coupon.discountType === 'percentage' ? `${coupon.discountValue}% OFF` : `₹${coupon.discountValue} OFF`}
                                         </p>
@@ -389,7 +394,7 @@ export default function AdminCouponsPage() {
                                         <span className="font-bold text-slate-700">{coupon.currentUses} / {coupon.maxUses}</span>
                                     </div>
                                     <div className="flex items-center justify-between pt-2">
-                                        <span className={`px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-widest ${new Date() > new Date(coupon.expiryDate) ? 'bg-red-50 text-red-600' : 'bg-green-50 text-green-600'}`}>
+                                        <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-widest ${new Date() > new Date(coupon.expiryDate) ? 'bg-red-50 text-red-600' : 'bg-green-50 text-green-600'}`}>
                                             {new Date() > new Date(coupon.expiryDate) ? 'Expired' : 'Active'}
                                         </span>
                                     </div>

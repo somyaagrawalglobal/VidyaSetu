@@ -167,18 +167,18 @@ export default function UserManagementPage() {
             <div className="max-w-7xl mx-auto space-y-6">
 
                 {/* Header Section */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-xl border border-slate-200">
                     <div className="flex items-center gap-4">
-                        <Link href="/dashboard" className="p-2 bg-gray-50 rounded-lg text-gray-400 hover:text-indigo-600 transition-colors">
+                        <Link href="/dashboard" className="p-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-400 hover:text-indigo-600 transition-all">
                             <ChevronLeft className="w-5 h-5" />
                         </Link>
                         <div>
                             <h1 className="text-2xl font-bold text-slate-900 tracking-tight">User Management</h1>
-                            <p className="text-slate-500 mt-1">Manage platform students, instructors, and admins.</p>
+                            <p className="text-slate-500 mt-1 font-medium text-xs uppercase tracking-widest">Access Control & Members</p>
                         </div>
                     </div>
                     <div className="flex items-center gap-3">
-                        <div className="px-4 py-2 bg-indigo-50 text-indigo-700 rounded-xl font-bold text-sm">
+                        <div className="px-4 py-2 bg-indigo-50 text-indigo-700 rounded-lg font-bold text-sm border border-indigo-100">
                             Total: {users.length}
                         </div>
                     </div>
@@ -186,14 +186,14 @@ export default function UserManagementPage() {
 
                 {/* Filters */}
                 <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-                    <div className="relative w-full sm:max-w-md">
+                    <div className="relative w-full sm:max-md">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <Search className="h-5 w-5 text-gray-400" />
                         </div>
                         <input
                             type="text"
                             placeholder="Find user by name or email..."
-                            className="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-xl bg-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-sm shadow-sm"
+                            className="block w-full pl-10 pr-3 py-3 border border-slate-200 rounded-lg bg-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all text-sm shadow-sm"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
@@ -201,7 +201,7 @@ export default function UserManagementPage() {
                 </div>
 
                 {/* Users Table */}
-                <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
                     <div className="overflow-x-auto">
                         <table className="min-w-full divide-y divide-gray-100">
                             <thead className="bg-gray-50">
@@ -272,21 +272,21 @@ export default function UserManagementPage() {
                                             <div className="flex justify-end gap-2">
                                                 <Link
                                                     href={`/admin/users/${user._id}/enrollments`}
-                                                    className="p-2 text-gray-400 hover:text-emerald-600 transition-colors bg-gray-50 rounded-lg"
+                                                    className="p-2 text-slate-400 hover:text-emerald-600 transition-colors bg-slate-50 border border-slate-200 rounded-lg"
                                                     title="View Enrollments"
                                                 >
                                                     <BookOpen className="w-4 h-4" />
                                                 </Link>
                                                 <button
                                                     onClick={() => handleEditUser(user)}
-                                                    className="p-2 text-gray-400 hover:text-indigo-600 transition-colors bg-gray-50 rounded-lg"
+                                                    className="p-2 text-slate-400 hover:text-indigo-600 transition-colors bg-slate-50 border border-slate-200 rounded-lg"
                                                     title="Edit User"
                                                 >
                                                     <Edit2 className="w-4 h-4" />
                                                 </button>
                                                 <button
                                                     onClick={() => handleDeleteUser(user)}
-                                                    className="p-2 text-gray-400 hover:text-red-600 transition-colors bg-gray-50 rounded-lg"
+                                                    className="p-2 text-slate-400 hover:text-red-600 transition-colors bg-slate-50 border border-slate-200 rounded-lg"
                                                     title="Delete User"
                                                 >
                                                     <Trash2 className="w-4 h-4" />
@@ -315,7 +315,7 @@ export default function UserManagementPage() {
             {/* Edit User Modal */}
             {editModal.isOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
-                    <div className="bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in duration-300">
+                    <div className="bg-white rounded-xl shadow-2xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in duration-300">
                         <div className="p-6 border-b border-gray-100 flex items-center justify-between">
                             <h3 className="text-xl font-bold text-gray-900">Edit User Details</h3>
                             <button onClick={() => setEditModal({ isOpen: false, user: null })} className="p-2 hover:bg-gray-100 rounded-full transition-colors">

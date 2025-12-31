@@ -202,27 +202,27 @@ export default function AdminCoursesPage() {
 
 
                 {/* Header Section */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-xl border border-slate-200">
                     <div className="flex items-center gap-4">
-                        <Link href="/dashboard" className="p-2 bg-gray-50 rounded-lg text-gray-400 hover:text-indigo-600 transition-colors">
+                        <Link href="/dashboard" className="p-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-400 hover:text-indigo-600 transition-all">
                             <ChevronLeft className="w-5 h-5" />
                         </Link>
                         <div>
                             <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Course Management</h1>
-                            <p className="text-slate-500 mt-1">Content Inventory & Quality Control</p>
+                            <p className="text-slate-500 mt-1 font-medium text-xs uppercase tracking-widest">Invoicing & Quality Control</p>
                         </div>
                     </div>
                     <div className="flex items-center gap-3">
                         <Link
                             href="/admin/payouts"
-                            className="inline-flex items-center justify-center bg-white border border-slate-200 text-slate-700 px-5 py-2.5 rounded-xl font-bold text-sm shadow-sm transition-all hover:bg-slate-50 active:scale-95"
+                            className="inline-flex items-center justify-center bg-white border border-slate-200 text-slate-700 px-5 py-2.5 rounded-lg font-bold text-sm transition-all hover:bg-slate-50 active:scale-95 shadow-sm shadow-slate-100"
                         >
                             <DollarSign className="w-4 h-4 mr-2 text-emerald-500" />
                             Manage Payouts
                         </Link>
                         <Link
                             href="/admin/courses/add"
-                            className="inline-flex items-center justify-center bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-md shadow-indigo-100 transition-all active:scale-95"
+                            className="inline-flex items-center justify-center bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-lg font-bold text-sm transition-all active:scale-95 shadow-sm shadow-indigo-100"
                         >
                             <Plus className="w-4 h-4 mr-2" />
                             Create New Course
@@ -233,19 +233,19 @@ export default function AdminCoursesPage() {
                 {/* Filters */}
                 <div className="flex flex-col lg:flex-row justify-between items-center gap-6">
                     {/* Status Tabs */}
-                    <div className="flex p-1 bg-gray-200/50 rounded-xl w-full lg:w-fit overflow-x-auto no-scrollbar font-bold text-xs">
+                    <div className="flex p-1 bg-gray-200/50 rounded-lg w-full lg:w-fit overflow-x-auto no-scrollbar font-bold text-xs">
                         {['all', 'pending', 'approved', 'rejected'].map((tab) => (
                             <button
                                 key={tab}
                                 onClick={() => setActiveTab(tab)}
-                                className={`px-5 py-2 rounded-lg text-xs font-extrabold transition-all whitespace-nowrap uppercase tracking-widest ${activeTab === tab
+                                className={`px-5 py-2 rounded-md text-xs font-bold transition-all whitespace-nowrap uppercase tracking-widest ${activeTab === tab
                                     ? 'bg-white text-indigo-600 shadow-sm'
                                     : 'text-gray-500 hover:text-gray-700'
                                     }`}
                             >
                                 {tab}
                                 {tab !== 'all' && (
-                                    <span className={`ml-2 px-1.5 py-0.5 rounded-md text-[9px] ${activeTab === tab ? 'bg-indigo-50 text-indigo-600' : 'bg-gray-200 text-gray-400'
+                                    <span className={`ml-2 px-1.5 py-0.5 rounded text-[9px] ${activeTab === tab ? 'bg-indigo-50 text-indigo-600' : 'bg-gray-200 text-gray-400'
                                         }`}>
                                         {courses.filter(c => tab === 'pending' ? (c.approvalStatus === 'pending' || !c.approvalStatus) : c.approvalStatus === tab).length}
                                     </span>
@@ -262,7 +262,7 @@ export default function AdminCoursesPage() {
                             <input
                                 type="text"
                                 placeholder="Filter results..."
-                                className="block w-full pl-9 pr-3 py-2.5 border border-slate-200 rounded-xl bg-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 text-sm transition-all shadow-sm"
+                                className="block w-full pl-9 pr-3 py-2.5 border border-slate-200 rounded-lg bg-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 text-sm transition-all shadow-sm"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                             />
@@ -271,7 +271,7 @@ export default function AdminCoursesPage() {
                 </div>
 
                 {/* Course List Card */}
-                <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
                     <div className="overflow-x-auto">
                         <table className="min-w-full divide-y divide-gray-100">
                             <thead className="bg-gray-50">
@@ -338,7 +338,7 @@ export default function AdminCoursesPage() {
                                                     <span className="text-[10px] text-gray-400 font-medium uppercase tracking-tighter">Instructor</span>
                                                 )}
                                                 {course.instructor?._id === currentUser?._id && (
-                                                    <span className="text-[10px] text-indigo-400 font-medium uppercase tracking-tighter italic font-black">Creator</span>
+                                                    <span className="text-[10px] text-indigo-400 font-medium uppercase tracking-tighter italic font-semibold">Creator</span>
                                                 )}
                                             </div>
                                         </td>
@@ -394,7 +394,7 @@ export default function AdminCoursesPage() {
                                                             handleNotifyAdmin(course._id);
                                                         }}
                                                         disabled={notifyingCourseId === course._id}
-                                                        className="group flex items-center gap-1.5 px-2 py-1 bg-indigo-50 hover:bg-indigo-600 text-indigo-600 hover:text-white rounded-md text-[9px] font-black uppercase tracking-tighter transition-all duration-300 border border-indigo-100/50 w-fit disabled:opacity-50 disabled:cursor-not-allowed"
+                                                        className="group flex items-center gap-1.5 px-2 py-1 bg-indigo-50 hover:bg-indigo-600 text-indigo-600 hover:text-white rounded-lg text-[9px] font-bold uppercase tracking-tighter transition-all duration-300 border border-indigo-100/50 w-fit disabled:opacity-50 disabled:cursor-not-allowed"
                                                         title="Notify admin to review your course"
                                                     >
                                                         {notifyingCourseId === course._id ? (
@@ -456,7 +456,7 @@ export default function AdminCoursesPage() {
                         </div>
                     )}
                 </div>
-            </div>
+            </div >
             <Modal
                 isOpen={modalConfig.isOpen}
                 onClose={closeModal}
@@ -467,6 +467,6 @@ export default function AdminCoursesPage() {
                 confirmText={modalConfig.confirmText}
                 showCancel={modalConfig.showCancel}
             />
-        </div>
+        </div >
     );
 }
