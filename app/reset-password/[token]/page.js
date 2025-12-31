@@ -63,26 +63,37 @@ export default function ResetPassword({ params }) {
     };
 
     return (
-        <div className="min-h-screen pt-25 flex items-center justify-center bg-slate-50 p-6">
+
+
+        <div className="min-h-screen pt-20 flex items-center justify-center relative overflow-hidden bg-slate-50">
+            {/* Background Decoration */}
+            <div className="absolute inset-0 w-full h-full bg-white bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none"></div>
+            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-indigo-50/50 rounded-full blur-[100px] opacity-50 animate-pulse pointer-events-none"></div>
+            <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-purple-50/50 rounded-full blur-[100px] opacity-50 animate-pulse pointer-events-none"></div>
+
             <div
-                className="w-full max-w-md bg-white p-8 md:p-12 rounded-3xl shadow-2xl shadow-purple-300/50 border border-gray-100"
+                className="relative w-full max-w-sm bg-white/70 backdrop-blur-xl border border-white/40 shadow-2xl shadow-indigo-100/50 rounded-2xl p-6 md:p-10 m-4 z-10"
                 data-aos="zoom-in"
+                data-aos-duration="600"
             >
-                <div className="text-center mb-10">
-                    <h2 className="text-3xl font-extrabold text-slate-900 mb-2">
+                <div className="text-center mb-6 md:mb-8">
+                    <h2 className="text-2xl md:text-3xl font-extrabold text-slate-900 mb-1.5 tracking-tight">
                         Set New <span className={gradientTextClass}>Password</span>
                     </h2>
+                    <p className="text-xs md:text-sm text-slate-500 font-medium">
+                        Create a strong password for your account.
+                    </p>
                 </div>
 
                 {error && (
-                    <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-4 rounded-r">
-                        <p className="text-sm text-red-700">{error}</p>
+                    <div className="bg-red-50/80 backdrop-blur-sm border-l-4 border-red-500 p-3 mb-5 rounded-r-lg shadow-sm">
+                        <p className="text-xs text-red-700 font-semibold">{error}</p>
                     </div>
                 )}
 
                 {message && (
-                    <div className="bg-green-50 border-l-4 border-green-500 p-4 mb-4 rounded-r">
-                        <p className="text-sm text-green-700">{message}</p>
+                    <div className="bg-emerald-50/80 backdrop-blur-sm border-l-4 border-emerald-500 p-3 mb-5 rounded-r-lg shadow-sm">
+                        <p className="text-xs text-emerald-700 font-bold">{message}</p>
                     </div>
                 )}
 
@@ -99,7 +110,7 @@ export default function ResetPassword({ params }) {
                             placeholder="New Password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="w-full pl-12 pr-5 py-3 rounded-xl bg-slate-50 border border-gray-200 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/50 outline-none transition text-slate-800"
+                            className="w-full pl-12 pr-5 py-3 md:py-4 rounded-xl bg-white/50 border border-slate-200 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/10 focus:bg-white outline-none transition-all duration-200 text-slate-800 font-medium shadow-sm"
                             required
                             minLength={6}
                         />
@@ -116,7 +127,7 @@ export default function ResetPassword({ params }) {
                             placeholder="Confirm Password"
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
-                            className="w-full pl-12 pr-5 py-3 rounded-xl bg-slate-50 border border-gray-200 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/50 outline-none transition text-slate-800"
+                            className="w-full pl-12 pr-5 py-3 md:py-4 rounded-xl bg-white/50 border border-slate-200 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/10 focus:bg-white outline-none transition-all duration-200 text-slate-800 font-medium shadow-sm"
                             required
                         />
                     </div>
@@ -124,10 +135,10 @@ export default function ResetPassword({ params }) {
                     <button
                         type="submit"
                         disabled={loading}
-                        className={`w-full flex items-center justify-center gap-2 bg-gradient-to-r from-${primaryColor} to-${secondaryColor} text-white font-extrabold text-lg py-3.5 mt-6 rounded-xl shadow-lg shadow-purple-600/30 hover:shadow-xl hover:shadow-purple-600/50 transition transform hover:scale-[1.005] disabled:opacity-70`}
+                        className={`w-full flex items-center justify-center gap-2 bg-gradient-to-r from-${primaryColor} to-${secondaryColor} text-white font-extrabold text-sm md:text-base py-3 mt-6 rounded-xl shadow-lg shadow-indigo-500/20 hover:shadow-xl hover:shadow-indigo-500/40 transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed`}
                     >
-                        {loading ? <Loader2 className="animate-spin" /> : 'Update Password'}
-                        {!loading && <ArrowRight className="w-5 h-5 ml-1" />}
+                        {loading ? <Loader2 className="animate-spin w-5 h-5" /> : 'Update Password'}
+                        {!loading && <ArrowRight className="w-4 h-4 ml-1" />}
                     </button>
 
                 </form>
