@@ -28,6 +28,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'miro.medium.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'j5wxn4miy2xkqjcu.public.blob.vercel-storage.com',
+      },
     ],
   },
   experimental: {

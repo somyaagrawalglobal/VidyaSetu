@@ -47,7 +47,7 @@ export default function FileUploader({ type, initialUrl, onUploadSuccess, accept
         formData.append('type', type);
 
         // If we have an existing server URL, pass it to delete the old file
-        if (preview && preview.startsWith('/uploads/')) {
+        if (preview && (preview.startsWith('/uploads/') || preview.includes('blob.vercel-storage.com'))) {
             formData.append('previousUrl', preview);
         }
 

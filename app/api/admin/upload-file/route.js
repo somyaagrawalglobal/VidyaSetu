@@ -29,7 +29,7 @@ export async function POST(request) {
             return NextResponse.json({ success: false, message: 'No file uploaded' }, { status: 400 });
         }
 
-        if (!['thumbnail', 'resource'].includes(type)) {
+        if (!['thumbnail', 'resource', 'video'].includes(type)) {
             return NextResponse.json({ success: false, message: 'Invalid upload type' }, { status: 400 });
         }
 
@@ -42,11 +42,14 @@ export async function POST(request) {
         let url = '';
 
         // 4. Upload Logic
-        if (process.env.BLOB_READ_WRITE_TOKEN) {
+        const token = process.env.BLOB_READ_WRITE_TOKEN;
+
+        if (token) {
             // Production: Vercel Blob
             const blob = await put(filename, file, {
                 access: 'public',
                 addRandomSuffix: false,
+                token: token
             });
             url = blob.url;
             console.log(`[UPLOAD] File uploaded to Vercel Blob: ${url}`);
@@ -54,7 +57,8 @@ export async function POST(request) {
             // Delete previous if it's a blob URL
             if (previousUrl && previousUrl.includes('blob.vercel-storage.com')) {
                 try {
-                    await del(previousUrl);
+                    await del(previousUrl, { token });
+                    console.log(`[UPLOAD] Previous blob deleted: ${previousUrl}`);
                 } catch (e) {
                     console.warn('[UPLOAD_WARNING] Previous blob deletion failed', e.message);
                 }
@@ -75,6 +79,17 @@ export async function POST(request) {
 
             url = `/uploads/${type}/${timestamp}-${randomStr}.${extension}`;
             console.log(`[UPLOAD] File saved locally: ${url}`);
+        }
+
+        // Cleanup: If there was a previous local file, delete it regardless of current mode
+        if (previousUrl && previousUrl.startsWith('/uploads/')) {
+            try {
+                const oldPath = path.join(process.cwd(), 'public', previousUrl);
+                await fs.unlink(oldPath);
+                console.log(`[UPLOAD] Previous local file deleted: ${oldPath}`);
+            } catch (e) {
+                console.warn('[UPLOAD_WARNING] Previous local file deletion failed', e.message);
+            }
         }
 
         // 5. Return success result
