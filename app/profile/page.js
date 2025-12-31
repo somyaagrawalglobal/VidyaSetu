@@ -29,6 +29,13 @@ export default function Profile() {
                 firstName: user.firstName,
                 lastName: user.lastName,
                 mobileNumber: user.mobileNumber,
+                payoutDetails: {
+                    bankName: user.payoutDetails?.bankName || '',
+                    accountNumber: user.payoutDetails?.accountNumber || '',
+                    accountHolderName: user.payoutDetails?.accountHolderName || '',
+                    ifscCode: user.payoutDetails?.ifscCode || '',
+                    upiId: user.payoutDetails?.upiId || '',
+                }
             });
         }
     }, [user, loading, router]);
@@ -162,6 +169,60 @@ export default function Profile() {
                                         />
                                     </div>
                                 </div>
+
+                                {user.roles?.includes('Instructor') && (
+                                    <div className="pt-6 border-t border-slate-100">
+                                        <h3 className="text-sm font-black text-slate-800 mb-4 flex items-center gap-2">
+                                            <div className="w-1 h-4 bg-indigo-600 rounded-full"></div>
+                                            Payout Information (For Settlements)
+                                        </h3>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                            <div className="space-y-1.5">
+                                                <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider ml-1">Bank Name</label>
+                                                <input
+                                                    value={formData.payoutDetails.bankName}
+                                                    onChange={(e) => setFormData({ ...formData, payoutDetails: { ...formData.payoutDetails, bankName: e.target.value } })}
+                                                    className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50/50 focus:bg-white focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-bold text-sm text-slate-700"
+                                                    placeholder="e.g. HDFC Bank"
+                                                />
+                                            </div>
+                                            <div className="space-y-1.5">
+                                                <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider ml-1">Account Number</label>
+                                                <input
+                                                    value={formData.payoutDetails.accountNumber}
+                                                    onChange={(e) => setFormData({ ...formData, payoutDetails: { ...formData.payoutDetails, accountNumber: e.target.value } })}
+                                                    className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50/50 focus:bg-white focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-bold text-sm text-slate-700"
+                                                    placeholder="Enter A/C Number"
+                                                />
+                                            </div>
+                                            <div className="space-y-1.5">
+                                                <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider ml-1">Account Holder Name</label>
+                                                <input
+                                                    value={formData.payoutDetails.accountHolderName}
+                                                    onChange={(e) => setFormData({ ...formData, payoutDetails: { ...formData.payoutDetails, accountHolderName: e.target.value } })}
+                                                    className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50/50 focus:bg-white focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-bold text-sm text-slate-700"
+                                                />
+                                            </div>
+                                            <div className="space-y-1.5">
+                                                <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider ml-1">IFSC Code</label>
+                                                <input
+                                                    value={formData.payoutDetails.ifscCode}
+                                                    onChange={(e) => setFormData({ ...formData, payoutDetails: { ...formData.payoutDetails, ifscCode: e.target.value } })}
+                                                    className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50/50 focus:bg-white focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-bold text-sm text-slate-700 uppercase"
+                                                />
+                                            </div>
+                                            <div className="space-y-1.5">
+                                                <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider ml-1">UPI ID (Optional)</label>
+                                                <input
+                                                    value={formData.payoutDetails.upiId}
+                                                    onChange={(e) => setFormData({ ...formData, payoutDetails: { ...formData.payoutDetails, upiId: e.target.value } })}
+                                                    className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50/50 focus:bg-white focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-bold text-sm text-slate-700"
+                                                    placeholder="username@upi"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
                                 <div className="flex justify-end gap-3 pt-6 border-t border-slate-100">
                                     <button
                                         type="button"
@@ -224,6 +285,37 @@ export default function Profile() {
                                         </div>
                                     </div>
                                 </div>
+
+                                {user.roles?.includes('Instructor') && user.payoutDetails && (
+                                    <div className="mt-8 pt-8 border-t border-slate-100">
+                                        <h3 className="text-sm font-black text-slate-800 mb-6 flex items-center gap-2">
+                                            <div className="w-1 h-4 bg-indigo-600 rounded-full"></div>
+                                            Payout Information
+                                        </h3>
+                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                            <div>
+                                                <p className="text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-1">Bank Name</p>
+                                                <p className="font-bold text-slate-800 text-sm">{user.payoutDetails.bankName || '--'}</p>
+                                            </div>
+                                            <div>
+                                                <p className="text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-1">Account Number</p>
+                                                <p className="font-bold text-slate-800 text-sm">{user.payoutDetails.accountNumber || '--'}</p>
+                                            </div>
+                                            <div>
+                                                <p className="text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-1">IFSC Code</p>
+                                                <p className="font-bold text-slate-800 text-sm">{user.payoutDetails.ifscCode || '--'}</p>
+                                            </div>
+                                            <div>
+                                                <p className="text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-1">A/C Holder Name</p>
+                                                <p className="font-bold text-slate-800 text-sm">{user.payoutDetails.accountHolderName || '--'}</p>
+                                            </div>
+                                            <div>
+                                                <p className="text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-1">UPI ID</p>
+                                                <p className="font-bold text-indigo-600 text-sm">{user.payoutDetails.upiId || '--'}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
                                 <div className="pt-8 border-t border-slate-100 mt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
                                     <p className="text-[10px] font-medium text-slate-400 italic">
                                         Last Profile Update: {new Date(user.updatedOn).toLocaleString()}

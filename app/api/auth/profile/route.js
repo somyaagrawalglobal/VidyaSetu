@@ -6,10 +6,19 @@ import User from '@/models/User';
 import { validateSession } from '@/lib/session';
 import { z } from 'zod';
 
+const payoutDetailsSchema = z.object({
+    bankName: z.string().optional(),
+    accountNumber: z.string().optional(),
+    accountHolderName: z.string().optional(),
+    ifscCode: z.string().optional(),
+    upiId: z.string().optional(),
+}).optional();
+
 const updateProfileSchema = z.object({
     firstName: z.string().min(1, 'First Name is required'),
     lastName: z.string().min(1, 'Last Name is required'),
     mobileNumber: z.string().min(10, 'Mobile Number is required'),
+    payoutDetails: payoutDetailsSchema,
 });
 
 export async function PUT(req) {
@@ -41,14 +50,14 @@ export async function PUT(req) {
             );
         }
 
-        const { firstName, lastName, mobileNumber } = result.data;
+        const { firstName, lastName, mobileNumber, payoutDetails } = result.data;
 
         await dbConnect();
 
         // Update User
         const updatedUser = await User.findByIdAndUpdate(
             userId,
-            { firstName, lastName, mobileNumber },
+            { firstName, lastName, mobileNumber, payoutDetails },
             { new: true, runValidators: true }
         ).select('-passwordHash -activeToken');
 
