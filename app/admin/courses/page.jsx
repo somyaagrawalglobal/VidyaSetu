@@ -19,7 +19,8 @@ import {
     Bell,
     Send,
     Loader2,
-    ChevronLeft
+    ChevronLeft,
+    DollarSign
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Modal from '@/components/Modal';
@@ -211,13 +212,22 @@ export default function AdminCoursesPage() {
                             <p className="text-slate-500 mt-1">Content Inventory & Quality Control</p>
                         </div>
                     </div>
-                    <Link
-                        href="/admin/courses/add"
-                        className="inline-flex items-center justify-center bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-md shadow-indigo-100 transition-all active:scale-95"
-                    >
-                        <Plus className="w-4 h-4 mr-2" />
-                        Create New Course
-                    </Link>
+                    <div className="flex items-center gap-3">
+                        <Link
+                            href="/admin/payouts"
+                            className="inline-flex items-center justify-center bg-white border border-slate-200 text-slate-700 px-5 py-2.5 rounded-xl font-bold text-sm shadow-sm transition-all hover:bg-slate-50 active:scale-95"
+                        >
+                            <DollarSign className="w-4 h-4 mr-2 text-emerald-500" />
+                            Manage Payouts
+                        </Link>
+                        <Link
+                            href="/admin/courses/add"
+                            className="inline-flex items-center justify-center bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-md shadow-indigo-100 transition-all active:scale-95"
+                        >
+                            <Plus className="w-4 h-4 mr-2" />
+                            Create New Course
+                        </Link>
+                    </div>
                 </div>
 
                 {/* Filters */}

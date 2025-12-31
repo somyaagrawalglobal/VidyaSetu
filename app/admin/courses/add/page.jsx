@@ -239,6 +239,31 @@ export default function AddCoursePage() {
                                 </div>
                             </div>
 
+                            {/* Earnings Breakdown */}
+                            {formData.price > 0 && (
+                                <div className="bg-indigo-50/50 rounded-2xl p-4 border border-indigo-100/50 mt-4 animate-in fade-in slide-in-from-top-2 duration-500">
+                                    <div className="flex items-center justify-between mb-3 border-b border-indigo-100 pb-2">
+                                        <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-400">Projected Earnings Breakdown</h3>
+                                        <span className="text-[10px] font-bold text-indigo-600 bg-indigo-100 px-2 py-0.5 rounded-full">60/40 Split</span>
+                                    </div>
+                                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                        <div className="flex flex-col">
+                                            <span className="text-[10px] font-bold text-slate-400 uppercase">Student Pays</span>
+                                            <span className="text-sm font-black text-slate-700">₹{Number(formData.price).toLocaleString()}</span>
+                                        </div>
+                                        <div className="flex flex-col">
+                                            <span className="text-[10px] font-bold text-slate-400 uppercase">Deductions (40%)</span>
+                                            <span className="text-sm font-black text-red-500">-₹{(formData.price * 0.4).toLocaleString()}</span>
+                                            <p className="text-[9px] text-slate-400 mt-0.5 line-clamp-1">Platform, GST, Gateway fees</p>
+                                        </div>
+                                        <div className="flex flex-col p-2 bg-indigo-600 rounded-xl shadow-lg shadow-indigo-200">
+                                            <span className="text-[10px] font-bold text-indigo-200 uppercase">You Receive (60%)</span>
+                                            <span className="text-base font-black text-white">₹{(formData.price * 0.6).toLocaleString()}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
                                     <label className="block text-sm font-semibold text-gray-700 mb-2">Level</label>
