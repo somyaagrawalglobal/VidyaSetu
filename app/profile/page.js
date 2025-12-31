@@ -18,6 +18,15 @@ export default function Profile() {
         firstName: '',
         lastName: '',
         mobileNumber: '',
+        headline: '',
+        bio: '',
+        payoutDetails: {
+            bankName: '',
+            accountNumber: '',
+            accountHolderName: '',
+            ifscCode: '',
+            upiId: '',
+        }
     });
 
     useEffect(() => {
@@ -26,9 +35,11 @@ export default function Profile() {
         }
         if (user) {
             setFormData({
-                firstName: user.firstName,
-                lastName: user.lastName,
-                mobileNumber: user.mobileNumber,
+                firstName: user.firstName || '',
+                lastName: user.lastName || '',
+                mobileNumber: user.mobileNumber || '',
+                headline: user.headline || '',
+                bio: user.bio || '',
                 payoutDetails: {
                     bankName: user.payoutDetails?.bankName || '',
                     accountNumber: user.payoutDetails?.accountNumber || '',
@@ -173,6 +184,27 @@ export default function Profile() {
                                             className="w-full px-4 py-2.5 rounded-lg border border-slate-100 bg-slate-100/50 text-slate-400 cursor-not-allowed font-bold text-sm"
                                         />
                                     </div>
+                                    <div className="md:col-span-2 space-y-1.5">
+                                        <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider ml-1">Headline</label>
+                                        <input
+                                            name="headline"
+                                            value={formData.headline}
+                                            onChange={handleChange}
+                                            placeholder="e.g. Senior Software Engineer or Math Specialist"
+                                            className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50/50 focus:bg-white focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-bold text-sm text-slate-700"
+                                        />
+                                    </div>
+                                    <div className="md:col-span-2 space-y-1.5">
+                                        <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider ml-1">Bio</label>
+                                        <textarea
+                                            name="bio"
+                                            rows={4}
+                                            value={formData.bio}
+                                            onChange={handleChange}
+                                            placeholder="Tell us about yourself..."
+                                            className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50/50 focus:bg-white focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-bold text-sm text-slate-700"
+                                        />
+                                    </div>
                                 </div>
 
                                 {user.roles?.includes('Instructor') && (
@@ -186,7 +218,7 @@ export default function Profile() {
                                                 <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider ml-1">Bank Name</label>
                                                 <input
                                                     value={formData.payoutDetails.bankName}
-                                                    onChange={(e) => setFormData({ ...formData, payoutDetails: { ...formData.payoutDetails, bankName: e.target.value } })}
+                                                    onChange={(e) => setFormData(prev => ({ ...prev, payoutDetails: { ...prev.payoutDetails, bankName: e.target.value } }))}
                                                     className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50/50 focus:bg-white focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-bold text-sm text-slate-700"
                                                     placeholder="e.g. HDFC Bank"
                                                 />
@@ -195,7 +227,7 @@ export default function Profile() {
                                                 <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider ml-1">Account Number</label>
                                                 <input
                                                     value={formData.payoutDetails.accountNumber}
-                                                    onChange={(e) => setFormData({ ...formData, payoutDetails: { ...formData.payoutDetails, accountNumber: e.target.value } })}
+                                                    onChange={(e) => setFormData(prev => ({ ...prev, payoutDetails: { ...prev.payoutDetails, accountNumber: e.target.value } }))}
                                                     className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50/50 focus:bg-white focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-bold text-sm text-slate-700"
                                                     placeholder="Enter A/C Number"
                                                 />
@@ -204,7 +236,7 @@ export default function Profile() {
                                                 <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider ml-1">Account Holder Name</label>
                                                 <input
                                                     value={formData.payoutDetails.accountHolderName}
-                                                    onChange={(e) => setFormData({ ...formData, payoutDetails: { ...formData.payoutDetails, accountHolderName: e.target.value } })}
+                                                    onChange={(e) => setFormData(prev => ({ ...prev, payoutDetails: { ...prev.payoutDetails, accountHolderName: e.target.value } }))}
                                                     className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50/50 focus:bg-white focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-bold text-sm text-slate-700"
                                                 />
                                             </div>
@@ -212,7 +244,7 @@ export default function Profile() {
                                                 <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider ml-1">IFSC Code</label>
                                                 <input
                                                     value={formData.payoutDetails.ifscCode}
-                                                    onChange={(e) => setFormData({ ...formData, payoutDetails: { ...formData.payoutDetails, ifscCode: e.target.value } })}
+                                                    onChange={(e) => setFormData(prev => ({ ...prev, payoutDetails: { ...prev.payoutDetails, ifscCode: e.target.value } }))}
                                                     className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50/50 focus:bg-white focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-bold text-sm text-slate-700 uppercase"
                                                 />
                                             </div>
@@ -220,7 +252,7 @@ export default function Profile() {
                                                 <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider ml-1">UPI ID (Optional)</label>
                                                 <input
                                                     value={formData.payoutDetails.upiId}
-                                                    onChange={(e) => setFormData({ ...formData, payoutDetails: { ...formData.payoutDetails, upiId: e.target.value } })}
+                                                    onChange={(e) => setFormData(prev => ({ ...prev, payoutDetails: { ...prev.payoutDetails, upiId: e.target.value } }))}
                                                     className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50/50 focus:bg-white focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-bold text-sm text-slate-700"
                                                     placeholder="username@upi"
                                                 />
@@ -290,6 +322,23 @@ export default function Profile() {
                                         </div>
                                     </div>
                                 </div>
+
+                                {(user.headline || user.bio) && (
+                                    <div className="mt-6 space-y-4">
+                                        {user.headline && (
+                                            <div className="p-5 rounded-lg bg-slate-50 border border-slate-100">
+                                                <p className="text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-1">Headline</p>
+                                                <p className="font-bold text-slate-800 text-sm">{user.headline}</p>
+                                            </div>
+                                        )}
+                                        {user.bio && (
+                                            <div className="p-5 rounded-lg bg-slate-50 border border-slate-100">
+                                                <p className="text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-1">Professional Bio</p>
+                                                <p className="text-slate-600 text-sm leading-relaxed whitespace-pre-wrap">{user.bio}</p>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
 
                                 {user.roles?.includes('Instructor') && user.payoutDetails && (
                                     <div className="mt-8 pt-8 border-t border-slate-100">

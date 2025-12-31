@@ -18,6 +18,8 @@ const updateProfileSchema = z.object({
     firstName: z.string().min(1, 'First Name is required'),
     lastName: z.string().min(1, 'Last Name is required'),
     mobileNumber: z.string().min(10, 'Mobile Number is required'),
+    headline: z.string().optional(),
+    bio: z.string().optional(),
     payoutDetails: payoutDetailsSchema,
 });
 
@@ -50,14 +52,14 @@ export async function PUT(req) {
             );
         }
 
-        const { firstName, lastName, mobileNumber, payoutDetails } = result.data;
+        const { firstName, lastName, mobileNumber, headline, bio, payoutDetails } = result.data;
 
         await dbConnect();
 
         // Update User
         const updatedUser = await User.findByIdAndUpdate(
             userId,
-            { firstName, lastName, mobileNumber, payoutDetails },
+            { firstName, lastName, mobileNumber, headline, bio, payoutDetails },
             { new: true, runValidators: true }
         ).select('-passwordHash -activeToken');
 
