@@ -134,8 +134,11 @@ export default function Profile() {
                                 <h2 className="text-xl font-bold text-slate-800">{user.firstName} {user.lastName}</h2>
                                 <p className="text-slate-500 font-medium text-xs">{user.email}</p>
                                 <div className="mt-3 flex gap-2">
-                                    <span className="px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider bg-indigo-100 text-indigo-700 border border-indigo-200/50">
-                                        {user.roles?.[0] || 'Student'}
+                                    <span className={`px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider border ${user.roles?.includes('Admin') ? 'bg-purple-100 text-purple-700 border-purple-200/50' :
+                                            user.roles?.includes('Instructor') ? 'bg-indigo-100 text-indigo-700 border-indigo-200/50' :
+                                                'bg-slate-100 text-slate-700 border-slate-200/50'
+                                        }`}>
+                                        {user.roles?.includes('Admin') ? 'Admin' : user.roles?.includes('Instructor') ? 'Instructor' : 'Student'}
                                     </span>
                                     {user.isActive && (
                                         <span className="px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider bg-emerald-100 text-emerald-700 border border-emerald-200/50">Active</span>

@@ -202,71 +202,89 @@ export default function AdminCoursesPage() {
 
 
                 {/* Header Section */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-xl border border-slate-200">
-                    <div className="flex items-center gap-4">
-                        <Link href="/dashboard" className="p-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-400 hover:text-indigo-600 transition-all">
-                            <ChevronLeft className="w-5 h-5" />
-                        </Link>
-                        <div>
-                            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Course Management</h1>
-                            <p className="text-slate-500 mt-1 font-medium text-xs uppercase tracking-widest">Invoicing & Quality Control</p>
+                <div className="relative overflow-hidden bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm">
+                    {/* Background Decorative Elements */}
+                    <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-indigo-50 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
+                    <div className="absolute bottom-0 left-0 -ml-16 -mb-16 w-64 h-64 bg-emerald-50 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
+
+                    <div className="relative flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+                        <div className="flex items-start gap-4">
+                            <Link
+                                href="/dashboard"
+                                className="mt-1 p-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-400 hover:text-indigo-600 hover:border-indigo-100 hover:bg-indigo-50 transition-all duration-300 group"
+                            >
+                                <ChevronLeft className="w-5 h-5 group-hover:-translate-x-0.5 transition-transform" />
+                            </Link>
+                            <div>
+                                <div className="flex items-center gap-2 mb-1">
+                                    <span className="px-2 py-0.5 bg-indigo-50 text-indigo-600 text-[10px] font-bold uppercase tracking-wider rounded-md border border-indigo-100">
+                                        {currentUser?.roles.includes('Admin') ? 'Admin Console' : 'Instructor Console'}
+                                    </span>
+                                    <span className="w-1 h-1 bg-slate-300 rounded-full"></span>
+                                    <span className="text-slate-400 text-[10px] font-bold uppercase tracking-wider">{courses.length} Total Courses</span>
+                                </div>
+                                <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
+                                    Course <span className="text-indigo-600">Inventory</span>
+                                </h1>
+                                <p className="text-slate-500 mt-1 font-medium text-sm">
+                                    Manage quality standards, approvals, and instructor payouts.
+                                </p>
+                            </div>
                         </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                        <Link
-                            href="/admin/payouts"
-                            className="inline-flex items-center justify-center bg-white border border-slate-200 text-slate-700 px-5 py-2.5 rounded-lg font-bold text-sm transition-all hover:bg-slate-50 active:scale-95 shadow-sm shadow-slate-100"
-                        >
-                            <DollarSign className="w-4 h-4 mr-2 text-emerald-500" />
-                            Manage Payouts
-                        </Link>
-                        <Link
-                            href="/admin/courses/add"
-                            className="inline-flex items-center justify-center bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-lg font-bold text-sm transition-all active:scale-95 shadow-sm shadow-indigo-100"
-                        >
-                            <Plus className="w-4 h-4 mr-2" />
-                            Create New Course
-                        </Link>
+
+                        <div className="flex flex-wrap items-center gap-3">
+                            <Link
+                                href="/admin/payouts"
+                                className="flex-1 sm:flex-none inline-flex items-center justify-center bg-white border border-slate-200 text-slate-700 px-6 py-3 rounded-xl font-bold text-sm transition-all hover:bg-slate-50 hover:border-slate-300 active:scale-[0.98] shadow-sm shadow-slate-100"
+                            >
+                                <DollarSign className="w-4 h-4 mr-2 text-emerald-500" />
+                                Payout Status
+                            </Link>
+                            <Link
+                                href="/admin/courses/add"
+                                className="flex-1 sm:flex-none inline-flex items-center justify-center bg-slate-900 border border-transparent text-white px-6 py-3 rounded-xl font-bold text-sm transition-all hover:bg-slate-800 active:scale-[0.98] shadow-xl shadow-slate-200"
+                            >
+                                <Plus className="w-4 h-4 mr-2" />
+                                Add New Course
+                            </Link>
+                        </div>
                     </div>
                 </div>
 
-                {/* Filters */}
-                <div className="flex flex-col lg:flex-row justify-between items-center gap-6">
-                    {/* Status Tabs */}
-                    <div className="flex p-1 bg-gray-200/50 rounded-lg w-full lg:w-fit overflow-x-auto no-scrollbar font-bold text-xs">
+                {/* Filters Section */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
+                    {/* Tabs */}
+                    <div className="lg:col-span-8 flex p-1.5 bg-slate-200/50 backdrop-blur-sm rounded-xl w-full overflow-x-auto no-scrollbar">
                         {['all', 'pending', 'approved', 'rejected'].map((tab) => (
                             <button
                                 key={tab}
                                 onClick={() => setActiveTab(tab)}
-                                className={`px-5 py-2 rounded-md text-xs font-bold transition-all whitespace-nowrap uppercase tracking-widest ${activeTab === tab
-                                    ? 'bg-white text-indigo-600 shadow-sm'
-                                    : 'text-gray-500 hover:text-gray-700'
+                                className={`flex-1 sm:flex-none px-6 py-2.5 rounded-lg text-xs font-bold transition-all duration-300 uppercase tracking-widest flex items-center justify-center gap-2 ${activeTab === tab
+                                    ? 'bg-white text-indigo-600 shadow-md ring-1 ring-slate-200/50'
+                                    : 'text-slate-500 hover:text-slate-800 hover:bg-white/50'
                                     }`}
                             >
                                 {tab}
-                                {tab !== 'all' && (
-                                    <span className={`ml-2 px-1.5 py-0.5 rounded text-[9px] ${activeTab === tab ? 'bg-indigo-50 text-indigo-600' : 'bg-gray-200 text-gray-400'
-                                        }`}>
-                                        {courses.filter(c => tab === 'pending' ? (c.approvalStatus === 'pending' || !c.approvalStatus) : c.approvalStatus === tab).length}
-                                    </span>
-                                )}
+                                <span className={`px-1.5 py-0.5 rounded-md text-[9px] ${activeTab === tab ? 'bg-indigo-50 text-indigo-600' : 'bg-slate-300/50 text-slate-500'
+                                    }`}>
+                                    {courses.filter(c => tab === 'all' ? true : (tab === 'pending' ? (c.approvalStatus === 'pending' || !c.approvalStatus) : c.approvalStatus === tab)).length}
+                                </span>
                             </button>
                         ))}
                     </div>
 
-                    <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
-                        <div className="relative w-full sm:max-w-xs">
-                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <Search className="h-4 w-4 text-gray-400" />
-                            </div>
-                            <input
-                                type="text"
-                                placeholder="Filter results..."
-                                className="block w-full pl-9 pr-3 py-2.5 border border-slate-200 rounded-lg bg-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 text-sm transition-all shadow-sm"
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                            />
+                    {/* Search */}
+                    <div className="lg:col-span-4 relative group">
+                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                            <Search className="h-4 w-4 text-slate-400 group-focus-within:text-indigo-500 transition-colors" />
                         </div>
+                        <input
+                            type="text"
+                            placeholder="Find a course..."
+                            className="block w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl bg-white placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-indigo-500/5 focus:border-indigo-500 text-sm transition-all shadow-sm"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
                     </div>
                 </div>
 
