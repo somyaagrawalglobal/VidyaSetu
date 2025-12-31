@@ -9,7 +9,8 @@ import {
     AlertCircle,
     Loader2,
     Youtube,
-    RotateCcw
+    RotateCcw,
+    Cloud
 } from 'lucide-react';
 
 export default function VideoUploader({ courseId, initialVideoId, onVideoReady }) {
@@ -35,9 +36,64 @@ export default function VideoUploader({ courseId, initialVideoId, onVideoReady }
         onVideoReady(val);
     };
 
+    const startBlobUpload = async (file) => {
+        setStatus('uploading');
+        setProgress(0);
+        abortControllerRef.current = new AbortController();
+
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('type', 'video');
+        if (videoId && (videoId.startsWith('http') || videoId.includes('blob.vercel-storage.com'))) {
+            formData.append('previousUrl', videoId);
+        }
+
+        try {
+            const xhr = new XMLHttpRequest();
+            xhr.upload.addEventListener('progress', (e) => {
+                if (e.lengthComputable) {
+                    const percent = Math.round((e.loaded / e.total) * 100);
+                    setProgress(percent);
+                }
+            });
+
+            const promise = new Promise((resolve, reject) => {
+                xhr.onload = () => {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        resolve(JSON.parse(xhr.responseText));
+                    } else {
+                        reject(new Error(JSON.parse(xhr.responseText).message || 'Upload failed'));
+                    }
+                };
+                xhr.onerror = () => reject(new Error('Network error'));
+                abortControllerRef.current.signal.addEventListener('abort', () => xhr.abort());
+            });
+
+            xhr.open('POST', '/api/admin/upload-file');
+            xhr.send(formData);
+
+            const data = await promise;
+            setVideoId(data.url);
+            onVideoReady(data.url);
+            setStatus('completed');
+            setProgress(100);
+        } catch (err) {
+            if (err.name === 'AbortError') return;
+            setError(err.message || 'Blob upload failed');
+            setStatus('error');
+        } finally {
+            setIsUploading(false);
+        }
+    };
+
     const startUpload = async (e) => {
         const file = e.target.files[0];
         if (!file) return;
+
+        if (uploadMode === 'blob') {
+            await startBlobUpload(file);
+            return;
+        }
 
         setStatus('initializing');
         setError('');
@@ -171,15 +227,21 @@ export default function VideoUploader({ courseId, initialVideoId, onVideoReady }
             <div className="flex bg-slate-50 border-b border-slate-100">
                 <button
                     onClick={() => setUploadMode('upload')}
-                    className={`flex-1 flex items-center justify-center gap-2 py-3 text-xs font-bold uppercase tracking-wider transition-all ${uploadMode === 'upload' ? 'bg-white text-indigo-600 border-r border-slate-100' : 'text-slate-400 hover:text-slate-600'}`}
+                    className={`flex-1 flex items-center justify-center gap-2 py-3 text-[10px] font-black uppercase tracking-widest transition-all ${uploadMode === 'upload' ? 'bg-white text-indigo-600 border-r border-slate-100' : 'text-slate-400 hover:text-slate-600'}`}
                 >
-                    <Upload size={14} /> Upload Video
+                    <Youtube size={12} /> YouTube
+                </button>
+                <button
+                    onClick={() => setUploadMode('blob')}
+                    className={`flex-1 flex items-center justify-center gap-2 py-3 text-[10px] font-black uppercase tracking-widest transition-all ${uploadMode === 'blob' ? 'bg-white text-indigo-600 border-x border-slate-100' : 'text-slate-400 hover:text-slate-600'}`}
+                >
+                    <Cloud size={12} /> Vercel Blob
                 </button>
                 <button
                     onClick={() => setUploadMode('manual')}
-                    className={`flex-1 flex items-center justify-center gap-2 py-3 text-xs font-bold uppercase tracking-wider transition-all ${uploadMode === 'manual' ? 'bg-white text-indigo-600 border-l border-slate-100' : 'text-slate-400 hover:text-slate-600'}`}
+                    className={`flex-1 flex items-center justify-center gap-2 py-3 text-[10px] font-black uppercase tracking-widest transition-all ${uploadMode === 'manual' ? 'bg-white text-indigo-600 border-l border-slate-100' : 'text-slate-400 hover:text-slate-600'}`}
                 >
-                    <LinkIcon size={14} /> YouTube ID
+                    <LinkIcon size={12} /> Manual ID
                 </button>
             </div>
 
@@ -209,7 +271,8 @@ export default function VideoUploader({ courseId, initialVideoId, onVideoReady }
                                             <Upload className="text-indigo-600" size={16} />
                                         )}
                                         <span className="text-xs font-black text-indigo-900 uppercase">
-                                            {status === 'initializing' ? 'Connecting to YouTube...' : 'Uploading to YouTube...'}
+                                            {status === 'initializing' ? 'Connecting...' :
+                                                uploadMode === 'blob' ? 'Uploading to Vercel Blob...' : 'Uploading to YouTube...'}
                                         </span>
                                     </div>
                                     <button onClick={cancelUpload} className="text-slate-400 hover:text-red-600 transition-colors">
@@ -237,7 +300,9 @@ export default function VideoUploader({ courseId, initialVideoId, onVideoReady }
                                     </div>
                                     <div>
                                         <p className="text-sm font-bold text-emerald-900 leading-none mb-1">Upload Successful!</p>
-                                        <p className="text-xs text-emerald-600 font-medium tracking-tight">ID: {videoId}</p>
+                                        <p className="text-[10px] text-emerald-600 font-medium tracking-tight truncate max-w-[200px]">
+                                            {uploadMode === 'blob' ? videoId : `YouTube ID: ${videoId}`}
+                                        </p>
                                     </div>
                                 </div>
                                 <button onClick={reset} className="p-2 text-emerald-600 hover:bg-emerald-100 rounded-lg transition-colors">
