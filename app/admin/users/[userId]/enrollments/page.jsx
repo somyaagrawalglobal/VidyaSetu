@@ -3,7 +3,7 @@
 import { useEffect, useState, use } from 'react';
 import {
     BookOpen,
-    ArrowLeft,
+    ChevronLeft,
     ShieldAlert,
     ShieldCheck,
     Clock,
@@ -107,7 +107,7 @@ export default function UserEnrollmentsPage({ params }) {
                 {/* Back Link */}
                 <div className="flex items-center gap-4 mb-8">
                     <Link href="/admin/users" className="p-2 bg-white border border-slate-200 rounded-lg text-slate-400 hover:text-indigo-600 transition-all">
-                        <ArrowLeft className="w-5 h-5" />
+                        <ChevronLeft className="w-5 h-5" />
                     </Link>
                     <div>
                         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-emerald-50 text-emerald-700 text-[10px] font-bold uppercase tracking-wider mb-2 border border-emerald-100/50">
@@ -144,12 +144,12 @@ export default function UserEnrollmentsPage({ params }) {
                                         <div className="flex justify-between items-start mb-2">
                                             <h3 className="text-xl font-bold text-slate-900 leading-tight">{enrollment.courseTitle}</h3>
                                             {enrollment.accessStatus === 'blocked' ? (
-                                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-red-50 text-red-600 text-[10px] font-bold uppercase tracking-widest border border-red-100">
-                                                    <ShieldAlert size={10} /> Access Blocked
+                                                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-red-50 text-red-600 text-[10px] font-bold uppercase tracking-widest border border-red-100 shadow-sm">
+                                                    <ShieldAlert size={12} /> Access Blocked
                                                 </span>
                                             ) : (
-                                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-600 text-[10px] font-bold uppercase tracking-widest border border-emerald-100">
-                                                    <ShieldCheck size={10} /> Active Access
+                                                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-emerald-50 text-emerald-600 text-[10px] font-bold uppercase tracking-widest border border-emerald-100 shadow-sm">
+                                                    <ShieldCheck size={12} /> Active Access
                                                 </span>
                                             )}
                                         </div>

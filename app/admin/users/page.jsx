@@ -270,13 +270,15 @@ export default function UserManagementPage() {
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                             <div className="flex justify-end gap-2">
-                                                <Link
-                                                    href={`/admin/users/${user._id}/enrollments`}
-                                                    className="p-2 text-slate-400 hover:text-emerald-600 transition-colors bg-slate-50 border border-slate-200 rounded-lg"
-                                                    title="View Enrollments"
-                                                >
-                                                    <BookOpen className="w-4 h-4" />
-                                                </Link>
+                                                {user.roles.includes('Student') && (
+                                                    <Link
+                                                        href={`/admin/users/${user._id}/enrollments`}
+                                                        className="p-2 text-slate-400 hover:text-emerald-600 transition-colors bg-slate-50 border border-slate-200 rounded-lg"
+                                                        title="View Enrollments"
+                                                    >
+                                                        <BookOpen className="w-4 h-4" />
+                                                    </Link>
+                                                )}
                                                 <button
                                                     onClick={() => handleEditUser(user)}
                                                     className="p-2 text-slate-400 hover:text-indigo-600 transition-colors bg-slate-50 border border-slate-200 rounded-lg"
