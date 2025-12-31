@@ -96,7 +96,7 @@ export default function About() {
 
                     {/* Main Title - Responsive & Animated */}
                     <h1
-                        className="text-xl sm:text-2xl md:text-3xl font-black text-slate-900 mb-4 sm:mb-5 leading-tight"
+                        className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 mb-4 sm:mb-6 leading-[1.1]"
                         data-aos="fade-up"
                         data-aos-duration="800"
                     >

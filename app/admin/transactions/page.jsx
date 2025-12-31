@@ -20,6 +20,7 @@ import {
 import Link from 'next/link';
 import { useToast } from '@/components/ToastContext';
 import Modal from '@/components/Modal';
+import Loader from '@/components/Loader';
 
 export default function AdminTransactionsPage() {
     const [orders, setOrders] = useState([]);
@@ -173,11 +174,7 @@ export default function AdminTransactionsPage() {
         return matchesSearch && matchesFilter;
     });
 
-    if (loading) return (
-        <div className="min-h-screen bg-white pt-32 flex justify-center">
-            <Loader2 className="animate-spin text-indigo-600" size={40} />
-        </div>
-    );
+    if (loading) return <Loader text="Reconciling financial data..." />;
 
     if (!isAuthorized) {
         return (

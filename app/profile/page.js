@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/components/AuthProvider';
 import { User as UserIcon, Mail, Phone, Calendar, Loader2, Edit2, Save, X, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
+import Loader from '@/components/Loader';
 
 export default function Profile() {
     const { user, loading, refresh } = useAuth();
@@ -64,13 +65,7 @@ export default function Profile() {
         }
     };
 
-    if (loading) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-slate-50">
-                <Loader2 className="animate-spin text-indigo-600 w-10 h-10" />
-            </div>
-        );
-    }
+    if (loading) return <Loader text="Loading your profile..." />;
 
     if (!user) return null;
 

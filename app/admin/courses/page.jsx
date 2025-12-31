@@ -24,6 +24,7 @@ import {
 import { useRouter } from 'next/navigation';
 import Modal from '@/components/Modal';
 import { useToast } from '@/components/ToastContext';
+import Loader from '@/components/Loader';
 
 export default function AdminCoursesPage() {
     const [courses, setCourses] = useState([]);
@@ -192,11 +193,7 @@ export default function AdminCoursesPage() {
         return matchesSearch && matchesTab;
     });
 
-    if (loading) return (
-        <div className="flex items-center justify-center min-h-screen bg-slate-50 pt-24">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
-        </div>
-    );
+    if (loading) return <Loader text="Loading your inventory..." />;
 
     return (
         <div className="min-h-screen bg-slate-50 pt-20 md:pt-28 pb-16 px-4 sm:px-6 lg:px-8 font-sans">

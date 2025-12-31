@@ -57,10 +57,10 @@ export default async function Dashboard() {
                                 <LayoutDashboard className="w-3.5 h-3.5" />
                                 {isAdmin ? 'System Administrator' : (isInstructor ? 'Instructor Console' : 'Student Portal')}
                             </div>
-                            <h1 className="text-3xl font-bold text-slate-800 tracking-tight">
+                            <h1 className="text-2xl md:text-3xl font-bold text-slate-800 tracking-tight">
                                 Welcome back, <span className="text-indigo-600">{user.firstName}</span>
                             </h1>
-                            <p className="mt-1 text-slate-500 font-medium text-sm">
+                            <p className="mt-1 text-slate-500 font-medium text-sm md:text-base">
                                 Manage your learning experience and track your progress.
                             </p>
                         </div>

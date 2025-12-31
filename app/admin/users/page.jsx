@@ -24,6 +24,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/components/ToastContext';
 import Modal from '@/components/Modal';
+import Loader from '@/components/Loader';
 
 export default function UserManagementPage() {
     const [users, setUsers] = useState([]);
@@ -159,11 +160,7 @@ export default function UserManagementPage() {
         user.email.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    if (loading) return (
-        <div className="flex items-center justify-center min-h-screen bg-slate-50 pt-24">
-            <Loader2 className="w-12 h-12 text-indigo-600 animate-spin" />
-        </div>
-    );
+    if (loading) return <Loader text="Synchronizing user data..." />;
 
     return (
         <div className="min-h-screen bg-slate-50 pt-28 pb-12 px-4 sm:px-6 lg:px-8 font-sans">

@@ -10,6 +10,7 @@ import VideoUploader from '@/components/admin/VideoUploader';
 import FileUploader from '@/components/admin/FileUploader';
 import { AlertCircle, CheckCircle, XCircle, Send } from 'lucide-react';
 import { useToast } from '@/components/ToastContext';
+import Loader from '@/components/Loader';
 
 export default function EditCoursePage({ params }) {
     const { courseId } = use(params);
@@ -236,11 +237,7 @@ export default function EditCoursePage({ params }) {
         }
     };
 
-    if (loading) return (
-        <div className="flex items-center justify-center min-h-screen bg-slate-50 pt-24">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
-        </div>
-    );
+    if (loading) return <Loader text="Fetching course source..." />;
 
     return (
         <div className="min-h-screen bg-slate-50 pt-20 pb-12 px-4 sm:px-6 lg:px-8 font-sans">
