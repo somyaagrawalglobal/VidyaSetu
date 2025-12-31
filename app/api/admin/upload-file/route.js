@@ -1,11 +1,10 @@
 import { NextResponse } from 'next/server';
-import { writeFile, mkdir, unlink } from 'fs/promises';
-import path from 'path';
-import { existsSync } from 'fs';
+import { put, del } from '@vercel/blob';
 import { authenticateApi } from '@/lib/api-auth';
 
 /**
  * API Route to handle file uploads for course thumbnails and resources.
+ * Uses Vercel Blob Storage for production (serverless-compatible).
  * Method: POST
  * Body: FormData with 'file' and 'type' ('thumbnail' | 'resource')
  */
@@ -31,56 +30,34 @@ export async function POST(request) {
             return NextResponse.json({ success: false, message: 'Invalid upload type' }, { status: 400 });
         }
 
-        // 3. Prepare storage path
-        const bytes = await file.arrayBuffer();
-        const buffer = Buffer.from(bytes);
+        // 3. Prepare file metadata
+        const extension = file.name.split('.').pop();
+        const filename = `${type}/${Date.now()}-${Math.random().toString(36).substring(2, 9)}.${extension}`;
 
-        const extension = path.extname(file.name);
-        const filename = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}${extension}`;
-        const relativeDir = type === 'thumbnail' ? 'uploads/courses/thumbnails' : 'uploads/courses/resources';
-        const absoluteDir = type === 'thumbnail'
-            ? path.join(process.cwd(), 'public', relativeDir)
-            : path.join(process.cwd(), relativeDir);
+        // 4. Upload to Vercel Blob
+        const blob = await put(filename, file, {
+            access: type === 'thumbnail' ? 'public' : 'public', // Both public for now
+            addRandomSuffix: false,
+        });
 
-        // Ensure directory exists
-        await mkdir(absoluteDir, { recursive: true });
+        console.log(`[UPLOAD] File uploaded to Vercel Blob: ${blob.url}`);
 
-        const filePath = path.join(absoluteDir, filename);
-
-        // 4. Save file
-        await writeFile(filePath, buffer);
-        console.log(`[UPLOAD] File saved to ${filePath}`);
-
-        // 5. Delete previous file if it exists and is local
-        if (previousUrl && (previousUrl.startsWith('/uploads/') || previousUrl.startsWith('/api/courses/resources/'))) {
+        // 5. Delete previous file if it exists and is a blob URL
+        if (previousUrl && previousUrl.includes('blob.vercel-storage.com')) {
             try {
-                let absolutePreviousPath;
-                if (previousUrl.startsWith('/uploads/')) {
-                    absolutePreviousPath = path.join(process.cwd(), 'public', previousUrl);
-                } else {
-                    const prevFilename = previousUrl.split('/').pop();
-                    absolutePreviousPath = path.join(process.cwd(), 'uploads/courses/resources', prevFilename);
-                }
-
-                if (existsSync(absolutePreviousPath)) {
-                    await unlink(absolutePreviousPath);
-                    console.log(`[UPLOAD] Previous file deleted: ${absolutePreviousPath}`);
-                }
+                await del(previousUrl);
+                console.log(`[UPLOAD] Previous blob deleted: ${previousUrl}`);
             } catch (delError) {
-                console.warn(`[UPLOAD_WARNING] Failed to delete previous file: ${previousUrl}`, delError.message);
+                console.warn(`[UPLOAD_WARNING] Failed to delete previous blob: ${previousUrl}`, delError.message);
                 // Don't fail the upload just because deletion failed
             }
         }
 
-        // 6. Return public URL / Secured API URL
-        const publicUrl = type === 'thumbnail'
-            ? `/${relativeDir}/${filename}`
-            : `/api/courses/resources/${filename}`;
-
+        // 6. Return blob URL
         return NextResponse.json({
             success: true,
             message: 'File uploaded successfully',
-            url: publicUrl
+            url: blob.url
         });
 
     } catch (error) {
