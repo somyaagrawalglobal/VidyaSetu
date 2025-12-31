@@ -2,9 +2,9 @@
 
 import { GraduationCap } from 'lucide-react';
 
-export default function Loader({ text = "Loading your experience..." }) {
+export default function Loader({ text = "Loading your experience...", className = "" }) {
     return (
-        <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-white/80 backdrop-blur-md">
+        <div className={`fixed inset-0 z-40 flex flex-col items-center justify-center bg-white/80 backdrop-blur-md ${className}`}>
             <div className="relative">
                 {/* Outer pulsing ring */}
                 <div className="absolute inset-0 w-24 h-24 bg-indigo-500/20 rounded-full animate-ping"></div>
