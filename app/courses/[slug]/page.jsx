@@ -281,7 +281,7 @@ export default function CourseDetails({ params }) {
                                 className="relative h-48 w-full group cursor-pointer overflow-hidden"
                                 onClick={() => course.modules?.[0]?.lessons?.[0]?.videoId && openPreview(course.modules[0].lessons[0].videoId, "Course Preview")}
                             >
-                                <Image src={course.thumbnail} alt={course.title} fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
+                                <img src={course.thumbnail} alt={course.title} className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                                 <div className="absolute inset-0 bg-black/40 flex items-center justify-center group-hover:bg-black/50 transition-colors">
                                     <div className="w-16 h-16 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform">
                                         <PlayCircle className="w-8 h-8 text-white fill-current" />

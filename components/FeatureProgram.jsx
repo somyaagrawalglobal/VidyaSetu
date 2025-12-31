@@ -111,14 +111,10 @@ export default function FeaturedProgramsSection() {
                                 {/* --- 1. Top Graphic Header Section --- */}
                                 {/* Ensure image container is reasonably sized on mobile */}
                                 <div className="relative h-40 sm:h-48 flex items-center justify-center overflow-hidden">
-                                    <Image
+                                    <img
                                         src={program.thumbnail} // Use the course's thumbnail or the default set in useEffect
                                         alt={program.title}
-                                        fill
-                                        style={{ objectFit: 'cover' }}
-                                        // Smoother hover effect on image restricted to md: and up
-                                        className="transition-transform duration-500 group-hover:md:scale-105"
-                                        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:md:scale-105"
                                     />
                                     <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 to-transparent"></div>
 

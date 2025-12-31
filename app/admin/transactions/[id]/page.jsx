@@ -249,11 +249,10 @@ export default function TransactionDetailsPage() {
                             </h3>
                             <div className="flex gap-6">
                                 <div className="relative h-24 w-40 rounded-2xl overflow-hidden shadow-sm flex-shrink-0 bg-slate-100">
-                                    <Image
+                                    <img
                                         src={order.course?.thumbnail || '/assets/images/course-placeholder.jpg'}
                                         alt={order.course?.title || 'Course'}
-                                        fill
-                                        className="object-cover"
+                                        className="absolute inset-0 w-full h-full object-cover"
                                     />
                                 </div>
                                 <div className="flex-1">
