@@ -170,7 +170,7 @@ export default function WatchContent({ activeLesson, course, isCompleted, onTogg
                     </div>
 
                     {/* Tabs Navigation */}
-                    <div className="flex items-center gap-1 border-b border-slate-200 mb-6">
+                    <div className="flex items-center gap-1 border-b border-slate-200 mb-6 overflow-x-auto scrollbar-none">
                         {tabs.map(tab => {
                             const Icon = tab.icon;
                             const isActive = activeTab === tab.id;
@@ -178,7 +178,7 @@ export default function WatchContent({ activeLesson, course, isCompleted, onTogg
                                 <button
                                     key={tab.id}
                                     onClick={() => setActiveTab(tab.id)}
-                                    className={`flex items-center gap-2 px-5 py-3 text-sm font-semibold transition-colors relative ${isActive
+                                    className={`flex items-center gap-2 px-3 sm:px-5 py-3 text-sm font-semibold transition-colors relative whitespace-nowrap ${isActive
                                         ? 'text-indigo-600 border-b-2 border-indigo-600'
                                         : 'text-slate-600 hover:text-slate-900 border-b-2 border-transparent'
                                         }`}

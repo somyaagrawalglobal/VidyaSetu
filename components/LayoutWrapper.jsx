@@ -7,14 +7,14 @@ import AOSInitializer from './AOSInitializer';
 
 export default function LayoutWrapper({ children }) {
     const pathname = usePathname();
-    // Layout logic simplified: Always render wrapper, control print visibility via CSS
+    const isWatchPage = pathname?.includes('/watch');
 
     return (
         <>
-            <Navbar />
+            {!isWatchPage && <Navbar />}
             <AOSInitializer />
             <main>{children}</main>
-            <Footer />
+            {!isWatchPage && <Footer />}
         </>
     );
 }
