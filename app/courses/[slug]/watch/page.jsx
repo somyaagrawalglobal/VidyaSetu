@@ -101,7 +101,7 @@ export default function WatchCoursePage({ params }) {
     const progressPercentage = calculateProgressPercentage();
 
     return (
-        <div className="min-h-screen flex flex-col bg-slate-50 overflow-hidden font-sans pt-16">
+        <div className="h-screen flex flex-col bg-slate-50 overflow-hidden font-sans">
             <WatchHeader
                 courseTitle={course.title}
                 slug={slug}
