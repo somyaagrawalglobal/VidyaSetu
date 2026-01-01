@@ -3,27 +3,42 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Mail, Lock, ArrowRight, Loader2 } from "lucide-react";
+import { Mail, Lock, ArrowRight, Loader2, Eye, EyeOff } from "lucide-react";
 import { useAuth } from '@/components/AuthProvider';
 
-const InputField = ({ id, name, type, placeholder, icon: Icon, required = false, value, onChange }) => (
-    <div className="relative">
-        <label className="sr-only" htmlFor={id}>{placeholder}</label>
-        <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-slate-400">
-            <Icon className="w-5 h-5" />
+const InputField = ({ id, name, type, placeholder, icon: Icon, required = false, value, onChange }) => {
+    const [showPassword, setShowPassword] = useState(false);
+    const isPassword = type === 'password';
+    const inputType = isPassword ? (showPassword ? 'text' : 'password') : type;
+
+    return (
+        <div className="relative">
+            <label className="sr-only" htmlFor={id}>{placeholder}</label>
+            <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-slate-400">
+                <Icon className="w-5 h-5" />
+            </div>
+            <input
+                id={id}
+                name={name}
+                type={inputType}
+                placeholder={placeholder}
+                value={value}
+                onChange={onChange}
+                className={`w-full pl-12 ${isPassword ? 'pr-12' : 'pr-5'} py-3 rounded-xl bg-slate-50 border border-gray-200 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/50 outline-none transition text-slate-800`}
+                required={required}
+            />
+            {isPassword && (
+                <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-400 hover:text-indigo-600 transition-colors"
+                >
+                    {showPassword ? <Eye className="w-5 h-5" /> : <EyeOff className="w-5 h-5" />}
+                </button>
+            )}
         </div>
-        <input
-            id={id}
-            name={name}
-            type={type}
-            placeholder={placeholder}
-            value={value}
-            onChange={onChange}
-            className="w-full pl-12 pr-5 py-3 rounded-xl bg-slate-50 border border-gray-200 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/50 outline-none transition text-slate-800"
-            required={required}
-        />
-    </div>
-);
+    );
+};
 
 export default function Login() {
     const router = useRouter();
