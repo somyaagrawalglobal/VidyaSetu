@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Instagram, Linkedin, Mail, Phone, Send } from "lucide-react";
+import { Instagram, Linkedin, Mail, Send } from "lucide-react";
 
 // Define the accent color for better management
 const ACCENT_COLOR_CLASSES = "text-indigo-400 hover:text-indigo-300 transition-colors duration-200";
@@ -25,12 +25,12 @@ export default function Footer() {
   return (
     // 1. Footer Container: Darker background, border, and position relative for texture/gradient
     <footer className="bg-slate-900 text-slate-400 pt-16 border-t border-indigo-900/50 shadow-inner relative overflow-hidden">
-      
+
       {/* Decorative Gradient Background Element */}
       <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top_left,#1e1b4b_0%,transparent_50%)] opacity-20 pointer-events-none"></div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        
+
         {/* --- MAIN GRID LAYOUT (Responsive Columns) --- */}
         {/* Mobile: 2 columns (2x2) | Tablet (md): 4 columns | Desktop (lg): 6 columns */}
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-x-8 gap-y-12 mb-16">
@@ -54,9 +54,11 @@ export default function Footer() {
                 </a>
               </div>
               <div className="flex items-center space-x-3">
-                <Phone className="w-5 h-5 text-indigo-400 flex-shrink-0" />
-                <a href="tel:+1234567890" className="text-sm text-slate-300 hover:text-white transition-colors duration-200">
-                  +91 98765 43210
+                <svg className="w-5 h-5 text-indigo-400 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.412c-1.935 0-3.83-.502-5.485-1.45L3 21l1.082-3.942C3.12 15.421 2.585 13.513 2.585 11.61c0-5.187 4.221-9.408 9.408-9.408 2.512 0 4.873.978 6.649 2.755a9.357 9.357 0 0 1 2.756 6.654c0 5.188-4.221 9.409-9.408 9.409m9.408-20.422C17.388 1.157 14.814.5 12.05.5 5.683.5.517 5.666.517 12.032c0 2.035.532 4.022 1.542 5.777L.5 23.5l5.882-1.542a11.47 11.47 0 0 0 5.669 1.493c6.366 0 11.533-5.166 11.533-11.532 0-3.104-1.201-6.023-3.382-8.204" />
+                </svg>
+                <a href="https://wa.me/919876543210" className="text-sm text-slate-300 hover:text-white transition-colors duration-200">
+                  WhatsApp Channel
                 </a>
               </div>
             </div>
@@ -126,10 +128,10 @@ export default function Footer() {
               &copy; {currentYear} Vidya-Setu. All rights reserved.
             </p>
             {/* You could optionally add a small bottom nav here for mobile if needed, e.g., */}
-             <div className="order-1 sm:order-2 flex space-x-4">
-               <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
-               <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>
-             </div>
+            <div className="order-1 sm:order-2 flex space-x-4">
+              <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
+              <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>
+            </div>
           </div>
         </div>
       </div>

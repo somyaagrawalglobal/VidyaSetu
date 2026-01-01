@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Clock, Zap, DollarSign, BookOpen, User, Loader2 } from "lucide-react";
+import { ArrowRight, Clock, Zap, DollarSign, BookOpen, User, Loader2, Sparkles } from "lucide-react";
 // Assuming ProgramBadge is a separate component and properly styled for responsiveness
 import ProgramBadge from "./ProgramBadge";
 import Loader from "./Loader";
@@ -59,135 +59,115 @@ export default function FeaturedProgramsSection() {
     if (courses.length === 0) return null;
 
     return (
-        // Standard vertical padding: py-16 on mobile, py-24 on desktop
-        <section className="py-16 md:py-24 bg-slate-50 border-t border-slate-100">
-            {/* *RESPONSIVE FIX*: Ensure standard horizontal padding on small screens (px-4) */}
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section className="py-16 lg:py-24 bg-slate-50 relative overflow-hidden">
+            {/* Subtle decorative element to match homepage */}
+            <div className="absolute top-0 left-0 w-[300px] h-[300px] bg-indigo-100/20 rounded-full blur-[80px] pointer-events-none opacity-50"></div>
 
-                {/* Header and CTA */}
-                {/* *RESPONSIVE FIX*: Ensure items stack nicely on small screens (flex-col) and align text center before sm breakpoint */}
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-10 sm:mb-16 text-center sm:text-left">
-                    {/* Removed data-aos="fade-right" */}
-                    <div className="w-full sm:w-auto mb-6 sm:mb-0">
-                        {/* Center badge on mobile, left on larger screens */}
-                        <div className="inline-flex items-center justify-center sm:justify-start w-full sm:w-auto gap-2 px-3 py-1 rounded-md bg-indigo-50 text-indigo-700 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider mb-4 border border-indigo-100/50">
-                            Our Best-Sellers
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+
+                {/* Header Section: Aligned with Homepage Framework Section */}
+                <div className="flex flex-col md:flex-row justify-between items-center md:items-end mb-10 lg:mb-12 gap-6 text-center md:text-left">
+                    <div className="max-w-2xl">
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-[10px] font-black uppercase tracking-[0.2em] mb-4 border border-indigo-100 shadow-sm mx-auto md:mx-0">
+                            <Sparkles className="w-3 h-3 text-indigo-500" />
+                            Industry Favorite
                         </div>
-                        {/* Responsive Heading Size: 3xl on mobile, 4xl on desktop */}
-                        <h2 className="text-3xl sm:text-4xl font-bold text-slate-800 tracking-tight">
-                            Featured <span className="text-indigo-600">Programs</span>
+                        <h2 className="text-3xl lg:text-5xl font-black text-slate-900 tracking-tighter leading-tight">
+                            Featured <span className="text-indigo-600 italic">Programs</span>
                         </h2>
-                        {/* Responsive Subtitle: max-w-none on mobile for centered text */}
-                        <p className="text-sm text-slate-500 mt-3 font-medium max-w-full sm:max-w-xl mx-auto sm:mx-0 leading-relaxed">
-                            Industry-aligned certification programs designed by experts to make you job-ready in weeks.
+                        <p className="text-sm lg:text-base text-slate-500 mt-3 font-medium leading-relaxed">
+                            Upskill with certification tracks designed to accelerate your growth.
                         </p>
                     </div>
 
-                    {/* CTA Link - Removed data-aos="fade-left", added md: to limit hover animation */}
                     <Link
                         href="/courses"
-                        className="group inline-flex items-center gap-2 text-indigo-600 font-bold text-xs uppercase tracking-widest hover:text-indigo-800 transition-all border-b-2 border-transparent hover:border-indigo-600 pb-1 flex-shrink-0 mx-auto sm:mx-0"
+                        className="group inline-flex items-center gap-2 text-indigo-600 font-black text-[10px] uppercase tracking-[0.2em] hover:text-indigo-800 transition-all border-b-2 border-transparent hover:border-indigo-600 pb-1"
                     >
-                        Explore All Path <ArrowRight className="w-4 h-4 transition-transform group-hover:md:translate-x-1" />
+                        Explore All Paths <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                     </Link>
                 </div>
 
-                {/* Course Cards Grid - Key Responsiveness */}
-                {/* *RESPONSIVE FIX*: Grid ensures 1 column on mobile, 2 on medium, 3 on large */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                {/* Animated Grid Wrapper */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 animate-slide-in-bottom">
                     {courses.map((program, index) => {
                         const price = formatPrice(program.price);
                         const originalPrice = program.originalPrice ? formatPrice(program.originalPrice) : null;
-                        // Use a dummy discount badge if not available, for consistency
                         const discountBadge = program.discount || "50% OFF";
 
                         return (
                             <div
                                 key={program._id || index}
-                                // Card Hover Effect: subtle lift and stronger shadow restricted to md: and up
-                                className="bg-white rounded-xl overflow-hidden shadow-md md:hover:shadow-2xl md:hover:-translate-y-1 transition-all duration-300 flex flex-col group border border-slate-200 md:hover:border-indigo-300 h-full relative"
-                            // Removed data-aos and data-aos-delay
+                                className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex flex-col group border border-slate-200 hover:border-indigo-200 h-full relative"
                             >
-                                {/* --- 1. Top Graphic Header Section --- */}
-                                {/* Ensure image container is reasonably sized on mobile */}
-                                <div className="relative h-40 sm:h-48 flex items-center justify-center overflow-hidden">
+                                {/* Top Graphic Header Section */}
+                                <div className="relative h-48 flex items-center justify-center overflow-hidden">
                                     <img
-                                        src={program.thumbnail} // Use the course's thumbnail or the default set in useEffect
+                                        src={program.thumbnail}
                                         alt={program.title}
-                                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:md:scale-105"
+                                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                                     />
                                     <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 to-transparent"></div>
 
                                     {discountBadge && (
-                                        <div className="absolute top-4 left-4 py-1 px-3 bg-indigo-600 text-white font-bold text-[10px] uppercase rounded shadow-lg z-20">
+                                        <div className="absolute top-4 left-4 py-1 px-3 bg-indigo-600 text-white font-bold text-[10px] uppercase rounded-lg shadow-lg z-20">
                                             {discountBadge}
                                         </div>
                                     )}
                                 </div>
 
-                                {/* --- 2. Content Body Section --- */}
-                                {/* *RESPONSIVE FIX*: Using flex-1 to push the footer to the bottom and ensure uniform card height */}
-                                <div className="p-4 sm:p-5 flex flex-col flex-1">
-                                    {/* Topic Badge & Career Track */}
-                                    {/* Adjusted font size for better mobile fit */}
-                                    <div className="mb-3 flex items-center gap-2 flex-wrap">
-                                        <span className="inline-block px-2 py-0.5 text-[9px] sm:text-[10px] font-bold text-indigo-700 bg-indigo-50 border border-indigo-100/50 rounded-md">
+                                {/* Content Body Section */}
+                                <div className="p-6 flex flex-col flex-1">
+                                    <div className="mb-4 flex items-center gap-2 flex-wrap">
+                                        <span className="inline-block px-2 py-0.5 text-[10px] font-bold text-indigo-700 bg-indigo-50 border border-indigo-100/50 rounded-md">
                                             {program.category || 'Professional Skills'}
                                         </span>
-                                        <div className="flex items-center gap-1 text-[9px] sm:text-[10px] font-bold text-emerald-600">
-                                            <Zap className="w-3 h-3" /> Career Track
+                                        <div className="flex items-center gap-1 text-[10px] font-bold text-emerald-600">
+                                            <Zap className="w-3 h-3" /> Industry Standard
                                         </div>
                                     </div>
 
-                                    {/* Title - Restricted hover color change to md: and up */}
-                                    <h3 className="text-base sm:text-lg font-bold text-slate-800 leading-snug mb-3 line-clamp-2 min-h-[2.5rem] sm:min-h-[3rem] group-hover:md:text-indigo-600 transition-colors duration-200">
+                                    <h3 className="text-lg font-black text-slate-800 leading-tight mb-3 line-clamp-2 min-h-[3rem] group-hover:text-indigo-600 transition-colors">
                                         <Link href={`/courses/${program.slug}`}>
                                             {program.title}
                                         </Link>
                                     </h3>
 
-                                    {/* Description - smaller text on mobile for better fit */}
-                                    <p className="text-slate-500 text-xs sm:text-sm mb-6 line-clamp-3 min-h-[3rem] sm:min-h-[3.75rem] font-medium leading-relaxed">
+                                    <p className="text-slate-500 text-sm mb-6 line-clamp-2 min-h-[2.5rem] font-medium leading-relaxed">
                                         {program.description}
                                     </p>
 
-                                    {/* Meta Data Line */}
-                                    <div className="flex items-center justify-between py-3 border-y border-slate-50 mb-6">
-                                        <div className="flex items-center gap-3 flex-wrap">
-                                            {/* Adjusted font size for meta data */}
-                                            <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-500">
+                                    <div className="flex items-center justify-between py-4 border-y border-slate-50 mb-6">
+                                        <div className="flex items-center gap-4">
+                                            <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-500 uppercase tracking-wide">
                                                 <Clock className="w-3.5 h-3.5 text-indigo-500" />
-                                                <span>{program.duration || '8 Weeks'}</span>
+                                                {program.duration || '8 Weeks'}
                                             </div>
-                                            <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-500">
-                                                <User className="w-3.5 h-3.5 text-indigo-500" />
-                                                <span>{program.modules?.length || 5} Lessons</span>
+                                            <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-500 uppercase tracking-wide">
+                                                <BookOpen className="w-3.5 h-3.5 text-indigo-500" />
+                                                {program.modules?.length || 5} Modules
                                             </div>
                                         </div>
                                     </div>
 
-                                    {/* --- 3. Footer/CTA Area --- */}
                                     <div className="flex justify-between items-center mt-auto">
                                         <div className="flex flex-col">
                                             {originalPrice && (
-                                                <span className="text-xs text-slate-400 line-through mb-0.5">
+                                                <span className="text-[10px] text-slate-400 line-through mb-0.5">
                                                     {originalPrice}
                                                 </span>
                                             )}
-                                            {/* Price is prominent */}
-                                            <span className="text-lg sm:text-xl font-bold text-slate-800 tracking-tight">
+                                            <span className="text-xl font-black text-slate-800 tracking-tight">
                                                 {price}
                                             </span>
                                         </div>
 
-                                        {/* CTA Button with Smooth Hover - Restricted hover/active animations to md: and up */}
-                                        {/* Slightly smaller button on mobile (text-xs) */}
                                         <Link
                                             href={`/courses/${program.slug}`}
-                                            className="inline-flex items-center gap-2 bg-slate-800 text-white font-bold py-2 px-3 sm:py-2.5 sm:px-4 rounded-lg text-xs transition-all duration-200 md:hover:bg-indigo-600 shadow-lg shadow-slate-800/10 md:active:scale-95 group/btn"
+                                            className="inline-flex items-center gap-2 bg-slate-900 text-white font-black py-2.5 px-5 rounded-xl text-xs transition-all hover:bg-indigo-600 shadow-lg shadow-slate-900/10 active:scale-95 group/btn"
                                         >
                                             View Details
-                                            <ArrowRight className="w-3.5 h-3.5 group-hover/btn:md:translate-x-1 transition-transform duration-200" />
+                                            <ArrowRight className="w-3.5 h-3.5 group-hover/btn:translate-x-1 transition-transform" />
                                         </Link>
                                     </div>
                                 </div>
