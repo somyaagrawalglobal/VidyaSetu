@@ -13,6 +13,8 @@ import {
     Cloud
 } from 'lucide-react';
 
+import Modal from '@/components/Modal';
+
 export default function VideoUploader({ courseId, initialVideoId, onVideoReady }) {
     const [videoId, setVideoId] = useState(initialVideoId || '');
     const [isUploading, setIsUploading] = useState(false);
@@ -20,6 +22,15 @@ export default function VideoUploader({ courseId, initialVideoId, onVideoReady }
     const [status, setStatus] = useState('idle'); // idle, initializing, uploading, completed, error
     const [error, setError] = useState('');
     const [uploadMode, setUploadMode] = useState('upload'); // 'upload' or 'manual'
+
+    const [modalConfig, setModalConfig] = useState({
+        isOpen: false,
+        title: '',
+        message: '',
+        type: 'info',
+        onConfirm: null,
+        showCancel: true
+    });
 
     const abortControllerRef = useRef(null);
 
@@ -29,6 +40,35 @@ export default function VideoUploader({ courseId, initialVideoId, onVideoReady }
             setVideoId(initialVideoId);
         }
     }, [initialVideoId]);
+
+    const handleModeClick = (mode) => {
+        if (mode === uploadMode) return;
+
+        const config = {
+            upload: {
+                title: 'Switch to YouTube Upload',
+                message: 'Upload and host videos securely via YouTube. This is recommended for long-form content.'
+            },
+            blob: {
+                title: 'Switch to Vercel Blob',
+                message: 'Host videos directly on Vercel Blob storage. Best for reliable, high-speed delivery of shorter clips.'
+            },
+            manual: {
+                title: 'Switch to Manual Link',
+                message: 'Manually enter an existing video URL (YouTube, Vimeo, or direct CDN link).'
+            }
+        };
+
+        setModalConfig({
+            isOpen: true,
+            title: config[mode].title,
+            message: config[mode].message,
+            type: 'info',
+            onConfirm: () => setUploadMode(mode),
+            showCancel: true,
+            confirmText: 'Switch Mode'
+        });
+    };
 
     const handleManualChange = (e) => {
         const val = e.target.value;
@@ -226,19 +266,22 @@ export default function VideoUploader({ courseId, initialVideoId, onVideoReady }
             {/* Toggle Modes */}
             <div className="flex bg-slate-50 border-b border-slate-100">
                 <button
-                    onClick={() => setUploadMode('upload')}
+                    type="button"
+                    onClick={() => handleModeClick('upload')}
                     className={`flex-1 flex items-center justify-center gap-2 py-3 text-[10px] font-black uppercase tracking-widest transition-all ${uploadMode === 'upload' ? 'bg-white text-indigo-600 border-r border-slate-100' : 'text-slate-400 hover:text-slate-600'}`}
                 >
                     <Youtube size={12} /> YouTube
                 </button>
                 <button
-                    onClick={() => setUploadMode('blob')}
+                    type="button"
+                    onClick={() => handleModeClick('blob')}
                     className={`flex-1 flex items-center justify-center gap-2 py-3 text-[10px] font-black uppercase tracking-widest transition-all ${uploadMode === 'blob' ? 'bg-white text-indigo-600 border-x border-slate-100' : 'text-slate-400 hover:text-slate-600'}`}
                 >
                     <Cloud size={12} /> Vercel Blob
                 </button>
                 <button
-                    onClick={() => setUploadMode('manual')}
+                    type="button"
+                    onClick={() => handleModeClick('manual')}
                     className={`flex-1 flex items-center justify-center gap-2 py-3 text-[10px] font-black uppercase tracking-widest transition-all ${uploadMode === 'manual' ? 'bg-white text-indigo-600 border-l border-slate-100' : 'text-slate-400 hover:text-slate-600'}`}
                 >
                     <LinkIcon size={12} /> Manual ID
@@ -275,7 +318,7 @@ export default function VideoUploader({ courseId, initialVideoId, onVideoReady }
                                                 uploadMode === 'blob' ? 'Uploading to Vercel Blob...' : 'Uploading to YouTube...'}
                                         </span>
                                     </div>
-                                    <button onClick={cancelUpload} className="text-slate-400 hover:text-red-600 transition-colors">
+                                    <button type="button" onClick={cancelUpload} className="text-slate-400 hover:text-red-600 transition-colors">
                                         <X size={16} />
                                     </button>
                                 </div>
@@ -305,7 +348,7 @@ export default function VideoUploader({ courseId, initialVideoId, onVideoReady }
                                         </p>
                                     </div>
                                 </div>
-                                <button onClick={reset} className="p-2 text-emerald-600 hover:bg-emerald-100 rounded-lg transition-colors">
+                                <button type="button" onClick={reset} className="p-2 text-emerald-600 hover:bg-emerald-100 rounded-lg transition-colors">
                                     <RotateCcw size={16} />
                                 </button>
                             </div>
@@ -319,7 +362,7 @@ export default function VideoUploader({ courseId, initialVideoId, onVideoReady }
                                 </div>
                                 <p className="text-xs text-red-600 mb-4">{error}</p>
                                 <div className="flex gap-2">
-                                    <button onClick={reset} className="px-4 py-2 bg-red-600 text-white rounded-xl text-xs font-bold shadow-lg shadow-red-200 hover:bg-red-700 transition-all">
+                                    <button type="button" onClick={reset} className="px-4 py-2 bg-red-600 text-white rounded-xl text-xs font-bold shadow-lg shadow-red-200 hover:bg-red-700 transition-all">
                                         Try Again
                                     </button>
                                 </div>
@@ -353,6 +396,17 @@ export default function VideoUploader({ courseId, initialVideoId, onVideoReady }
                     <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Video Linked: {videoId}</span>
                 </div>
             )}
+
+            <Modal
+                isOpen={modalConfig.isOpen}
+                onClose={() => setModalConfig(prev => ({ ...prev, isOpen: false }))}
+                title={modalConfig.title}
+                message={modalConfig.message}
+                type={modalConfig.type}
+                onConfirm={modalConfig.onConfirm}
+                confirmText={modalConfig.confirmText}
+                showCancel={modalConfig.showCancel}
+            />
         </div>
     );
 }
