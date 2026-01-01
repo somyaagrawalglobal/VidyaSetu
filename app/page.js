@@ -1,5 +1,5 @@
 "use client";
-
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -10,393 +10,325 @@ import {
     CheckCircle,
     TrendingUp,
     Sparkles,
-    User,
     Users,
     Building2,
     Trophy,
     Target,
     MessageCircle,
     BookOpen,
-    Award
+    Star,
+    ShieldCheck,
+    Globe,
+    ChevronRight,
+    PlayCircle,
+    Rocket,
+    Code
 } from "lucide-react";
 import FeaturedProgramsSection from "@/components/FeatureProgram";
 
 export default function Home() {
-    return (
-        <main className="bg-white pt-20 lg:pt-0">
+    const [mounted, setMounted] = useState(false);
 
-            {/* 1. HERO SECTION */}
-            <section className="relative pb-12 pt-10 md:pt-24 lg:pt-32 overflow-hidden bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-indigo-50/60 via-white to-white">
-                {/* Decorative Elements */}
-                <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-indigo-100/30 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
-                <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 bg-purple-100/30 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    const pedagogySteps = [
+        {
+            title: "Expert-Led Training",
+            desc: "Master high-demand skills through live sessions led by industry veterans who've built at scale.",
+            icon: GraduationCap,
+            step: "01",
+            gradient: "from-indigo-500 to-violet-500"
+        },
+        {
+            title: "Hands-on Projects",
+            desc: "Apply your knowledge to real-world industrial projects that mirror actual workplace challenges.",
+            icon: Target,
+            step: "02",
+            gradient: "from-violet-500 to-rose-500"
+        },
+        {
+            title: "Career Acceleration",
+            desc: "Get personalized career coaching, resume workshops, and direct access to our hiring network.",
+            icon: Rocket,
+            step: "03",
+            gradient: "from-rose-500 to-orange-500"
+        }
+    ];
+
+    return (
+        <main className="bg-white text-slate-900 selection:bg-indigo-100 selection:text-indigo-900 min-h-screen overflow-x-hidden">
+            {/* 1. HERO SECTION: COMPACT & RESPONSIVE */}
+            <section className="relative pt-24 pb-12 lg:pt-36 lg:pb-20 overflow-hidden bg-[radial-gradient(circle_at_top_right,rgba(99,102,241,0.05),transparent),radial-gradient(circle_at_bottom_left,rgba(244,63,94,0.05),transparent)]">
+                <div className="absolute inset-0 z-0 opacity-[0.03] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
 
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                     <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
-
-                        {/* Hero Content */}
-                        <div className="lg:w-1/2 text-center lg:text-left animate-fade-in-up">
-                            {/* Launch Pill */}
-                            <div className="inline-flex items-center gap-2 mb-6 px-3 py-1 rounded-full bg-white border border-indigo-100 shadow-sm animate-fade-in">
-                                <Sparkles className="w-3.5 h-3.5 text-indigo-600 animate-pulse" />
-                                <span className="text-xs font-semibold text-indigo-700 tracking-wide uppercase">Launch Your Career</span>
+                        {/* Content */}
+                        <div className={`lg:w-1/2 text-center lg:text-left transition-all duration-1000 ${mounted ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0 animate-fade-in-down'}`}>
+                            <div className="inline-flex items-center gap-2 mb-4 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-100 shadow-sm animate-pulse-subtle">
+                                <Sparkles className="w-4 h-4 text-indigo-600" />
+                                <span className="text-[10px] sm:text-xs font-bold text-indigo-700 uppercase tracking-widest">Built for Future Builders</span>
                             </div>
 
-                            {/* Main Heading */}
-                            <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-gray-900 via-slate-800 to-gray-900 mb-5 leading-tight tracking-tight">
-                                Learn Real <span className="text-gray-400">Skills.</span>
-                                <br />
-                                <span className="text-indigo-600">Get Real Jobs.</span>
+                            <h1 className="text-3xl sm:text-5xl lg:text-6xl xl:text-7xl font-black text-slate-900 mb-6 leading-[1.1] tracking-tighter">
+                                Accelerate Your <br />
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-violet-600 to-rose-600">
+                                    Career Path.
+                                </span>
                             </h1>
 
-                            {/* Hero Visual for Mobile - Shown here on mobile */}
-                            <div className="block md:hidden mb-8 relative">
-                                <div className="relative w-full aspect-[16/10] rounded-2xl overflow-hidden shadow-xl shadow-indigo-100/50 ring-1 ring-black/5">
-                                    <Image
-                                        src="/assets/images/hero-gen.png"
-                                        alt="Career success"
-                                        fill
-                                        className="object-cover"
-                                    />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-indigo-900/40 via-transparent to-transparent opacity-60"></div>
-                                </div>
-                                {/* Floating Badge for Mobile */}
-                                <div className="absolute -bottom-3 -right-2 bg-white/90 backdrop-blur-sm rounded-xl shadow-lg border border-indigo-50 p-2.5 flex items-center gap-2 transform rotate-2">
-                                    <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
-                                        <Briefcase className="w-4 h-4 text-white" />
-                                    </div>
-                                    <div className="text-left pr-1">
-                                        <p className="text-[10px] font-bold text-slate-800">Job Ready</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Description */}
-                            <p className="text-sm md:text-base text-gray-600 mb-8 md:mb-7 max-w-xl mx-auto lg:mx-0 leading-relaxed font-medium">
-                                The gap between education and employment ends here. Master outcome-driven skills with guaranteed <span className="font-semibold text-gray-900 underline decoration-indigo-200 decoration-2 underline-offset-2">On-the-Job Training</span>.
+                            <p className="text-base sm:text-lg text-slate-600 mb-8 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-medium">
+                                We bridge the gap between academic theory and industry reality. Gain practical skills and mentorship needed to thrive in today's tech ecosystem.
                             </p>
 
-                            {/* Action Buttons */}
                             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                                 <Link
                                     href="/courses"
-                                    className="group inline-flex items-center justify-center px-7 py-3.5 rounded-full bg-indigo-600 text-white font-semibold text-sm hover:bg-indigo-700 hover:shadow-[0_0_20px_rgba(79,70,229,0.3)] hover:-translate-y-0.5 transition-all duration-300 ring-1 ring-indigo-500 ring-offset-2"
+                                    className="inline-flex items-center justify-center px-6 py-3 sm:px-8 sm:py-4 rounded-xl sm:rounded-2xl bg-indigo-600 text-white font-bold hover:bg-indigo-700 transition-all shadow-lg active:scale-95"
                                 >
-                                    Explore Courses
-                                    <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                                    View Pathways <ArrowRight className="ml-2 w-5 h-5" />
                                 </Link>
                                 <a
-                                    href="#methodology"
-                                    className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full border border-gray-200 bg-white text-gray-700 font-medium text-sm hover:border-indigo-300 hover:bg-slate-50 hover:text-indigo-600 transition-all duration-300 shadow-sm hover:shadow-md"
+                                    href="#how-it-works"
+                                    className="inline-flex items-center justify-center px-6 py-3 sm:px-8 sm:py-4 rounded-xl sm:rounded-2xl bg-white border border-slate-200 text-slate-700 font-bold hover:bg-slate-50 transition-all"
                                 >
-                                    <Target className="w-4 h-4" />
-                                    How It Works
+                                    Methodology
                                 </a>
                             </div>
+
+                            <div className="mt-10 pt-6 border-t border-slate-100 flex flex-wrap items-center justify-center lg:justify-start gap-6 opacity-60">
+                                {[
+                                    { icon: ShieldCheck, label: "Vetted" },
+                                    { icon: BookOpen, label: "Projects" },
+                                    { icon: Users, label: "Mentors" }
+                                ].map((badge, i) => (
+                                    <div key={i} className="flex items-center gap-1.5">
+                                        <badge.icon className="w-4 h-4 text-indigo-600" />
+                                        <span className="text-[10px] font-black text-slate-800 uppercase tracking-widest">{badge.label}</span>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
 
-                        {/* Hero Visual - Desktop Only */}
-                        <div className="hidden md:block lg:w-1/2 relative animate-fade-in-right w-full mt-8 lg:mt-0">
-                            {/* Stats Badge */}
-                            <div className="absolute -top-4 left-0 sm:-left-6 bg-white/90 backdrop-blur-sm rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-white/20 p-3 md:p-4 z-10 flex items-center gap-3 animate-bounce-slow transition-transform duration-300 transform scale-90 md:scale-100 origin-top-left">
-                                <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-indigo-600 to-indigo-500 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-200">
-                                    <Briefcase className="w-5 h-5 md:w-6 md:h-6 text-white" />
-                                </div>
-                                <div>
-                                    <p className="text-[10px] md:text-xs font-bold text-gray-400 uppercase tracking-wider">Industry Ready</p>
-                                    <p className="text-base md:text-lg font-bold text-slate-800">OJT Projects</p>
-                                </div>
-                            </div>
-
-                            {/* Hero Image */}
-                            <div className="relative w-full max-w-lg mx-auto aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl shadow-indigo-200/50 group ring-1 ring-black/5">
+                        {/* Image Component */}
+                        <div className={`lg:w-1/2 relative transition-all duration-1000 delay-300 ${mounted ? 'scale-100 opacity-100' : 'scale-95 opacity-0 animate-zoom-in'}`}>
+                            <div className="relative rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden shadow-2xl border-4 sm:border-8 border-white group">
                                 <Image
                                     src="/assets/images/hero-gen.png"
-                                    alt="Career success"
-                                    fill
-                                    className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                                    alt="Learning community"
+                                    width={800}
+                                    height={1000}
+                                    className="object-cover w-full aspect-video lg:aspect-square group-hover:scale-110 transition-transform duration-700"
+                                    priority
                                 />
-                                <div className="absolute inset-0 bg-gradient-to-t from-indigo-900/40 via-transparent to-transparent opacity-60"></div>
+                                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent to-transparent"></div>
+                                <div className="absolute bottom-4 left-4 right-4 p-4 bg-white/90 backdrop-blur-md rounded-xl border border-white/20 shadow-xl hidden sm:flex items-center gap-3">
+                                    <div className="p-2 bg-indigo-600 rounded-lg">
+                                        <PlayCircle className="w-5 h-5 text-white" />
+                                    </div>
+                                    <p className="text-xs font-black text-slate-800">Learn from Architects</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                {/* Add custom animations */}
-                <style jsx>{`
-                    @keyframes fadeInUp {
-                        from { opacity: 0; transform: translateY(20px); }
-                        to { opacity: 1; transform: translateY(0); }
-                    }
-                    @keyframes fadeIn {
-                        from { opacity: 0; }
-                        to { opacity: 1; }
-                    }
-                    @keyframes fadeInRight {
-                        from { opacity: 0; transform: translateX(20px); }
-                        to { opacity: 1; transform: translateX(0); }
-                    }
-                    @keyframes bounceSlow {
-                        0%, 100% { transform: translateY(0) scale(var(--tw-scale-x)); }
-                        50% { transform: translateY(-8px) scale(var(--tw-scale-x)); }
-                    }
-                    .animate-fade-in-up { animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
-                    .animate-fade-in { animation: fadeIn 1.2s ease-out; }
-                    .animate-fade-in-right { animation: fadeInRight 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both; }
-                    .animate-bounce-slow { animation: bounceSlow 4s ease-in-out infinite; }
-                `}</style>
             </section>
 
-
-            {/* 2. THE BRIDGE METHOD */}
-            <section id="methodology" className="py-12 md:py-24 bg-white relative">
-                <div className="absolute top-0 right-0 left-0 h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
+            {/* 3. PEDAGOGY: ANIMATED STEPS */}
+            <section id="how-it-works" className="py-16 lg:py-24 bg-white">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    {/* Section Header */}
-                    <div className="text-center mb-12 md:mb-16">
-                        <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 tracking-tight">
-                            The <span className="text-indigo-600">Bridge</span> Method
-                        </h2>
-                        <p className="text-base md:text-lg text-gray-500 max-w-2xl mx-auto font-medium">
-                            Your structured timeline from novice to professional.
-                        </p>
+                    <div className="max-w-3xl mb-12 text-center mx-auto transition-all duration-700 delay-500">
+                        <h2 className="text-3xl lg:text-5xl font-black text-slate-900 mb-4 tracking-tighter">Our <span className="text-indigo-600 italic">Framework</span></h2>
+                        <p className="text-base text-slate-500 font-medium">Outcome-driven process for professional excellence.</p>
                     </div>
 
-                    {/* Steps Grid */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
-                        {/* Connecting Line - Desktop Only */}
-                        <div className="hidden md:block absolute top-[40%] left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-indigo-100 to-transparent z-0"></div>
-
-                        {/* Step 1 */}
-                        <div className="group bg-white rounded-3xl p-8 shadow-sm border border-gray-100 hover:shadow-xl hover:shadow-indigo-500/10 hover:border-indigo-100 transition-all duration-300 relative z-10">
-                            <div className="w-16 h-16 bg-gradient-to-br from-indigo-50 to-white rounded-2xl flex items-center justify-center mb-6 border border-indigo-50 group-hover:scale-110 transition-transform duration-300 shadow-sm mx-auto md:mx-0">
-                                <BookOpen className="w-8 h-8 text-indigo-600" />
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+                        {pedagogySteps.map((step, idx) => (
+                            <div key={idx} className={`relative p-8 lg:p-10 bg-white border border-slate-100 rounded-[2rem] group hover:border-indigo-100 transition-all duration-500 hover:shadow-2xl animate-slide-in-bottom`} style={{ animationDelay: `${idx * 200}ms` }}>
+                                <div className="absolute top-4 right-6 text-6xl font-black text-indigo-50/30 group-hover:text-indigo-100 transition-colors">{step.step}</div>
+                                <div className={`w-12 h-12 bg-gradient-to-br ${step.gradient} rounded-xl flex items-center justify-center mb-6 shadow-lg shadow-indigo-100 group-hover:rotate-12 transition-transform`}>
+                                    <step.icon className="w-6 h-6 text-white" />
+                                </div>
+                                <h3 className="text-xl lg:text-2xl font-black text-slate-900 mb-3">{step.title}</h3>
+                                <p className="text-sm lg:text-base text-slate-500 font-medium leading-relaxed">{step.desc}</p>
                             </div>
-                            <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-indigo-600 transition-colors text-center md:text-left">1. Learn Skills</h3>
-                            <p className="text-base text-gray-600 leading-relaxed font-medium text-center md:text-left">
-                                Master tools via live mentorship and deep-dive modules tailored to industry needs.
-                            </p>
-                        </div>
-
-                        {/* Step 2 */}
-                        <div className="group bg-white rounded-3xl p-8 shadow-sm border border-gray-100 hover:shadow-xl hover:shadow-indigo-500/10 hover:border-indigo-100 transition-all duration-300 relative z-10">
-                            <div className="w-16 h-16 bg-gradient-to-br from-indigo-50 to-white rounded-2xl flex items-center justify-center mb-6 border border-indigo-50 group-hover:scale-110 transition-transform duration-300 shadow-sm mx-auto md:mx-0">
-                                <Users className="w-8 h-8 text-indigo-600" />
-                            </div>
-                            <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-indigo-600 transition-colors text-center md:text-left">2. Real Practice</h3>
-                            <p className="text-base text-gray-600 leading-relaxed font-medium text-center md:text-left">
-                                Join live projects and OJT simulations with senior devs. No dummy projects.
-                            </p>
-                        </div>
-
-                        {/* Step 3 */}
-                        <div className="group bg-white rounded-3xl p-8 shadow-sm border border-gray-100 hover:shadow-xl hover:shadow-emerald-500/10 hover:border-emerald-100 transition-all duration-300 relative z-10">
-                            <div className="w-16 h-16 bg-gradient-to-br from-emerald-50 to-white rounded-2xl flex items-center justify-center mb-6 border border-emerald-50 group-hover:scale-110 transition-transform duration-300 shadow-sm mx-auto md:mx-0">
-                                <Briefcase className="w-8 h-8 text-emerald-600" />
-                            </div>
-                            <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-emerald-600 transition-colors text-center md:text-left">3. Get Hired</h3>
-                            <p className="text-base text-gray-600 leading-relaxed font-medium text-center md:text-left">
-                                Direct referrals to partner startups and internal roles. Your career starts here.
-                            </p>
-                        </div>
-
+                        ))}
                     </div>
                 </div>
             </section>
 
-            {/* 5. FEATURED PROGRAMS (Existing Component) */}
-            <FeaturedProgramsSection />
+            {/* 4. FEATURED PROGRAMS */}
+            <div className="py-8 bg-slate-50">
+                <FeaturedProgramsSection />
+            </div>
 
-            {/* 3. WHY CHOOSE US */}
-            <section className="py-12 md:py-24 bg-slate-50 relative overflow-hidden">
+            {/* 5. WHY US: THE STARTUP ADVANTAGE */}
+            <section className="py-16 lg:py-24 bg-slate-50 text-slate-900 relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-indigo-100/30 rounded-full blur-[100px] pointer-events-none opacity-50"></div>
+                <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-rose-100/30 rounded-full blur-[100px] pointer-events-none opacity-40"></div>
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                    <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
-                        {/* Content */}
-                        <div className="lg:w-1/2">
-                            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-10 tracking-tight text-center lg:text-left">
-                                Why <span className="text-indigo-600">Choose Us?</span>
-                            </h2>
-
-                            {/* Desktop Version: Premium List (Hidden on Mobile) */}
-                            <div className="hidden md:block space-y-8">
-                                {/* Feature 1 */}
-                                <div className="flex items-start gap-5 group">
-                                    <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center flex-shrink-0 shadow-md border border-indigo-50 group-hover:scale-110 transition-transform duration-300">
-                                        <Target className="w-6 h-6 text-indigo-600" />
-                                    </div>
-                                    <div>
-                                        <h3 className="text-lg font-bold text-gray-900 mb-2">Outcome-Driven Learning</h3>
-                                        <p className="text-base text-gray-500 leading-relaxed font-medium">
-                                            We looked at what 100+ CTOs want and built our courses backward from there.
-                                        </p>
-                                    </div>
-                                </div>
-
-                                {/* Feature 2 */}
-                                <div className="flex items-start gap-5 group">
-                                    <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center flex-shrink-0 shadow-md border border-indigo-50 group-hover:scale-110 transition-transform duration-300">
-                                        <Users className="w-6 h-6 text-indigo-600" />
-                                    </div>
-                                    <div>
-                                        <h3 className="text-lg font-bold text-gray-900 mb-2">Trainer-First Marketplace</h3>
-                                        <p className="text-base text-gray-500 leading-relaxed font-medium">
-                                            Learn from engineers who code by day and teach by night. No academic fluff.
-                                        </p>
-                                    </div>
-                                </div>
-
-                                {/* Feature 3 */}
-                                <div className="flex items-start gap-5 group">
-                                    <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center flex-shrink-0 shadow-md border border-pink-50 group-hover:scale-110 transition-transform duration-300">
-                                        <Award className="w-6 h-6 text-pink-600" />
-                                    </div>
-                                    <div>
-                                        <h3 className="text-lg font-bold text-gray-900 mb-2">Guaranteed Internships</h3>
-                                        <p className="text-base text-gray-500 leading-relaxed font-medium">
-                                            Theory is free. We sell experience. You will work on real products.
-                                        </p>
-                                    </div>
-                                </div>
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 items-center">
+                        <div className="lg:col-span-7">
+                            <div className="text-center lg:text-left animate-slide-in-left">
+                                <span className="inline-block px-3 py-1 rounded-full bg-indigo-100 border border-indigo-200 text-indigo-700 text-[10px] font-black uppercase tracking-widest mb-6">Why Vidya-Setu?</span>
+                                <h2 className="text-3xl lg:text-6xl font-black mb-10 tracking-tighter leading-tight text-slate-900">
+                                    Beyond the <br className="hidden lg:block" />
+                                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-rose-600">
+                                        Curriculum.
+                                    </span>
+                                </h2>
                             </div>
 
-                            {/* Mobile Version: Modern Cards (Hidden on Desktop) */}
-                            <div className="grid grid-cols-1 gap-6 md:hidden">
-                                <div className="bg-white p-6 rounded-3xl border border-indigo-50/50 shadow-sm relative overflow-hidden group">
-                                    <div className="absolute top-0 right-0 w-24 h-24 bg-indigo-50 rounded-full -mr-12 -mt-12 opacity-50 group-active:scale-150 transition-transform duration-500"></div>
-                                    <div className="relative z-10">
-                                        <div className="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center mb-5 shadow-lg shadow-indigo-200">
-                                            <Target className="w-6 h-6 text-white" />
+                            <div className="grid grid-cols-2 lg:grid-cols-2 gap-3 lg:gap-6 animate-slide-in-bottom">
+                                {[
+                                    { title: "Mentorship", desc: "Top Creators", icon: Users, bg: "bg-indigo-50", color: "text-indigo-600" },
+                                    { title: "Projects", desc: "Real Scale", icon: Code, bg: "bg-violet-50", color: "text-violet-600" },
+                                    { title: "Network", desc: "50+ Partners", icon: Globe, bg: "bg-rose-50", color: "text-rose-600" },
+                                    { title: "Quality", desc: "Vetted Docs", icon: ShieldCheck, bg: "bg-emerald-50", color: "text-emerald-600" }
+                                ].map((item, i) => (
+                                    <div key={i} className="group p-5 lg:p-6 rounded-[2rem] bg-white/70 backdrop-blur-md border border-white hover:border-indigo-200 hover:shadow-xl transition-all duration-500 shadow-sm">
+                                        <div className={`w-10 h-10 lg:w-12 lg:h-12 rounded-2xl ${item.bg} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-inner`}>
+                                            <item.icon className={`w-5 h-5 lg:w-6 lg:h-6 ${item.color}`} />
                                         </div>
-                                        <h3 className="text-lg font-bold text-gray-900 mb-3">Outcome-Driven Learning</h3>
-                                        <p className="text-base text-gray-500 leading-relaxed font-medium">
-                                            We looked at what 100+ CTOs want and built our courses backward from there.
-                                        </p>
+                                        <h4 className="text-base lg:text-lg font-black mb-1 text-slate-900">{item.title}</h4>
+                                        <p className="text-[10px] lg:text-xs text-slate-500 font-bold leading-tight">{item.desc}</p>
                                     </div>
-                                </div>
-
-                                <div className="bg-white p-6 rounded-3xl border border-indigo-50/50 shadow-sm relative overflow-hidden group">
-                                    <div className="absolute top-0 right-0 w-24 h-24 bg-indigo-50 rounded-full -mr-12 -mt-12 opacity-50 group-active:scale-150 transition-transform duration-500"></div>
-                                    <div className="relative z-10">
-                                        <div className="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center mb-5 shadow-lg shadow-indigo-200">
-                                            <Users className="w-6 h-6 text-white" />
-                                        </div>
-                                        <h3 className="text-lg font-bold text-gray-900 mb-3">Trainer-First Marketplace</h3>
-                                        <p className="text-base text-gray-500 leading-relaxed font-medium">
-                                            Learn from engineers who code by day and teach by night. No academic fluff.
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div className="bg-white p-6 rounded-3xl border border-pink-50/50 shadow-sm relative overflow-hidden group">
-                                    <div className="absolute top-0 right-0 w-24 h-24 bg-pink-50 rounded-full -mr-12 -mt-12 opacity-50 group-active:scale-150 transition-transform duration-500"></div>
-                                    <div className="relative z-10">
-                                        <div className="w-12 h-12 bg-pink-600 rounded-2xl flex items-center justify-center mb-5 shadow-lg shadow-pink-200">
-                                            <Award className="w-6 h-6 text-white" />
-                                        </div>
-                                        <h3 className="text-lg font-bold text-gray-900 mb-3">Guaranteed Internships</h3>
-                                        <p className="text-base text-gray-500 leading-relaxed font-medium">
-                                            Theory is free. We sell experience. You will work on real products.
-                                        </p>
-                                    </div>
-                                </div>
+                                ))}
                             </div>
                         </div>
 
-                        {/* Visual */}
-                        <div className="lg:w-1/2 relative">
-                            <div className="absolute inset-0 bg-indigo-600 rounded-3xl rotate-3 opacity-10"></div>
-                            <div className="relative rounded-3xl overflow-hidden shadow-2xl ring-1 ring-black/5">
+                        <div className="lg:col-span-5 relative animate-tilt-in">
+                            <div className="relative rounded-[2.5rem] lg:rounded-[3rem] overflow-hidden border-4 lg:border-8 border-white shadow-2xl aspect-[4/5] lg:aspect-[3/4]">
                                 <Image
                                     src="/assets/images/hero-img.jpeg"
-                                    alt="Collaborative learning"
-                                    width={700}
-                                    height={500}
-                                    className="object-cover w-full h-auto hover:scale-105 transition-transform duration-700 ease-out"
+                                    alt="Focused learning"
+                                    fill
+                                    className="object-cover"
                                 />
+                                {/* Bottom overlay for mobile */}
+                                <div className="absolute bottom-4 left-4 right-4 p-4 bg-white/30 backdrop-blur-md rounded-2xl border border-white/20 sm:hidden">
+                                    <p className="text-[10px] font-black text-center text-slate-900 uppercase tracking-widest">Bridging Academic Reality</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            {/* 7. FOUNDER SECTION */}
-            <section className="py-12 md:py-24 lg:py-28 bg-white overflow-hidden">
-                <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl p-8 md:p-12 lg:p-16 shadow-2xl relative overflow-hidden group">
-                        {/* Background Pattern */}
-                        <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500/20 rounded-full blur-[100px] opacity-40 group-hover:opacity-60 transition-opacity duration-700"></div>
-                        <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-500/20 rounded-full blur-[80px] opacity-40"></div>
-
-                        <div className="flex flex-col md:flex-row items-center gap-10 md:gap-16 relative z-10">
-                            {/* Founder Image */}
-                            <div className="relative w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 rounded-3xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] border-4 border-slate-700 flex-shrink-0 mx-auto md:mx-0">
+            {/* 6. FOUNDER'S VISION */}
+            <section className="py-16 lg:py-24 bg-white">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="bg-slate-50 rounded-[2rem] lg:rounded-[3rem] p-8 lg:p-20 flex flex-col lg:flex-row items-center gap-10 lg:gap-16 border border-slate-100 relative animate-fade-in">
+                        <div className="lg:w-1/3 flex-shrink-0 animate-float">
+                            <div className="relative w-48 h-48 lg:w-72 lg:h-72 mx-auto rounded-[2rem] overflow-hidden shadow-2xl border-4 border-white rotate-2 transition-transform hover:rotate-0 duration-500">
                                 <Image
                                     src="/assets/images/founder-profile.jpg"
-                                    alt="Somya Agrawal - Founder"
+                                    alt="Somya Agrawal"
                                     fill
-                                    className="object-cover transition-transform duration-700 hover:scale-105"
+                                    className="object-cover grayscale hover:grayscale-0 transition-all duration-700"
                                 />
                             </div>
-
-                            {/* Founder Content */}
-                            <div className="flex-1 text-center md:text-left space-y-6">
-                                <div className="inline-block px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-indigo-400 text-[10px] md:text-[11px] font-bold uppercase tracking-wider shadow-sm">
-                                    Meet The Founder
-                                </div>
-                                <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white tracking-tight">Somya Agrawal</h2>
-
-                                <div className="relative">
-                                    <div className="absolute -left-5 -top-3 opacity-20 hidden md:block">
-                                        <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor" className="text-indigo-400"><path d="M14.017 21L14.017 18C14.017 16.082 14.321 15.243 14.929 14.485C15.537 13.727 16.591 13 18.09 12.219V9.10901C15.823 10.046 14.471 10.875 14.032 11.597C13.593 12.319 13.374 13.568 13.374 15.344V21H14.017ZM5.016 21L5.016 18C5.016 16.082 5.32 15.243 5.928 14.485C6.536 13.727 7.59 13 9.089 12.219V9.10901C6.822 10.046 5.47 10.875 5.031 11.597C4.592 12.319 4.373 13.568 4.373 15.344V21H5.016Z" /></svg>
-                                    </div>
-                                    <p className="text-sm md:text-base text-indigo-50 leading-relaxed font-medium pl-0 md:pl-2">
-                                        "Led by vision-driven founder Somya Agrawal, Vidya-Setu bridges the gap between education and employment. We believe certificates are just paper—real experience is the currency of the modern job market."
-                                    </p>
-                                </div>
-
-                                <div className="flex items-center justify-center md:justify-start gap-4 pt-2">
-                                    <Link href="#" className="w-10 h-10 md:w-11 md:h-11 bg-slate-800 border border-slate-700 rounded-xl flex items-center justify-center text-indigo-400 hover:bg-indigo-600 hover:text-white hover:border-indigo-600 transition-all duration-300 shadow-lg hover:shadow-indigo-500/20">
-                                        <Building2 className="w-4 h-4 md:w-5 md:h-5" />
-                                    </Link>
-                                    <Link href="#" className="w-10 h-10 md:w-11 md:h-11 bg-slate-800 border border-slate-700 rounded-xl flex items-center justify-center text-indigo-400 hover:bg-indigo-600 hover:text-white hover:border-indigo-600 transition-all duration-300 shadow-lg hover:shadow-indigo-500/20">
-                                        <Users className="w-4 h-4 md:w-5 md:h-5" />
-                                    </Link>
-                                </div>
+                        </div>
+                        <div className="lg:w-2/3 text-center lg:text-left">
+                            <span className="inline-block px-3 py-1 bg-slate-900 text-white text-[8px] sm:text-[10px] font-black uppercase tracking-widest rounded-full mb-6">Founder's Letter</span>
+                            <h3 className="text-2xl lg:text-4xl font-black text-slate-900 mb-6 italic leading-tight">"Redefining how education meets industry reality."</h3>
+                            <p className="text-sm lg:text-lg text-slate-600 font-medium leading-relaxed mb-8">
+                                We're building the bridge for the next generation of professionals to walk across with absolute confidence.
+                            </p>
+                            <div>
+                                <h4 className="text-xl font-black text-slate-900">Somya Agrawal</h4>
+                                <p className="text-[10px] font-black text-indigo-600 uppercase tracking-widest">Founder & CEO</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            {/* 5. LEVEL UP CTA */}
-            <section className="py-20 md:py-24 bg-white relative overflow-hidden">
-                {/* Background Glow */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-indigo-50 rounded-full blur-[120px] opacity-60 pointer-events-none"></div>
-
-                <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-                    <h2 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-                        Ready to <span className="text-indigo-600">Level Up?</span>
+            {/* 7. FINAL CTA */}
+            <section className="py-20 lg:py-32 text-center bg-white relative overflow-hidden">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-indigo-50/50 rounded-full blur-[100px] opacity-40 animate-pulse-slow"></div>
+                <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 animate-bounce-in">
+                    <h2 className="text-3xl lg:text-7xl font-black text-slate-900 mb-6 tracking-tighter">
+                        Transform Your <br />
+                        <span className="text-indigo-600">Future.</span>
                     </h2>
-                    <p className="text-base md:text-lg text-gray-600 mb-10 max-w-2xl mx-auto font-medium">
-                        Join the ecosystem where skills meet opportunity.
-                    </p>
+                    <p className="text-base lg:text-xl text-slate-600 mb-10 font-bold">Be part of our next cohort of builders.</p>
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                         <Link
-                            href="/courses"
-                            className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 rounded-full bg-indigo-600 text-white font-bold text-base hover:bg-indigo-700 transition-all duration-300 shadow-xl shadow-indigo-600/25 hover:-translate-y-1"
+                            href="/register"
+                            className="w-full sm:w-auto px-8 py-4 bg-indigo-600 text-white font-black text-lg rounded-xl shadow-xl hover:bg-indigo-700 transition-all hover:-translate-y-1 active:scale-95"
                         >
-                            Start Your Journey
+                            Get Started
                         </Link>
                         <a
-                            href="#"
-                            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full border-2 border-slate-200 bg-white text-slate-700 font-bold text-base hover:border-indigo-600 hover:text-indigo-600 transition-all duration-300 shadow-sm"
+                            href="https://wa.me/919113645398"
+                            className="w-full sm:w-auto px-8 py-4 bg-white border border-slate-200 text-slate-700 font-bold rounded-xl hover:bg-slate-50 transition-all flex items-center justify-center gap-2"
                         >
-                            <MessageCircle className="w-5 h-5 text-emerald-600" />
-                            Talk to Us
+                            <MessageCircle className="w-5 h-5 text-emerald-500" />
+                            Counseling
                         </a>
                     </div>
                 </div>
             </section>
-        </main >
+
+            <style jsx>{`
+                h1, h2, h3, h4 { font-family: 'Outfit', sans-serif; }
+                body { font-family: 'Inter', sans-serif; }
+
+                .animate-fade-in-down { animation: fadeInDown 1s ease-out forwards; }
+                .animate-zoom-in { animation: zoomIn 0.8s ease-out forwards; }
+                .animate-slide-in-bottom { animation: slideInBottom 0.8s ease-out forwards; }
+                .animate-slide-in-left { animation: slideInLeft 1s ease-out forwards; }
+                .animate-slide-in-right { animation: slideInRight 1s ease-out forwards; }
+                .animate-tilt-in { animation: tiltIn 1.2s ease-out forwards; }
+                .animate-float { animation: float 6s ease-in-out infinite; }
+                .animate-pulse-subtle { animation: pulseSubtle 4s ease-in-out infinite; }
+                .animate-pulse-slow { animation: pulseSlow 8s ease-in-out infinite; }
+                .animate-bounce-in { animation: bounceIn 1s cubic-bezier(0.36, 0, 0.66, -0.56) 0.5s both, slideInBottom 1s ease-out; }
+                .animate-fade-in { animation: fadeIn 1.5s ease-out forwards; }
+
+                @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+                @keyframes fadeInDown {
+                    from { opacity: 0; transform: translateY(-20px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+                @keyframes zoomIn {
+                    from { opacity: 0; transform: scale(0.9); }
+                    to { opacity: 1; transform: scale(1); }
+                }
+                @keyframes slideInBottom {
+                    from { opacity: 0; transform: translateY(40px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+                @keyframes slideInLeft {
+                    from { opacity: 0; transform: translateX(-40px); }
+                    to { opacity: 1; transform: translateX(0); }
+                }
+                @keyframes tiltIn {
+                    from { opacity: 0; transform: perspective(1000px) rotateY(-10deg) translateY(20px); }
+                    to { opacity: 1; transform: perspective(1000px) rotateY(0deg) translateY(0); }
+                }
+                @keyframes float {
+                    0%, 100% { transform: translateY(0); }
+                    50% { transform: translateY(-15px); }
+                }
+                @keyframes pulseSubtle {
+                    0%, 100% { transform: scale(1); opacity: 1; }
+                    50% { transform: scale(1.02); opacity: 0.9; }
+                }
+                @keyframes pulseSlow {
+                    0%, 100% { opacity: 0.3; transform: scale(1); }
+                    50% { opacity: 0.5; transform: scale(1.1); }
+                }
+                @keyframes bounceIn {
+                    0% { opacity: 0; transform: scale(0.3); }
+                    50% { opacity: 0.9; transform: scale(1.1); }
+                    80% { opacity: 1; transform: scale(0.89); }
+                    100% { opacity: 1; transform: scale(1); }
+                }
+            `}</style>
+        </main>
     );
 }
