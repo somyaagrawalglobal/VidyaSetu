@@ -10,7 +10,9 @@ export default function AOSInitializer() {
     AOS.init({
       duration: 1000,      // Animation duration (milliseconds)
       once: true,          // Whether animation should only happen once - good for performance
-      disable: 'mobile',   // Optional: disable on mobile for smoother performance
+      disable: function () {
+    return window.innerWidth < 768;
+  },   // Optional: disable on mobile for smoother performance
     });
   }, []);
 

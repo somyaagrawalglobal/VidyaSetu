@@ -1,254 +1,354 @@
 "use client";
 
+import { useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { 
-    ArrowRight, 
-    Zap, 
-    GraduationCap, 
-    Briefcase, 
-    CheckCircle, 
-    TrendingUp, 
-    Sparkles, 
-    User,
-    Users,
-    Building2,
+import { motion, useScroll, useTransform, useInView } from "framer-motion";
+import {
+    ArrowRight,
+    ShieldCheck,
+    Cpu,
+    Globe,
+    Rocket,
     Trophy,
-    ArrowUpRight
-} from "lucide-react"; 
+    Sparkles,
+    Star
+} from "lucide-react";
 import FeaturedProgramsSection from "@/components/FeatureProgram";
 import PrimaryButton from "@/components/PrimaryButton";
-import { useEffect } from "react"; // Import useEffect for potential AOS initialization
+import FinalCTA from "@/components/CTA";
+
+// --- Animation Variants ---
+
+const fadeInUp = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] }
+    }
+};
+
+const staggerContainer = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.2,
+            delayChildren: 0.3
+        }
+    }
+};
 
 export default function Home() {
-    
-    // NOTE: If you are using an external library like AOS (Animate On Scroll),
-    // you must initialize it here. The best way to disable AOS for mobile is within the init function.
-    // However, since we cannot control the external AOS configuration here, we will remove 
-    // the data-aos attributes from the JSX for maximum compatibility.
+    const targetRef = useRef(null);
+    const { scrollYProgress } = useScroll({
+        target: targetRef,
+        offset: ["start start", "end start"]
+    });
 
-    // If using AOS, you should initialize it like this in your main entry point:
-    /*
-    useEffect(() => {
-        // Assuming AOS library is available globally
-        if (typeof window !== 'undefined' && typeof AOS !== 'undefined') {
-            AOS.init({ 
-                // Disables AOS for devices with screens narrower than 768px (standard Tailwind 'md')
-                disable: 'phone', 
-                once: true 
-            }); 
-        }
-    }, []);
-    */
+    // Parallax effect for Hero Background
+    const yBg = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
+    const opacityBg = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
     return (
-        // Adjusted overall top padding for mobile (pt-20 is safer) and desktop (lg:pt-0)
-        <main className="bg-white pt-20 lg:pt-0 selection:bg-indigo-100 selection:text-indigo-900">
-            
-            {/* 1. HERO SECTION: Modern Split with Pattern Background */}
-            <section className="relative pb-16 pt-16 lg:pt-32 lg:pb-28 overflow-hidden"> 
-                {/* Background Pattern - Dot Grid (Animation kept for background) */}
-                <div className="absolute inset-0 -z-10 h-full w-full bg-white bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)]"></div>
-                
-                {/* Subtle Gradient Blob (Animation kept for background) */}
-                <div className="absolute top-0 right-0 -z-10 w-96 h-96 lg:w-[600px] lg:h-[600px] bg-indigo-50/50 rounded-full blur-[100px] opacity-70 animate-pulse-slow"></div>
+        <main ref={targetRef} className="bg-slate-50 min-h-screen selection:bg-indigo-100 selection:text-indigo-900 scroll-smooth font-sans overflow-x-hidden">
 
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    {/* Column order reversal on mobile for better flow (image after text) - adjusted gap */}
-                    <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-20"> 
-                        
-                        {/* Hero Content - Removed data-aos */}
-                        <div className="lg:w-1/2 text-center lg:text-left z-10">
-                            {/* Alert Badge - Reduced hover animation scope to md: */}
-                            <div className="inline-flex items-center gap-2 py-1.5 px-3 rounded-full bg-slate-50 border border-slate-200 text-slate-600 text-xs font-semibold mb-6 hover:bg-slate-100 transition-colors cursor-pointer group">
-                                <span className="relative flex h-2 w-2">
-                                    <span className="md:animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            {/* 1. HERO SECTION */}
+            <section className="relative pt-24 pb-16 lg:pt-32 lg:pb-32 overflow-hidden min-h-[90vh] flex items-center">
+
+                {/* Background Elements */}
+                <motion.div style={{ y: yBg, opacity: opacityBg }} className="absolute inset-0 -z-10 h-full w-full pointer-events-none">
+                    <div className="absolute inset-0 bg-white bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:24px_24px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_0%,#000_70%,transparent_100%)] opacity-60"></div>
+                    <div className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] bg-indigo-100/40 rounded-full blur-[120px] mix-blend-multiply animate-blob"></div>
+                    <div className="absolute top-[20%] left-[-10%] w-[500px] h-[500px] bg-purple-100/40 rounded-full blur-[100px] mix-blend-multiply animate-blob animation-delay-2000"></div>
+                    <div className="absolute bottom-[-20%] left-[20%] w-[600px] h-[600px] bg-pink-50/40 rounded-full blur-[120px] mix-blend-multiply animate-blob animation-delay-4000"></div>
+                </motion.div>
+
+                <div className="max-w-7xl mx-auto px-6 lg:px-8 w-full">
+                    <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
+
+                        {/* Hero Content */}
+                        <motion.div
+                            className="lg:w-1/2 text-center lg:text-left z-10"
+                            initial="hidden"
+                            animate="visible"
+                            variants={staggerContainer}
+                        >
+                            {/* Badge */}
+                            <motion.div variants={fadeInUp} className="inline-flex items-center gap-2 py-2 px-5 rounded-full bg-white/80 backdrop-blur-sm border border-indigo-100 shadow-sm text-indigo-700 text-xs font-bold tracking-wide mb-8 hover:shadow-md hover:scale-105 transition-all cursor-pointer group">
+                                <span className="relative flex h-2.5 w-2.5">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+                                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-indigo-600"></span>
                                 </span>
-                                <Link href={"/courses"}>New Cohort Enrollment Open</Link>
-                                <ArrowRight className="w-3 h-3 group-hover:md:translate-x-1 transition-transform" />
-                            </div>
+                                <span className="uppercase tracking-widest group-hover:text-indigo-800 transition-colors">Cohort 2026: Applications Open</span>
+                                <ArrowRight className="w-3.5 h-3.5 text-indigo-400 group-hover:translate-x-1 transition-transform" />
+                            </motion.div>
 
-                            {/* Responsive Heading Size: 4xl (sm) to 7xl (lg) */}
-                            <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight text-slate-900 mb-6 leading-tight lg:leading-[1.1]">
-                                Bridge the gap between <br className="hidden lg:block"/>
-                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-violet-600">
-                                    Degree & Career.
+                            {/* Heading */}
+                            <motion.h1 variants={fadeInUp} className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-900 mb-8 leading-[1.05]">
+                                The Apex <br className="hidden lg:block" />
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-violet-600 to-indigo-600 animate-text-gradient bg-300%">
+                                    Engineering Program.
                                 </span>
-                            </h1>
+                            </motion.h1>
 
-                            {/* Responsive Text Size */}
-                            <p className="text-base sm:text-lg text-slate-600 mb-8 max-w-xl mx-auto lg:mx-0 leading-relaxed text-balance">
-                                Stop collecting certificates. Start building capabilities. We provide the **missing semester** of practical, industry-grade experience that universities don't teach.
-                            </p>
+                            <motion.p variants={fadeInUp} className="text-lg md:text-xl text-slate-600 mb-10 max-w-lg mx-auto lg:mx-0 leading-relaxed font-light">
+                                A <strong className="text-slate-900 font-semibold">$1M mentorship</strong> experience condensed into a verified portfolio. Designed for the top 1% of ambitious engineers.
+                            </motion.p>
 
-                            {/* Responsive Button Group - Reduced hover animation scope to md: */}
-                            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                                {/* Primary Button with enhanced shadow/animation */}
-                                <PrimaryButton href="/courses" className="h-12 px-6 sm:px-8 rounded-lg shadow-xl shadow-indigo-400/30 flex items-center justify-center gap-2 text-sm sm:text-base transition-all duration-300 md:hover:shadow-indigo-400/70 md:hover:scale-[1.02] md:active:scale-[0.98]">
-                                    Explore Programs
+                            {/* Buttons */}
+                            <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row gap-5 justify-center lg:justify-start">
+                                <PrimaryButton href="/application" className="!bg-indigo-600 !text-white hover:!bg-indigo-700 !shadow-xl !shadow-indigo-600/20 font-bold h-14 px-10 rounded-2xl text-base transition-all hover:-translate-y-1">
+                                    Request Access
                                 </PrimaryButton>
-                                {/* Secondary Button with hover animation */}
-                                <a href="#methodology" className="h-12 px-6 sm:px-8 rounded-lg border border-slate-200 text-slate-700 font-medium hover:bg-slate-50 hover:border-slate-300 transition-all duration-300 flex items-center justify-center gap-2 text-sm sm:text-base md:hover:shadow-md">
-                                    How it Works
+                                <a href="#curriculum" className="h-14 px-10 rounded-2xl border border-slate-200 bg-white/50 backdrop-blur-sm text-slate-600 font-medium hover:bg-white hover:border-indigo-200 hover:text-indigo-600 transition-all duration-300 flex items-center justify-center gap-2 shadow-sm hover:shadow-lg text-base group">
+                                    View Syllabus
+                                    <ArrowRight className="w-4 h-4 opacity-0 -ml-4 group-hover:opacity-100 group-hover:ml-0 transition-all duration-300" />
                                 </a>
-                            </div>
-                        </div>
+                            </motion.div>
+                        </motion.div>
 
-                        {/* Hero Image (Modern Composition) - Removed data-aos */}
-                        <div className="lg:w-1/2 relative mt-12 lg:mt-0">
-                            {/* Aspect control ensures the image is not distorted on mobile */}
-                            <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-indigo-300/30 border border-slate-100 bg-slate-50 aspect-[4/3] group">
+                        {/* Hero Visual */}
+                        <motion.div
+                            className="lg:w-1/2 relative perspective-1000"
+                            initial={{ opacity: 0, x: 50, rotateY: 10 }}
+                            animate={{ opacity: 1, x: 0, rotateY: 0 }}
+                            transition={{ duration: 1, delay: 0.5, ease: "easeOut" }}
+                        >
+                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gradient-to-tr from-indigo-200/30 to-purple-200/30 rounded-full blur-3xl -z-10 animate-pulse-slow"></div>
+
+                            <motion.div
+                                className="relative rounded-3xl overflow-hidden shadow-2xl shadow-indigo-900/10 border-4 border-white ring-1 ring-slate-900/5 bg-slate-50 aspect-[4/3] w-full"
+                                whileHover={{ scale: 1.02, rotate: 0.5 }}
+                                transition={{ duration: 0.5 }}
+                            >
                                 <Image
                                     src="/assets/images/hero-gen.png"
-                                    alt="Students working on practical projects together"
+                                    alt="Elite mentorship session"
                                     fill
-                                    style={{ objectFit: 'cover' }}
-                                    // Removed hover:scale-105 from base class, applied it only on md:
-                                    className="object-cover transition-transform duration-700 group-hover:md:scale-105" 
+                                    className="object-cover"
                                     priority
                                     sizes="(max-width: 1024px) 100vw, 50vw"
                                 />
-                            </div>
-                        </div>
+
+                                {/* Floating Badges */}
+                                <motion.div
+                                    className="absolute top-6 left-6 bg-white/90 backdrop-blur-md p-3 rounded-xl shadow-lg border border-white/50 flex items-center gap-3"
+                                    initial={{ opacity: 0, y: -20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 1.2 }}
+                                >
+                                    <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600">
+                                        <Trophy className="w-4 h-4" />
+                                    </div>
+                                    <div>
+                                        <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Top 1%</p>
+                                        <p className="text-xs font-bold text-slate-900">Elite Talent</p>
+                                    </div>
+                                </motion.div>
+
+                                <motion.div
+                                    className="absolute bottom-6 right-6 bg-white/95 backdrop-blur-xl p-4 rounded-2xl shadow-xl border border-white/50 max-w-[200px]"
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 1.4 }}
+                                >
+                                    <div className="flex items-center justify-between mb-2">
+                                        <div className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600">
+                                            <ShieldCheck className="w-4 h-4" />
+                                        </div>
+                                        <span className="bg-emerald-50 text-emerald-700 text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider">Verified</span>
+                                    </div>
+                                    <div>
+                                        <p className="text-slate-900 text-sm font-bold">System Architecture</p>
+                                        <div className="w-full bg-slate-100 h-1.5 rounded-full mt-2 overflow-hidden">
+                                            <motion.div
+                                                className="bg-emerald-500 h-full rounded-full"
+                                                initial={{ width: 0 }}
+                                                animate={{ width: "100%" }}
+                                                transition={{ duration: 1.5, delay: 1.8, ease: "easeInOut" }}
+                                            />
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            </motion.div>
+                        </motion.div>
                     </div>
                 </div>
             </section>
 
+            {/* 2. METHODOLOGY SECTION */}
+            <section id="methodology" className="relative py-24 lg:py-32 bg-slate-50">
+                <div className="max-w-7xl mx-auto px-6 lg:px-8">
+                    <motion.div
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true, margin: "-100px" }}
+                        variants={staggerContainer}
+                        className="text-center max-w-3xl mx-auto mb-20"
+                    >
+                        <motion.h2 variants={fadeInUp} className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 tracking-tight">
+                            The <span className="text-indigo-600 relative inline-block">
+                                Cognitive Refinement
+                                <svg className="absolute w-full h-3 -bottom-1 left-0 text-indigo-200 -z-10" viewBox="0 0 100 10" preserveAspectRatio="none">
+                                    <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="8" fill="none" />
+                                </svg>
+                            </span> Cycle
+                        </motion.h2>
+                        <motion.p variants={fadeInUp} className="text-slate-600 text-lg md:text-xl leading-relaxed font-light">
+                            We don't teach. We sculpt professional identity through a proprietary, feedback-intensive loop designed for speed and excellence.
+                        </motion.p>
+                    </motion.div>
 
-            {/* 3. METHODOLOGY (Bento Grid Style) */}
-            <section id="methodology" className=" bg-white relative py-16 md:py-24">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    {/* Header alignment and spacing adjusted for responsiveness */}
-                    <div className="text-center max-w-3xl mx-auto mb-12 md:mb-16">
-                        <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-                            The <span className="text-indigo-600">Bridge Method</span>
-                        </h2>
-                        <p className="text-slate-500 text-base md:text-lg">
-                            We don't just teach theory. We simulate the actual working environment of top-tier tech companies.
-                        </p>
-                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        {/* Card 1 */}
+                        <MethodologyCard
+                            icon={<Cpu className="w-8 h-8 text-blue-600 group-hover:text-white transition-colors duration-500" />}
+                            title="1. Technical Refinement"
+                            description="Deep dive into high-scale systems. Learn patterns, not just syntax, with rigorous code reviews from day one."
+                            colorClass="bg-blue-50 group-hover:bg-blue-600"
+                            delay={0.1}
+                        />
 
-                    {/* Bento Grid: 1 column on mobile, 2 columns on medium, 3 columns on large */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        
-                        {/* Card 1 - Removed data-aos, added md: to hover transforms */}
-                        <div className="p-6 md:p-8 rounded-2xl bg-slate-50 border border-slate-100 hover:border-indigo-200 hover:shadow-xl hover:shadow-indigo-100/50 transition-all duration-300 group">
-                            <div className="w-12 h-12 bg-white rounded-xl shadow-sm border border-slate-100 flex items-center justify-center mb-6 group-hover:md:scale-105 transition-transform duration-300">
-                                <GraduationCap className="w-6 h-6 text-indigo-600" />
+                        {/* Card 2 - Active */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 40 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.6, delay: 0.2 }}
+                            whileHover={{ y: -10 }}
+                            className="p-8 lg:p-10 rounded-[2rem] bg-indigo-600 text-white shadow-2xl shadow-indigo-600/30 relative overflow-hidden group transform"
+                        >
+                            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-[80px] pointer-events-none -mr-16 -mt-16"></div>
+
+                            <div className="w-16 h-16 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center mb-8 border border-white/30 shadow-inner">
+                                <Rocket className="w-8 h-8 text-white" />
                             </div>
-                            <h3 className="text-xl font-bold text-slate-900 mb-3">1. Upskill</h3>
-                            <p className="text-slate-500 leading-relaxed text-sm md:text-base">
-                                Intensive, live mentorship sessions focused on current market tools, not outdated textbooks.
+                            <h3 className="text-2xl font-bold text-white mb-4">2. Executive Validation</h3>
+                            <p className="text-indigo-100 text-base leading-relaxed font-light mb-8">
+                                Simulated CTO reviews. Your code is critiqued on production standards, scalability, and business impact.
                             </p>
-                        </div>
+                            <div className="inline-flex items-center text-sm font-bold text-white uppercase tracking-wider border-b border-white/30 pb-1 group-hover:border-white transition-colors cursor-pointer">
+                                The Core Differentiator <ArrowRight className="w-4 h-4 ml-2" />
+                            </div>
+                        </motion.div>
 
-                        {/* Card 2 - Featured/Middle - Removed data-aos, added md: to internal animation */}
-                        <div className="p-6 md:p-8 rounded-2xl bg-slate-900 text-white shadow-2xl relative overflow-hidden group transition-all duration-300 md:col-span-2 lg:col-span-1">
-                            {/* Subtle animation in dark card, kept for desktop, disabled for mobile by adding md: */}
-                            <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/20 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none transition-all duration-500 group-hover:md:scale-125"></div> 
-                            <div className="w-12 h-12 bg-white/10 backdrop-blur-md rounded-xl border border-white/20 flex items-center justify-center mb-6">
-                                <Briefcase className="w-6 h-6 text-indigo-300" />
-                            </div>
-                            <h3 className="text-xl font-bold mb-3">2. Simulate</h3>
-                            <p className="text-slate-300 leading-relaxed text-sm md:text-base">
-                                Work on real corporate capstone projects. Commit code, attend scrums, and face code reviews.
-                            </p>
-                            <div className="mt-6 flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-indigo-300 transition-colors duration-300 group-hover:text-indigo-100">
-                                Most Critical Step <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:md:translate-x-1" />
-                            </div>
-                        </div>
-
-                        {/* Card 3 - Removed data-aos, added md: to hover transforms */}
-                        <div className="p-6 md:p-8 rounded-2xl bg-slate-50 border border-slate-100 hover:border-indigo-200 hover:shadow-xl hover:shadow-indigo-100/50 transition-all duration-300 group">
-                            <div className="w-12 h-12 bg-white rounded-xl shadow-sm border border-slate-100 flex items-center justify-center mb-6 group-hover:md:scale-105 transition-transform duration-300">
-                                <TrendingUp className="w-6 h-6 text-indigo-600" />
-                            </div>
-                            <h3 className="text-xl font-bold text-slate-900 mb-3">3. Place</h3>
-                            <p className="text-slate-500 leading-relaxed text-sm md:text-base">
-                                Direct referrals to our hiring partners. We don't just fix your resume; we fix your career trajectory.
-                            </p>
-                        </div>
+                        {/* Card 3 */}
+                        <MethodologyCard
+                            icon={<Trophy className="w-8 h-8 text-purple-600 group-hover:text-white transition-colors duration-500" />}
+                            title="3. Market Ascension"
+                            description="Direct introductions to venture-backed startups. We don't just find jobs; we negotiate careers."
+                            colorClass="bg-purple-50 group-hover:bg-purple-600"
+                            delay={0.3}
+                        />
                     </div>
                 </div>
             </section>
 
-            {/* 5. FEATURED PROGRAMS (Existing Component) */}
-            {/* Adjusted Vertical Padding for better rhythm */}
-            <div className="py-16 md:py-24 bg-slate-50">
-                <FeaturedProgramsSection />
+            {/* 3. FEATURED PROGRAMS */}
+            <div id="curriculum" className="bg-white border-t border-slate-100 relative">
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 1 }}
+                    className="py-24"
+                >
+                    <FeaturedProgramsSection />
+                </motion.div>
             </div>
 
-            {/* 6. FOUNDER / MISSION SECTION (Editorial Style) */}
-            <section className="py-16 md:py-24 bg-white overflow-hidden">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    {/* OPTIMIZATION: Use md:flex-row-reverse to put the content column first on desktop, improving visual weight balance. */}
-                    <div className="flex flex-col md:flex-row-reverse gap-12 md:gap-16 items-center"> 
-                        
-                        {/* Content Column (Text) - Removed data-aos */}
-                        <div className="md:w-1/2 order-1">
-                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-[10px] font-bold uppercase tracking-wider mb-6">
-                                <Sparkles className="w-3 h-3" /> Our Mission
-                            </div>
-                            {/* Responsive Heading Size */}
-                            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 mb-6 tracking-tight">
-                                Education needs a <br/>
-                                <span className="text-indigo-600">Reality Check.</span>
-                            </h2>
-                            {/* Responsive Text Size */}
-                            <div className="space-y-6 text-base md:text-lg text-slate-600">
-                                <p>
-                                    The industry is evolving faster than university curriculums can keep up. This creates a **"skills gap"** that leaves graduates unemployed and companies with unfilled roles.
-                                </p>
-                                <p>
-                                    At Com-ED, we are not an institute; we are a **pre-accelerator for your career**. We bridge the disconnect by bringing the corporate world into the classroom.
-                                </p>
-                            </div>
-                            
-                            {/* Key Differentiators - added md: to hover transforms */}
-                            <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-6">
-                                <div className="flex gap-3 transition-transform duration-300 hover:md:translate-x-1">
-                                    <div className="bg-emerald-100 p-2 rounded-lg h-fit text-emerald-700"><CheckCircle className="w-5 h-5"/></div>
-                                    <div>
-                                        <h4 className="font-bold text-slate-900">Theory + Practical</h4>
-                                        <p className="text-sm text-slate-500">No fluff, just skills.</p>
-                                    </div>
-                                </div>
-                                <div className="flex gap-3 transition-transform duration-300 hover:md:translate-x-1">
-                                    <div className="bg-purple-100 p-2 rounded-lg h-fit text-purple-700"><Users className="w-5 h-5"/></div>
-                                    <div>
-                                        <h4 className="font-bold text-slate-900">Network Access</h4>
-                                        <p className="text-sm text-slate-500">Lifetime community.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+            {/* 4. MISSION FRAMEWORK */}
+            <section className="py-24 lg:py-32 bg-slate-50 relative overflow-hidden">
+                <div className="max-w-7xl mx-auto px-6 lg:px-8">
+                    <div className="flex flex-col md:flex-row-reverse gap-16 lg:gap-24 items-center">
 
-                        {/* Image Column - Removed data-aos */}
-                        <div className="md:w-1/2 relative order-2 md:order-1">
-                            <div className="relative z-10 max-w-sm mx-auto md:max-w-none">
+                        {/* Text Side */}
+                        <motion.div
+                            className="md:w-1/2"
+                            initial="hidden"
+                            whileInView="visible"
+                            viewport={{ once: true }}
+                            variants={staggerContainer}
+                        >
+                            <motion.div variants={fadeInUp} className="inline-block px-4 py-1.5 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs font-bold uppercase tracking-wider mb-8">
+                                Why We Exist
+                            </motion.div>
+                            <motion.h2 variants={fadeInUp} className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 mb-8 tracking-tight leading-tight">
+                                Curating the <br />
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">Next Generation.</span>
+                            </motion.h2>
+                            <motion.div variants={fadeInUp} className="space-y-6 text-lg md:text-xl text-slate-600 font-light leading-relaxed">
+                                <p>
+                                    Excellence is non-negotiable. We exist to identify individuals with raw intelligence and give them the <strong className="text-slate-900 font-semibold underline decoration-indigo-300 decoration-2 underline-offset-4">operational context</strong> to lead.
+                                </p>
+                                <p>
+                                    This isn't mass education. It's hyper-optimization for your career trajectory.
+                                </p>
+                            </motion.div>
+
+                            <motion.button variants={fadeInUp} className="mt-10 text-indigo-600 font-bold text-lg flex items-center gap-3 group">
+                                Meet the Architect <div className="w-8 h-[2px] bg-indigo-600 group-hover:w-16 transition-all duration-300"></div>
+                            </motion.button>
+                        </motion.div>
+
+                        {/* Image Side */}
+                        <motion.div
+                            className="md:w-1/2 relative"
+                            initial={{ opacity: 0, scale: 0.9, rotate: -2 }}
+                            whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.8 }}
+                        >
+                            {/* Decorative Frame */}
+                            <div className="absolute -inset-4 border-2 border-indigo-100/50 rounded-[2rem] -z-10 rotate-3 animate-pulse-slow"></div>
+                            <div className="absolute -inset-4 border-2 border-purple-100/50 rounded-[2rem] -z-10 -rotate-3 animate-pulse-slow animation-delay-2000"></div>
+
+                            <div className="relative z-10 rounded-2xl overflow-hidden shadow-2xl shadow-slate-200 group max-w-sm mx-auto md:max-w-none">
                                 <Image
                                     src="/assets/images/hero-img.jpeg"
-                                    alt="Founder"
-                                    width={500}
-                                    height={600}
-                                    // Added md: to hover effects
-                                    className="rounded-xl shadow-2xl shadow-slate-900/10 transition-transform duration-500 md:hover:rotate-1 md:hover:scale-[1.02]" 
+                                    alt="Dr. Anya Sharma"
+                                    width={600}
+                                    height={700}
+                                    className="object-cover transition-all duration-1000 scale-100 group-hover:scale-105"
                                 />
-                                {/* Signature / Name Tag - Added md: to hover effects */}
-                                <div className="absolute -bottom-6 -right-6 bg-white p-5 shadow-2xl rounded-lg max-w-xs border border-slate-100 hidden sm:block transition-all duration-500 md:hover:translate-y-1 md:hover:shadow-slate-300/50"> 
-                                    <p className="font-serif italic text-base text-slate-800 mb-2">"Talent is universal, but opportunity is not. We are here to fix that."</p>
-                                    <div className="h-px w-10 bg-indigo-500 mb-2"></div>
-                                    <p className="font-bold text-sm text-slate-900">Founder Name</p>
-                                    <p className="text-xs text-slate-500 uppercase tracking-wider">CEO, Vidya-Setu</p>
+                                <div className="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-xl p-6 z-20 border-t border-slate-100 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                                    <p className="text-slate-800 font-serif italic text-lg mb-2 leading-tight">"Talent is universal, opportunity is not."</p>
+                                    <div className="flex items-center justify-between mt-3">
+                                        <p className="text-indigo-600 font-bold text-xs uppercase tracking-widest">Dr. Anya Sharma</p>
+                                        <Sparkles className="w-4 h-4 text-purple-400" />
+                                    </div>
                                 </div>
                             </div>
-                            {/* Decorative Grid behind image - adjusted spacing */}
-                            <div className="absolute top-4 -left-4 w-full h-full border border-slate-200 rounded-xl -z-0 hidden sm:block"></div>
-                        </div>
+                        </motion.div>
                     </div>
                 </div>
             </section>
+
+            <FinalCTA />
         </main>
+    );
+}
+
+// Sub-component for Methodology Cards ensuring consistent animation
+function MethodologyCard({ icon, title, description, colorClass, delay }) {
+    return (
+        <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: delay }}
+            whileHover={{ y: -5 }}
+            className="p-8 lg:p-10 rounded-[2rem] bg-white border border-slate-100 shadow-[0_5px_30px_-10px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.1)] transition-all duration-300 group"
+        >
+            <div className={`w-16 h-16 ${colorClass.split(" ")[0]} rounded-2xl flex items-center justify-center mb-6 group-hover:bg-opacity-100 ${colorClass.split(" ")[1]} transition-colors duration-500`}>
+                {icon}
+            </div>
+            <h3 className="text-xl font-bold text-slate-900 mb-4">{title}</h3>
+            <p className="text-slate-500 text-sm leading-relaxed">
+                {description}
+            </p>
+        </motion.div>
     );
 }
