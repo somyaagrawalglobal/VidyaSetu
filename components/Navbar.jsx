@@ -22,7 +22,14 @@ export default function Navbar() {
 
   const pathname = usePathname();
 
-  const toggleMenu = () => setOpen(!open);
+  const toggleMenu = () => {
+    setOpen(!open);
+    if (!open) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+  };
 
   // Close profile dropdown when clicking outside
   useEffect(() => {
@@ -205,7 +212,7 @@ export default function Navbar() {
 
       {/* Mobile Menu Dropdown - *ANIMATION REFINED* */}
       <div
-        className={`md:hidden absolute w-full bg-white transition-all duration-300 ease-in-out ${open ? "max-h-[600px] opacity-100 shadow-xl border-t border-slate-200" : "max-h-0 opacity-0"
+        className={`md:hidden absolute w-full bg-white transition-all duration-300 ease-in-out ${open ? "max-h-[100vh] opacity-100 shadow-xl border-t border-slate-200" : "max-h-0 opacity-0"
           } overflow-hidden`}
       >
         <div className="px-4 py-6 space-y-2">
