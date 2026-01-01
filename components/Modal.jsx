@@ -57,6 +57,7 @@ export default function Modal({ isOpen, onClose, title, message, type = 'info', 
                 <div className="px-6 py-4 bg-gray-50 flex items-center justify-end gap-3">
                     {showCancel && (
                         <button
+                            type="button"
                             onClick={onClose}
                             className="px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
                         >
@@ -64,13 +65,14 @@ export default function Modal({ isOpen, onClose, title, message, type = 'info', 
                         </button>
                     )}
                     <button
+                        type="button"
                         onClick={() => {
                             if (onConfirm) onConfirm();
                             onClose();
                         }}
                         className={`px-6 py-2 text-sm font-semibold text-white rounded-lg shadow-md transition-all active:scale-95 ${type === 'danger' ? 'bg-red-600 hover:bg-red-700 shadow-red-200' :
-                                type === 'success' ? 'bg-green-600 hover:bg-green-700 shadow-green-200' :
-                                    'bg-indigo-600 hover:bg-indigo-700 shadow-indigo-200'
+                            type === 'success' ? 'bg-green-600 hover:bg-green-700 shadow-green-200' :
+                                'bg-indigo-600 hover:bg-indigo-700 shadow-indigo-200'
                             }`}
                     >
                         {confirmText}
