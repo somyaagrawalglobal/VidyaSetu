@@ -100,7 +100,7 @@ export default function Footer() {
             {/* Social Icons - Increased Size and better focus on the hover effect */}
             <div className="flex space-x-6 pt-2">
               <a
-                href="#"
+                href="https://www.instagram.com/vidyasetu2026/"
                 className={`p-2 rounded-full bg-slate-800 ${ACCENT_COLOR_CLASSES} hover:bg-indigo-900/50 transform hover:scale-110 transition-all duration-300`}
                 aria-label="Instagram"
               >

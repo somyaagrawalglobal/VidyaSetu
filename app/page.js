@@ -1,354 +1,332 @@
 "use client";
 
-import { useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion, useScroll, useTransform, useInView } from "framer-motion";
 import {
     ArrowRight,
-    ShieldCheck,
-    Cpu,
-    Globe,
-    Rocket,
-    Trophy,
+    Zap,
+    GraduationCap,
+    Briefcase,
+    CheckCircle,
+    TrendingUp,
     Sparkles,
-    Star
+    User,
+    Users,
+    Building2,
+    Trophy,
+    Target,
+    MessageCircle,
+    BookOpen,
+    Award
 } from "lucide-react";
 import FeaturedProgramsSection from "@/components/FeatureProgram";
-import PrimaryButton from "@/components/PrimaryButton";
-import FinalCTA from "@/components/CTA";
-
-// --- Animation Variants ---
-
-const fadeInUp = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-        opacity: 1,
-        y: 0,
-        transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] }
-    }
-};
-
-const staggerContainer = {
-    hidden: { opacity: 0 },
-    visible: {
-        opacity: 1,
-        transition: {
-            staggerChildren: 0.2,
-            delayChildren: 0.3
-        }
-    }
-};
 
 export default function Home() {
-    const targetRef = useRef(null);
-    const { scrollYProgress } = useScroll({
-        target: targetRef,
-        offset: ["start start", "end start"]
-    });
-
-    // Parallax effect for Hero Background
-    const yBg = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
-    const opacityBg = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
-
     return (
-        <main ref={targetRef} className="bg-slate-50 min-h-screen selection:bg-indigo-100 selection:text-indigo-900 scroll-smooth font-sans overflow-x-hidden">
+        <main className="bg-white pt-20 lg:pt-0">
 
             {/* 1. HERO SECTION */}
-            <section className="relative pt-24 pb-16 lg:pt-32 lg:pb-32 overflow-hidden min-h-[90vh] flex items-center">
+            <section className="relative pb-12 pt-10 md:pt-24 lg:pt-32 overflow-hidden bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-indigo-50/60 via-white to-white">
+                {/* Decorative Elements */}
+                <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-indigo-100/30 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
+                <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 bg-purple-100/30 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
 
-                {/* Background Elements */}
-                <motion.div style={{ y: yBg, opacity: opacityBg }} className="absolute inset-0 -z-10 h-full w-full pointer-events-none">
-                    <div className="absolute inset-0 bg-white bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:24px_24px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_0%,#000_70%,transparent_100%)] opacity-60"></div>
-                    <div className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] bg-indigo-100/40 rounded-full blur-[120px] mix-blend-multiply animate-blob"></div>
-                    <div className="absolute top-[20%] left-[-10%] w-[500px] h-[500px] bg-purple-100/40 rounded-full blur-[100px] mix-blend-multiply animate-blob animation-delay-2000"></div>
-                    <div className="absolute bottom-[-20%] left-[20%] w-[600px] h-[600px] bg-pink-50/40 rounded-full blur-[120px] mix-blend-multiply animate-blob animation-delay-4000"></div>
-                </motion.div>
-
-                <div className="max-w-7xl mx-auto px-6 lg:px-8 w-full">
-                    <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                    <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
 
                         {/* Hero Content */}
-                        <motion.div
-                            className="lg:w-1/2 text-center lg:text-left z-10"
-                            initial="hidden"
-                            animate="visible"
-                            variants={staggerContainer}
-                        >
-                            {/* Badge */}
-                            <motion.div variants={fadeInUp} className="inline-flex items-center gap-2 py-2 px-5 rounded-full bg-white/80 backdrop-blur-sm border border-indigo-100 shadow-sm text-indigo-700 text-xs font-bold tracking-wide mb-8 hover:shadow-md hover:scale-105 transition-all cursor-pointer group">
-                                <span className="relative flex h-2.5 w-2.5">
-                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
-                                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-indigo-600"></span>
-                                </span>
-                                <span className="uppercase tracking-widest group-hover:text-indigo-800 transition-colors">Cohort 2026: Applications Open</span>
-                                <ArrowRight className="w-3.5 h-3.5 text-indigo-400 group-hover:translate-x-1 transition-transform" />
-                            </motion.div>
+                        <div className="lg:w-1/2 text-center lg:text-left animate-fade-in-up">
+                            {/* Launch Pill */}
+                            <div className="inline-flex items-center gap-2 mb-4 md:mb-6 px-3 py-1 rounded-full bg-white border border-indigo-100 shadow-sm animate-fade-in">
+                                <Sparkles className="w-3.5 h-3.5 text-indigo-600 animate-pulse" />
+                                <span className="text-xs font-semibold text-indigo-700 tracking-wide uppercase">Launch Your Career</span>
+                            </div>
 
-                            {/* Heading */}
-                            <motion.h1 variants={fadeInUp} className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-900 mb-8 leading-[1.05]">
-                                The Apex <br className="hidden lg:block" />
-                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-violet-600 to-indigo-600 animate-text-gradient bg-300%">
-                                    Engineering Program.
-                                </span>
-                            </motion.h1>
+                            {/* Main Heading */}
+                            <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-gray-900 via-slate-800 to-gray-900 mb-4 md:mb-5 leading-tight tracking-tight">
+                                Learn Real <span className="text-gray-400">Skills.</span>
+                                <br />
+                                <span className="text-indigo-600">Get Real Jobs.</span>
+                            </h1>
 
-                            <motion.p variants={fadeInUp} className="text-lg md:text-xl text-slate-600 mb-10 max-w-lg mx-auto lg:mx-0 leading-relaxed font-light">
-                                A <strong className="text-slate-900 font-semibold">$1M mentorship</strong> experience condensed into a verified portfolio. Designed for the top 1% of ambitious engineers.
-                            </motion.p>
+                            {/* Description */}
+                            <p className="text-sm md:text-base text-gray-600 mb-6 md:mb-7 max-w-xl mx-auto lg:mx-0 leading-relaxed font-medium">
+                                The gap between education and employment ends here. Master outcome-driven skills with guaranteed <span className="font-semibold text-gray-900 underline decoration-indigo-200 decoration-2 underline-offset-2">On-the-Job Training</span>.
+                            </p>
 
-                            {/* Buttons */}
-                            <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row gap-5 justify-center lg:justify-start">
-                                <PrimaryButton href="/application" className="!bg-indigo-600 !text-white hover:!bg-indigo-700 !shadow-xl !shadow-indigo-600/20 font-bold h-14 px-10 rounded-2xl text-base transition-all hover:-translate-y-1">
-                                    Request Access
-                                </PrimaryButton>
-                                <a href="#curriculum" className="h-14 px-10 rounded-2xl border border-slate-200 bg-white/50 backdrop-blur-sm text-slate-600 font-medium hover:bg-white hover:border-indigo-200 hover:text-indigo-600 transition-all duration-300 flex items-center justify-center gap-2 shadow-sm hover:shadow-lg text-base group">
-                                    View Syllabus
-                                    <ArrowRight className="w-4 h-4 opacity-0 -ml-4 group-hover:opacity-100 group-hover:ml-0 transition-all duration-300" />
+                            {/* Action Buttons */}
+                            <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
+                                <Link
+                                    href="/courses"
+                                    className="group inline-flex items-center justify-center px-7 py-3 rounded-full bg-indigo-600 text-white font-semibold text-sm hover:bg-indigo-700 hover:shadow-[0_0_20px_rgba(79,70,229,0.3)] hover:-translate-y-0.5 transition-all duration-300 ring-1 ring-indigo-500 ring-offset-2"
+                                >
+                                    Explore Courses
+                                    <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                                </Link>
+                                <a
+                                    href="#methodology"
+                                    className="inline-flex items-center justify-center gap-2 px-7 py-3 rounded-full border border-gray-200 bg-white text-gray-700 font-medium text-sm hover:border-indigo-300 hover:bg-slate-50 hover:text-indigo-600 transition-all duration-300 shadow-sm hover:shadow-md"
+                                >
+                                    <Target className="w-4 h-4" />
+                                    How It Works
                                 </a>
-                            </motion.div>
-                        </motion.div>
+                            </div>
+                        </div>
 
                         {/* Hero Visual */}
-                        <motion.div
-                            className="lg:w-1/2 relative perspective-1000"
-                            initial={{ opacity: 0, x: 50, rotateY: 10 }}
-                            animate={{ opacity: 1, x: 0, rotateY: 0 }}
-                            transition={{ duration: 1, delay: 0.5, ease: "easeOut" }}
-                        >
-                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gradient-to-tr from-indigo-200/30 to-purple-200/30 rounded-full blur-3xl -z-10 animate-pulse-slow"></div>
+                        <div className="hidden md:block lg:w-1/2 relative animate-fade-in-right w-full mt-8 lg:mt-0">
+                            {/* Stats Badge */}
+                            <div className="absolute -top-4 left-0 sm:-left-6 bg-white/90 backdrop-blur-sm rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-white/20 p-3 md:p-4 z-10 flex items-center gap-3 animate-bounce-slow transition-transform duration-300 transform scale-90 md:scale-100 origin-top-left">
+                                <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-indigo-600 to-indigo-500 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-200">
+                                    <Briefcase className="w-5 h-5 md:w-6 md:h-6 text-white" />
+                                </div>
+                                <div>
+                                    <p className="text-[10px] md:text-xs font-bold text-gray-400 uppercase tracking-wider">Industry Ready</p>
+                                    <p className="text-base md:text-lg font-bold text-slate-800">OJT Projects</p>
+                                </div>
+                            </div>
 
-                            <motion.div
-                                className="relative rounded-3xl overflow-hidden shadow-2xl shadow-indigo-900/10 border-4 border-white ring-1 ring-slate-900/5 bg-slate-50 aspect-[4/3] w-full"
-                                whileHover={{ scale: 1.02, rotate: 0.5 }}
-                                transition={{ duration: 0.5 }}
-                            >
+                            {/* Hero Image */}
+                            <div className="relative w-full max-w-lg mx-auto aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl shadow-indigo-200/50 group ring-1 ring-black/5">
                                 <Image
                                     src="/assets/images/hero-gen.png"
-                                    alt="Elite mentorship session"
+                                    alt="Career success"
                                     fill
-                                    className="object-cover"
-                                    priority
-                                    sizes="(max-width: 1024px) 100vw, 50vw"
+                                    className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                                 />
-
-                                {/* Floating Badges */}
-                                <motion.div
-                                    className="absolute top-6 left-6 bg-white/90 backdrop-blur-md p-3 rounded-xl shadow-lg border border-white/50 flex items-center gap-3"
-                                    initial={{ opacity: 0, y: -20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: 1.2 }}
-                                >
-                                    <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600">
-                                        <Trophy className="w-4 h-4" />
-                                    </div>
-                                    <div>
-                                        <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Top 1%</p>
-                                        <p className="text-xs font-bold text-slate-900">Elite Talent</p>
-                                    </div>
-                                </motion.div>
-
-                                <motion.div
-                                    className="absolute bottom-6 right-6 bg-white/95 backdrop-blur-xl p-4 rounded-2xl shadow-xl border border-white/50 max-w-[200px]"
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: 1.4 }}
-                                >
-                                    <div className="flex items-center justify-between mb-2">
-                                        <div className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600">
-                                            <ShieldCheck className="w-4 h-4" />
-                                        </div>
-                                        <span className="bg-emerald-50 text-emerald-700 text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider">Verified</span>
-                                    </div>
-                                    <div>
-                                        <p className="text-slate-900 text-sm font-bold">System Architecture</p>
-                                        <div className="w-full bg-slate-100 h-1.5 rounded-full mt-2 overflow-hidden">
-                                            <motion.div
-                                                className="bg-emerald-500 h-full rounded-full"
-                                                initial={{ width: 0 }}
-                                                animate={{ width: "100%" }}
-                                                transition={{ duration: 1.5, delay: 1.8, ease: "easeInOut" }}
-                                            />
-                                        </div>
-                                    </div>
-                                </motion.div>
-                            </motion.div>
-                        </motion.div>
+                                <div className="absolute inset-0 bg-gradient-to-t from-indigo-900/40 via-transparent to-transparent opacity-60"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
+                {/* Add custom animations */}
+                <style jsx>{`
+                    @keyframes fadeInUp {
+                        from { opacity: 0; transform: translateY(20px); }
+                        to { opacity: 1; transform: translateY(0); }
+                    }
+                    @keyframes fadeIn {
+                        from { opacity: 0; }
+                        to { opacity: 1; }
+                    }
+                    @keyframes fadeInRight {
+                        from { opacity: 0; transform: translateX(20px); }
+                        to { opacity: 1; transform: translateX(0); }
+                    }
+                    @keyframes bounceSlow {
+                        0%, 100% { transform: translateY(0) scale(var(--tw-scale-x)); }
+                        50% { transform: translateY(-8px) scale(var(--tw-scale-x)); }
+                    }
+                    .animate-fade-in-up { animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+                    .animate-fade-in { animation: fadeIn 1.2s ease-out; }
+                    .animate-fade-in-right { animation: fadeInRight 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both; }
+                    .animate-bounce-slow { animation: bounceSlow 4s ease-in-out infinite; }
+                `}</style>
             </section>
 
-            {/* 2. METHODOLOGY SECTION */}
-            <section id="methodology" className="relative py-24 lg:py-32 bg-slate-50">
-                <div className="max-w-7xl mx-auto px-6 lg:px-8">
-                    <motion.div
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true, margin: "-100px" }}
-                        variants={staggerContainer}
-                        className="text-center max-w-3xl mx-auto mb-20"
-                    >
-                        <motion.h2 variants={fadeInUp} className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 tracking-tight">
-                            The <span className="text-indigo-600 relative inline-block">
-                                Cognitive Refinement
-                                <svg className="absolute w-full h-3 -bottom-1 left-0 text-indigo-200 -z-10" viewBox="0 0 100 10" preserveAspectRatio="none">
-                                    <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="8" fill="none" />
-                                </svg>
-                            </span> Cycle
-                        </motion.h2>
-                        <motion.p variants={fadeInUp} className="text-slate-600 text-lg md:text-xl leading-relaxed font-light">
-                            We don't teach. We sculpt professional identity through a proprietary, feedback-intensive loop designed for speed and excellence.
-                        </motion.p>
-                    </motion.div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        {/* Card 1 */}
-                        <MethodologyCard
-                            icon={<Cpu className="w-8 h-8 text-blue-600 group-hover:text-white transition-colors duration-500" />}
-                            title="1. Technical Refinement"
-                            description="Deep dive into high-scale systems. Learn patterns, not just syntax, with rigorous code reviews from day one."
-                            colorClass="bg-blue-50 group-hover:bg-blue-600"
-                            delay={0.1}
-                        />
+            {/* 2. THE BRIDGE METHOD */}
+            <section id="methodology" className="py-12 md:py-24 bg-white relative">
+                <div className="absolute top-0 right-0 left-0 h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    {/* Section Header */}
+                    <div className="text-center mb-12 md:mb-16">
+                        <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 tracking-tight">
+                            The <span className="text-indigo-600">Bridge</span> Method
+                        </h2>
+                        <p className="text-base md:text-lg text-gray-500 max-w-2xl mx-auto font-medium">
+                            Your structured timeline from novice to professional.
+                        </p>
+                    </div>
 
-                        {/* Card 2 - Active */}
-                        <motion.div
-                            initial={{ opacity: 0, y: 40 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.6, delay: 0.2 }}
-                            whileHover={{ y: -10 }}
-                            className="p-8 lg:p-10 rounded-[2rem] bg-indigo-600 text-white shadow-2xl shadow-indigo-600/30 relative overflow-hidden group transform"
-                        >
-                            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-[80px] pointer-events-none -mr-16 -mt-16"></div>
+                    {/* Steps Grid */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
 
-                            <div className="w-16 h-16 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center mb-8 border border-white/30 shadow-inner">
-                                <Rocket className="w-8 h-8 text-white" />
+                        {/* Step 1 */}
+                        <div className="group bg-white rounded-3xl p-8 shadow-sm border border-gray-100 hover:shadow-xl hover:shadow-indigo-500/10 hover:border-indigo-100 transition-all duration-300">
+                            <div className="w-16 h-16 bg-gradient-to-br from-indigo-50 to-white rounded-2xl flex items-center justify-center mb-6 border border-indigo-50 group-hover:scale-110 transition-transform duration-300 shadow-sm">
+                                <BookOpen className="w-8 h-8 text-indigo-600" />
                             </div>
-                            <h3 className="text-2xl font-bold text-white mb-4">2. Executive Validation</h3>
-                            <p className="text-indigo-100 text-base leading-relaxed font-light mb-8">
-                                Simulated CTO reviews. Your code is critiqued on production standards, scalability, and business impact.
+                            <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-indigo-600 transition-colors">1. Learn Skills</h3>
+                            <p className="text-base text-gray-600 leading-relaxed font-medium">
+                                Master tools via live mentorship and deep-dive modules tailored to industry needs.
                             </p>
-                            <div className="inline-flex items-center text-sm font-bold text-white uppercase tracking-wider border-b border-white/30 pb-1 group-hover:border-white transition-colors cursor-pointer">
-                                The Core Differentiator <ArrowRight className="w-4 h-4 ml-2" />
-                            </div>
-                        </motion.div>
+                        </div>
 
-                        {/* Card 3 */}
-                        <MethodologyCard
-                            icon={<Trophy className="w-8 h-8 text-purple-600 group-hover:text-white transition-colors duration-500" />}
-                            title="3. Market Ascension"
-                            description="Direct introductions to venture-backed startups. We don't just find jobs; we negotiate careers."
-                            colorClass="bg-purple-50 group-hover:bg-purple-600"
-                            delay={0.3}
-                        />
+                        {/* Step 2 */}
+                        <div className="group bg-white rounded-3xl p-8 shadow-sm border border-gray-100 hover:shadow-xl hover:shadow-indigo-500/10 hover:border-indigo-100 transition-all duration-300">
+                            <div className="w-16 h-16 bg-gradient-to-br from-indigo-50 to-white rounded-2xl flex items-center justify-center mb-6 border border-indigo-50 group-hover:scale-110 transition-transform duration-300 shadow-sm">
+                                <Users className="w-8 h-8 text-indigo-600" />
+                            </div>
+                            <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-indigo-600 transition-colors">2. Real Practice</h3>
+                            <p className="text-base text-gray-600 leading-relaxed font-medium">
+                                Join live projects and OJT simulations with senior devs. No dummy projects.
+                            </p>
+                        </div>
+
+                        {/* Step 3 */}
+                        <div className="group bg-white rounded-3xl p-8 shadow-sm border border-gray-100 hover:shadow-xl hover:shadow-emerald-500/10 hover:border-emerald-100 transition-all duration-300">
+                            <div className="w-16 h-16 bg-gradient-to-br from-emerald-50 to-white rounded-2xl flex items-center justify-center mb-6 border border-emerald-50 group-hover:scale-110 transition-transform duration-300 shadow-sm">
+                                <Briefcase className="w-8 h-8 text-emerald-600" />
+                            </div>
+                            <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-emerald-600 transition-colors">3. Get Hired</h3>
+                            <p className="text-base text-gray-600 leading-relaxed font-medium">
+                                Direct referrals to partner startups and internal roles. Your career starts here.
+                            </p>
+                        </div>
+
                     </div>
                 </div>
             </section>
 
-            {/* 3. FEATURED PROGRAMS */}
-            <div id="curriculum" className="bg-white border-t border-slate-100 relative">
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 1 }}
-                    className="py-24"
-                >
-                    <FeaturedProgramsSection />
-                </motion.div>
-            </div>
+            {/* 5. FEATURED PROGRAMS (Existing Component) */}
+            <FeaturedProgramsSection />
 
-            {/* 4. MISSION FRAMEWORK */}
-            <section className="py-24 lg:py-32 bg-slate-50 relative overflow-hidden">
-                <div className="max-w-7xl mx-auto px-6 lg:px-8">
-                    <div className="flex flex-col md:flex-row-reverse gap-16 lg:gap-24 items-center">
+            {/* 3. WHY CHOOSE US */}
+            <section className="py-12 md:py-24 bg-slate-50 relative overflow-hidden">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                    <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+                        {/* Content */}
+                        <div className="lg:w-1/2">
+                            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-10 tracking-tight">
+                                Why <span className="text-indigo-600">Choose Us?</span>
+                            </h2>
 
-                        {/* Text Side */}
-                        <motion.div
-                            className="md:w-1/2"
-                            initial="hidden"
-                            whileInView="visible"
-                            viewport={{ once: true }}
-                            variants={staggerContainer}
-                        >
-                            <motion.div variants={fadeInUp} className="inline-block px-4 py-1.5 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs font-bold uppercase tracking-wider mb-8">
-                                Why We Exist
-                            </motion.div>
-                            <motion.h2 variants={fadeInUp} className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 mb-8 tracking-tight leading-tight">
-                                Curating the <br />
-                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">Next Generation.</span>
-                            </motion.h2>
-                            <motion.div variants={fadeInUp} className="space-y-6 text-lg md:text-xl text-slate-600 font-light leading-relaxed">
-                                <p>
-                                    Excellence is non-negotiable. We exist to identify individuals with raw intelligence and give them the <strong className="text-slate-900 font-semibold underline decoration-indigo-300 decoration-2 underline-offset-4">operational context</strong> to lead.
-                                </p>
-                                <p>
-                                    This isn't mass education. It's hyper-optimization for your career trajectory.
-                                </p>
-                            </motion.div>
+                            <div className="space-y-8">
+                                {/* Feature 1 */}
+                                <div className="flex items-start gap-5 group">
+                                    <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center flex-shrink-0 shadow-md border border-indigo-50 group-hover:scale-110 transition-transform duration-300">
+                                        <Target className="w-6 h-6 text-indigo-600" />
+                                    </div>
+                                    <div>
+                                        <h3 className="text-lg font-bold text-gray-900 mb-2">Outcome-Driven Learning</h3>
+                                        <p className="text-base text-gray-500 leading-relaxed font-medium">
+                                            We looked at what 100+ CTOs want and built our courses backward from there.
+                                        </p>
+                                    </div>
+                                </div>
 
-                            <motion.button variants={fadeInUp} className="mt-10 text-indigo-600 font-bold text-lg flex items-center gap-3 group">
-                                Meet the Architect <div className="w-8 h-[2px] bg-indigo-600 group-hover:w-16 transition-all duration-300"></div>
-                            </motion.button>
-                        </motion.div>
+                                {/* Feature 2 */}
+                                <div className="flex items-start gap-5 group">
+                                    <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center flex-shrink-0 shadow-md border border-indigo-50 group-hover:scale-110 transition-transform duration-300">
+                                        <Users className="w-6 h-6 text-indigo-600" />
+                                    </div>
+                                    <div>
+                                        <h3 className="text-lg font-bold text-gray-900 mb-2">Trainer-First Marketplace</h3>
+                                        <p className="text-base text-gray-500 leading-relaxed font-medium">
+                                            Learn from engineers who code by day and teach by night. No academic fluff.
+                                        </p>
+                                    </div>
+                                </div>
 
-                        {/* Image Side */}
-                        <motion.div
-                            className="md:w-1/2 relative"
-                            initial={{ opacity: 0, scale: 0.9, rotate: -2 }}
-                            whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.8 }}
-                        >
-                            {/* Decorative Frame */}
-                            <div className="absolute -inset-4 border-2 border-indigo-100/50 rounded-[2rem] -z-10 rotate-3 animate-pulse-slow"></div>
-                            <div className="absolute -inset-4 border-2 border-purple-100/50 rounded-[2rem] -z-10 -rotate-3 animate-pulse-slow animation-delay-2000"></div>
-
-                            <div className="relative z-10 rounded-2xl overflow-hidden shadow-2xl shadow-slate-200 group max-w-sm mx-auto md:max-w-none">
-                                <Image
-                                    src="/assets/images/hero-img.jpeg"
-                                    alt="Dr. Anya Sharma"
-                                    width={600}
-                                    height={700}
-                                    className="object-cover transition-all duration-1000 scale-100 group-hover:scale-105"
-                                />
-                                <div className="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-xl p-6 z-20 border-t border-slate-100 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                                    <p className="text-slate-800 font-serif italic text-lg mb-2 leading-tight">"Talent is universal, opportunity is not."</p>
-                                    <div className="flex items-center justify-between mt-3">
-                                        <p className="text-indigo-600 font-bold text-xs uppercase tracking-widest">Dr. Anya Sharma</p>
-                                        <Sparkles className="w-4 h-4 text-purple-400" />
+                                {/* Feature 3 */}
+                                <div className="flex items-start gap-5 group">
+                                    <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center flex-shrink-0 shadow-md border border-pink-50 group-hover:scale-110 transition-transform duration-300">
+                                        <Award className="w-6 h-6 text-pink-600" />
+                                    </div>
+                                    <div>
+                                        <h3 className="text-lg font-bold text-gray-900 mb-2">Guaranteed Internships</h3>
+                                        <p className="text-base text-gray-500 leading-relaxed font-medium">
+                                            Theory is free. We sell experience. You will work on real products.
+                                        </p>
                                     </div>
                                 </div>
                             </div>
-                        </motion.div>
+                        </div>
+
+                        {/* Visual */}
+                        <div className="lg:w-1/2 relative">
+                            <div className="absolute inset-0 bg-indigo-600 rounded-3xl rotate-3 opacity-10"></div>
+                            <div className="relative rounded-3xl overflow-hidden shadow-2xl ring-1 ring-black/5">
+                                <Image
+                                    src="/assets/images/hero-img.jpeg"
+                                    alt="Collaborative learning"
+                                    width={700}
+                                    height={500}
+                                    className="object-cover w-full h-auto hover:scale-105 transition-transform duration-700 ease-out"
+                                />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
 
-            <FinalCTA />
-        </main>
-    );
-}
+            {/* 7. FOUNDER SECTION */}
+            <section className="py-12 md:py-24 lg:py-28 bg-white overflow-hidden">
+                <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl p-8 md:p-12 lg:p-16 shadow-2xl relative overflow-hidden group">
+                        {/* Background Pattern */}
+                        <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500/20 rounded-full blur-[100px] opacity-40 group-hover:opacity-60 transition-opacity duration-700"></div>
+                        <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-500/20 rounded-full blur-[80px] opacity-40"></div>
 
-// Sub-component for Methodology Cards ensuring consistent animation
-function MethodologyCard({ icon, title, description, colorClass, delay }) {
-    return (
-        <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: delay }}
-            whileHover={{ y: -5 }}
-            className="p-8 lg:p-10 rounded-[2rem] bg-white border border-slate-100 shadow-[0_5px_30px_-10px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.1)] transition-all duration-300 group"
-        >
-            <div className={`w-16 h-16 ${colorClass.split(" ")[0]} rounded-2xl flex items-center justify-center mb-6 group-hover:bg-opacity-100 ${colorClass.split(" ")[1]} transition-colors duration-500`}>
-                {icon}
-            </div>
-            <h3 className="text-xl font-bold text-slate-900 mb-4">{title}</h3>
-            <p className="text-slate-500 text-sm leading-relaxed">
-                {description}
-            </p>
-        </motion.div>
+                        <div className="flex flex-col md:flex-row items-center gap-10 md:gap-16 relative z-10">
+                            {/* Founder Image */}
+                            <div className="relative w-40 h-40 md:w-56 md:h-56 lg:w-64 lg:h-64 rounded-full md:rounded-3xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] border-4 border-slate-700 flex-shrink-0">
+                                <Image
+                                    src="/assets/images/hero-img.jpeg"
+                                    alt="Somya Agrawal - Founder"
+                                    fill
+                                    className="object-cover transition-transform duration-700 hover:scale-105"
+                                />
+                            </div>
+
+                            {/* Founder Content */}
+                            <div className="flex-1 text-center md:text-left space-y-6">
+                                <div className="inline-block px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-indigo-400 text-[10px] md:text-[11px] font-bold uppercase tracking-wider shadow-sm">
+                                    Meet The Founder
+                                </div>
+                                <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white tracking-tight">Somya Agrawal</h2>
+
+                                <div className="relative">
+                                    <div className="absolute -left-5 -top-3 opacity-20 hidden md:block">
+                                        <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor" className="text-indigo-400"><path d="M14.017 21L14.017 18C14.017 16.082 14.321 15.243 14.929 14.485C15.537 13.727 16.591 13 18.09 12.219V9.10901C15.823 10.046 14.471 10.875 14.032 11.597C13.593 12.319 13.374 13.568 13.374 15.344V21H14.017ZM5.016 21L5.016 18C5.016 16.082 5.32 15.243 5.928 14.485C6.536 13.727 7.59 13 9.089 12.219V9.10901C6.822 10.046 5.47 10.875 5.031 11.597C4.592 12.319 4.373 13.568 4.373 15.344V21H5.016Z" /></svg>
+                                    </div>
+                                    <p className="text-sm md:text-base text-indigo-50 leading-relaxed font-medium pl-0 md:pl-2">
+                                        "Led by vision-driven founder Somya Agrawal, Vidya-Setu bridges the gap between education and employment. We believe certificates are just paper—real experience is the currency of the modern job market."
+                                    </p>
+                                </div>
+
+                                <div className="flex items-center justify-center md:justify-start gap-4 pt-2">
+                                    <Link href="#" className="w-10 h-10 md:w-11 md:h-11 bg-slate-800 border border-slate-700 rounded-xl flex items-center justify-center text-indigo-400 hover:bg-indigo-600 hover:text-white hover:border-indigo-600 transition-all duration-300 shadow-lg hover:shadow-indigo-500/20">
+                                        <Building2 className="w-4 h-4 md:w-5 md:h-5" />
+                                    </Link>
+                                    <Link href="#" className="w-10 h-10 md:w-11 md:h-11 bg-slate-800 border border-slate-700 rounded-xl flex items-center justify-center text-indigo-400 hover:bg-indigo-600 hover:text-white hover:border-indigo-600 transition-all duration-300 shadow-lg hover:shadow-indigo-500/20">
+                                        <Users className="w-4 h-4 md:w-5 md:h-5" />
+                                    </Link>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* 5. LEVEL UP CTA */}
+            <section className="py-12 md:py-24 bg-white">
+                <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                    <h2 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 mb-4 leading-tight">
+                        Ready to <span className="text-indigo-600">Level Up?</span>
+                    </h2>
+                    <p className="text-base md:text-lg text-gray-600 mb-10 max-w-2xl mx-auto">
+                        Join the ecosystem where skills meet opportunity.
+                    </p>
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                        <Link
+                            href="/courses"
+                            className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 md:px-10 md:py-4 rounded-full bg-indigo-600 text-white font-medium text-base hover:bg-indigo-700 transition-colors duration-200 shadow-lg shadow-indigo-600/30"
+                        >
+                            Start Journey
+                        </Link>
+                        <a
+                            href="#"
+                            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 md:px-10 md:py-4 rounded-full border-2 border-gray-300 bg-white text-gray-700 font-medium text-base hover:border-gray-400 transition-colors duration-200"
+                        >
+                            <MessageCircle className="w-5 h-5 text-emerald-600" />
+                            WhatsApp
+                        </a>
+                    </div>
+                </div>
+            </section>
+        </main>
     );
 }

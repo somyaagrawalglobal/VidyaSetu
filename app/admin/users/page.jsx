@@ -24,6 +24,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/components/ToastContext';
 import Modal from '@/components/Modal';
+import Loader from '@/components/Loader';
 
 export default function UserManagementPage() {
     const [users, setUsers] = useState([]);
@@ -159,44 +160,64 @@ export default function UserManagementPage() {
         user.email.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    if (loading) return (
-        <div className="flex items-center justify-center min-h-screen bg-slate-50 pt-24">
-            <Loader2 className="w-12 h-12 text-indigo-600 animate-spin" />
-        </div>
-    );
+    if (loading) return <Loader text="Synchronizing user data..." />;
 
     return (
         <div className="min-h-screen bg-slate-50 pt-28 pb-12 px-4 sm:px-6 lg:px-8 font-sans">
             <div className="max-w-7xl mx-auto space-y-6">
 
                 {/* Header Section */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                    <div className="flex items-center gap-4">
-                        <Link href="/dashboard" className="p-2 bg-gray-50 rounded-lg text-gray-400 hover:text-indigo-600 transition-colors">
-                            <ChevronLeft className="w-5 h-5" />
-                        </Link>
-                        <div>
-                            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">User Management</h1>
-                            <p className="text-slate-500 mt-1">Manage platform students, instructors, and admins.</p>
+                <div className="relative overflow-hidden bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm">
+                    {/* Background Decorative Elements */}
+                    <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-indigo-50 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
+                    <div className="absolute bottom-0 left-0 -ml-16 -mb-16 w-64 h-64 bg-amber-50 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
+
+                    <div className="relative flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+                        <div className="flex items-start gap-4">
+                            <Link
+                                href="/dashboard"
+                                className="mt-1 p-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-400 hover:text-indigo-600 hover:border-indigo-100 hover:bg-indigo-50 transition-all duration-300 group"
+                            >
+                                <ChevronLeft className="w-5 h-5 group-hover:-translate-x-0.5 transition-transform" />
+                            </Link>
+                            <div>
+                                <div className="flex items-center gap-2 mb-1">
+                                    <span className="px-2 py-0.5 bg-indigo-50 text-indigo-600 text-[10px] font-bold uppercase tracking-wider rounded-md border border-indigo-100">Access Control</span>
+                                    <span className="w-1 h-1 bg-slate-300 rounded-full"></span>
+                                    <span className="text-slate-400 text-[10px] font-bold uppercase tracking-wider">{users.length} Registered Members</span>
+                                </div>
+                                <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
+                                    User <span className="text-indigo-600">Database</span>
+                                </h1>
+                                <p className="text-slate-500 mt-1 font-medium text-sm">
+                                    Manage member privileges, roles, and platform permissions.
+                                </p>
+                            </div>
                         </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                        <div className="px-4 py-2 bg-indigo-50 text-indigo-700 rounded-xl font-bold text-sm">
-                            Total: {users.length}
+
+                        <div className="flex items-center gap-3">
+                            <div className="px-4 py-2 bg-white border border-slate-200 rounded-xl flex flex-col items-center justify-center min-w-[80px] shadow-sm">
+                                <span className="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">Total Members</span>
+                                <span className="text-lg font-black text-slate-800">{users.length}</span>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                {/* Filters */}
-                <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-                    <div className="relative w-full sm:max-w-md">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <Search className="h-5 w-5 text-gray-400" />
+                {/* Filters & Search */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
+                    <div className="lg:col-span-8">
+                        {/* Placeholder for future tabs if needed (e.g. active, banned, roles) */}
+                    </div>
+
+                    <div className="lg:col-span-4 relative group">
+                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                            <Search className="h-4 w-4 text-slate-400 group-focus-within:text-indigo-500 transition-colors" />
                         </div>
                         <input
                             type="text"
-                            placeholder="Find user by name or email..."
-                            className="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-xl bg-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-sm shadow-sm"
+                            placeholder="Find member by name or email..."
+                            className="block w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl bg-white placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-indigo-500/5 focus:border-indigo-500 text-sm transition-all shadow-sm"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
@@ -204,7 +225,7 @@ export default function UserManagementPage() {
                 </div>
 
                 {/* Users Table */}
-                <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
                     <div className="overflow-x-auto">
                         <table className="min-w-full divide-y divide-gray-100">
                             <thead className="bg-gray-50">
@@ -273,23 +294,25 @@ export default function UserManagementPage() {
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                             <div className="flex justify-end gap-2">
-                                                <Link
-                                                    href={`/admin/users/${user._id}/enrollments`}
-                                                    className="p-2 text-gray-400 hover:text-emerald-600 transition-colors bg-gray-50 rounded-lg"
-                                                    title="View Enrollments"
-                                                >
-                                                    <BookOpen className="w-4 h-4" />
-                                                </Link>
+                                                {user.roles.includes('Student') && (
+                                                    <Link
+                                                        href={`/admin/users/${user._id}/enrollments`}
+                                                        className="p-2 text-slate-400 hover:text-emerald-600 transition-colors bg-slate-50 border border-slate-200 rounded-lg"
+                                                        title="View Enrollments"
+                                                    >
+                                                        <BookOpen className="w-4 h-4" />
+                                                    </Link>
+                                                )}
                                                 <button
                                                     onClick={() => handleEditUser(user)}
-                                                    className="p-2 text-gray-400 hover:text-indigo-600 transition-colors bg-gray-50 rounded-lg"
+                                                    className="p-2 text-slate-400 hover:text-indigo-600 transition-colors bg-slate-50 border border-slate-200 rounded-lg"
                                                     title="Edit User"
                                                 >
                                                     <Edit2 className="w-4 h-4" />
                                                 </button>
                                                 <button
                                                     onClick={() => handleDeleteUser(user)}
-                                                    className="p-2 text-gray-400 hover:text-red-600 transition-colors bg-gray-50 rounded-lg"
+                                                    className="p-2 text-slate-400 hover:text-red-600 transition-colors bg-slate-50 border border-slate-200 rounded-lg"
                                                     title="Delete User"
                                                 >
                                                     <Trash2 className="w-4 h-4" />
@@ -318,7 +341,7 @@ export default function UserManagementPage() {
             {/* Edit User Modal */}
             {editModal.isOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
-                    <div className="bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in duration-300">
+                    <div className="bg-white rounded-xl shadow-2xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in duration-300">
                         <div className="p-6 border-b border-gray-100 flex items-center justify-between">
                             <h3 className="text-xl font-bold text-gray-900">Edit User Details</h3>
                             <button onClick={() => setEditModal({ isOpen: false, user: null })} className="p-2 hover:bg-gray-100 rounded-full transition-colors">

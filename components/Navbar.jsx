@@ -53,14 +53,11 @@ export default function Navbar() {
   };
 
   return (
-    <nav
-      className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled
-        ? "bg-white/80 backdrop-blur-md border-b border-slate-200/50 shadow-sm py-2"
-        : "bg-transparent py-4 border-b border-transparent"
-        }`}
-    >
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="flex justify-between items-center h-10">
+    // UI Improvement 1: Add backdrop-blur and a subtle shadow for a modern "glassy" sticky effect
+    <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-lg border-b border-slate-200/60 shadow-sm">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Adjusted h-16 (4rem) is standard and clean for h-18 was non-standard */}
+        <div className="flex justify-between items-center h-16">
 
           {/* Logo Section */}
           <div className="flex-shrink-0 flex items-center">
@@ -81,8 +78,8 @@ export default function Navbar() {
             </Link>
           </div>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-6">
+          {/* Desktop Navigation Links */}
+          <div className="hidden md:flex items-center space-x-8">
             {navItems.map((item) => {
               const isActive = item.href === pathname || (item.href !== '/' && pathname.startsWith(item.href));
 
@@ -90,16 +87,14 @@ export default function Navbar() {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`
-                    relative py-2 text-sm font-medium transition-colors duration-300
-                    ${isActive ? "text-indigo-600" : "text-slate-600 hover:text-indigo-600"}
-                    
-                    after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-indigo-600 
-                    after:transition-transform after:duration-300 after:ease-in-out
-                    ${isActive ? "after:scale-x-100" : "after:scale-x-0 hover:after:scale-x-100"}
-                  `}
+                  className={`relative group py-1 text-sm font-medium transition-colors duration-300 focus:outline-none ${isActive ? "text-indigo-600" : "text-slate-600 hover:text-indigo-600"
+                    }`}
                 >
-                  {item.name}
+                  <span>{item.name}</span>
+                  <span
+                    className={`absolute bottom-0 left-0 h-[2px] bg-indigo-600 transition-all duration-300 ease-out ${isActive ? "w-full" : "w-0 group-hover:w-full group-focus-visible:w-full"
+                      }`}
+                  />
                 </Link>
               );
             })}
@@ -124,10 +119,22 @@ export default function Navbar() {
                 </button>
 
                 {profileOpen && (
-                  <div className="absolute right-0 mt-4 w-72 bg-white rounded-2xl shadow-xl ring-1 ring-slate-200 focus:outline-none animate-in fade-in slide-in-from-top-2 duration-200 border border-slate-100 p-2 z-50">
-                    <div className="px-4 py-3 mb-2">
-                      <p className="text-sm font-bold text-slate-900">{user.firstName} {user.lastName}</p>
-                      <p className="text-xs text-slate-500 truncate">{user.email}</p>
+                  <div className="absolute right-0 mt-3 w-64 bg-white rounded-xl shadow-2xl ring-1 ring-black/5 focus:outline-none animate-in fade-in slide-in-from-top-2 duration-200 overflow-hidden">
+
+                    {/* User Header in Dropdown */}
+                    <div className="px-5 py-4 bg-indigo-50/50 border-b border-indigo-100">
+                      <div className="flex items-center justify-between mb-1">
+                        <p className="text-sm font-extrabold text-slate-900">{user.firstName} {user.lastName}</p>
+                        {user.roles && (
+                          <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-md border uppercase tracking-wider ${user.roles.includes('Admin') ? 'bg-purple-50 text-purple-600 border-purple-100' :
+                            user.roles.includes('Instructor') ? 'bg-indigo-50 text-indigo-600 border-indigo-100' :
+                              'bg-slate-50 text-slate-600 border-slate-100'
+                            }`}>
+                            {user.roles.includes('Admin') ? 'Admin' : user.roles.includes('Instructor') ? 'Instructor' : 'Student'}
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-xs text-indigo-700 truncate">{user.email}</p>
                     </div>
 
                     <Link
@@ -163,9 +170,10 @@ export default function Navbar() {
               <div className="flex items-center gap-3">
                 <Link
                   href="/login"
-                  className="px-5 py-2 text-sm font-semibold text-slate-600 hover:text-indigo-600 transition-colors"
+                  className="relative group text-sm font-medium text-slate-700 hover:text-indigo-600 transition-colors focus:outline-none"
                 >
-                  Log in
+                  <span>Log in</span>
+                  <span className="" />
                 </Link>
                 <Link
                   href="/register"
