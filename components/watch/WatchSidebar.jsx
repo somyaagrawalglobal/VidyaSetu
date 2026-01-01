@@ -28,7 +28,7 @@ export default function WatchSidebar({ modules, activeLesson, onLessonSelect, co
             )}
 
             <aside
-                className={`fixed inset-y-0 left-0 z-50 w-80 lg:w-96 bg-white border-r border-slate-200 flex flex-col h-full overflow-y-auto scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-transparent shrink-0 shadow-2xl lg:shadow-sm lg:static transition-transform duration-300 transform 
+                className={`fixed inset-y-0 left-0 z-50 w-80 lg:w-96 bg-white border-r border-slate-200 flex flex-col h-full overflow-y-auto scrollbar-none shrink-0 shadow-2xl lg:shadow-sm lg:static transition-transform duration-300 transform 
                     ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
             >
                 <div className="p-5 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
@@ -43,7 +43,7 @@ export default function WatchSidebar({ modules, activeLesson, onLessonSelect, co
                     </button>
                 </div>
 
-                <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-transparent">
+                <div className="flex-1 overflow-y-auto scrollbar-none">
                     {modules.map((module, mIndex) => {
                         const isExpanded = expandedModules.includes(mIndex);
                         const completedInModule = module.lessons.filter(l => completedLessons.includes(l._id)).length;
