@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Clock, Zap, DollarSign, BookOpen, User, Loader2 } from "lucide-react";
+import { ArrowRight, Clock, Zap, DollarSign, BookOpen, User, Loader2, Sparkles } from "lucide-react";
 // Assuming ProgramBadge is a separate component and properly styled for responsiveness
 import ProgramBadge from "./ProgramBadge";
 import Loader from "./Loader";
@@ -65,12 +65,11 @@ export default function FeaturedProgramsSection() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
                 {/* Header and CTA */}
-                {/* *RESPONSIVE FIX*: Ensure items stack nicely on small screens (flex-col) and align text center before sm breakpoint */}
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-10 sm:mb-16 text-center sm:text-left">
-                    {/* Removed data-aos="fade-right" */}
-                    <div className="w-full sm:w-auto mb-6 sm:mb-0">
-                        {/* Center badge on mobile, left on larger screens */}
-                        <div className="inline-flex items-center justify-center sm:justify-start w-full sm:w-auto gap-2 px-3 py-1 rounded-md bg-indigo-50 text-indigo-700 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider mb-4 border border-indigo-100/50">
+                <div className="flex flex-col sm:flex-row justify-between items-center sm:items-end mb-10 sm:mb-16 text-center sm:text-left">
+                    <div className="w-full sm:w-auto mb-8 sm:mb-0">
+                        {/* Center pill on mobile, left on larger screens */}
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider mb-4 border border-indigo-100/50 shadow-sm mx-auto sm:mx-0">
+                            <Sparkles className="w-3 h-3 text-indigo-500" />
                             Our Best-Sellers
                         </div>
                         {/* Responsive Heading Size: 3xl on mobile, 4xl on desktop */}
@@ -78,17 +77,17 @@ export default function FeaturedProgramsSection() {
                             Featured <span className="text-indigo-600">Programs</span>
                         </h2>
                         {/* Responsive Subtitle: max-w-none on mobile for centered text */}
-                        <p className="text-sm text-slate-500 mt-3 font-medium max-w-full sm:max-w-xl mx-auto sm:mx-0 leading-relaxed">
+                        <p className="text-sm text-slate-500 mt-4 font-medium max-w-full sm:max-w-xl mx-auto sm:mx-0 leading-relaxed">
                             Industry-aligned certification programs designed by experts to make you job-ready in weeks.
                         </p>
                     </div>
 
-                    {/* CTA Link - Removed data-aos="fade-left", added md: to limit hover animation */}
+                    {/* CTA Link */}
                     <Link
                         href="/courses"
-                        className="group inline-flex items-center gap-2 text-indigo-600 font-bold text-xs uppercase tracking-widest hover:text-indigo-800 transition-all border-b-2 border-transparent hover:border-indigo-600 pb-1 flex-shrink-0 mx-auto sm:mx-0"
+                        className="group inline-flex items-center gap-2 text-indigo-600 font-bold text-xs uppercase tracking-widest hover:text-indigo-800 transition-all border-b-2 border-transparent hover:border-indigo-600 pb-1 flex-shrink-0"
                     >
-                        Explore All Path <ArrowRight className="w-4 h-4 transition-transform group-hover:md:translate-x-1" />
+                        Explore All Paths <ArrowRight className="w-4 h-4 transition-transform group-hover:md:translate-x-1" />
                     </Link>
                 </div>
 
