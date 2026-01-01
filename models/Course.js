@@ -82,6 +82,15 @@ const CourseSchema = new mongoose.Schema({
         type: Date,
         default: null,
     },
+    payoutStatus: {
+        type: String,
+        enum: ['Pending', 'Paid'],
+        default: 'Pending',
+    },
+    payoutTransactionId: {
+        type: String,
+        default: null,
+    },
 }, {
     timestamps: true,
 });

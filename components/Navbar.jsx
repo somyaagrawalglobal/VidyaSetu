@@ -22,7 +22,14 @@ export default function Navbar() {
 
   const pathname = usePathname();
 
-  const toggleMenu = () => setOpen(!open);
+  const toggleMenu = () => {
+    setOpen(!open);
+    if (!open) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+  };
 
   // Close profile dropdown when clicking outside
   useEffect(() => {
@@ -48,7 +55,7 @@ export default function Navbar() {
     <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-lg border-b border-slate-200/60 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Adjusted h-16 (4rem) is standard and clean for h-18 was non-standard */}
-        <div className="flex justify-between items-center h-16"> 
+        <div className="flex justify-between items-center h-16">
 
           {/* Logo Section - *OPTIMIZED SIZE* */}
           <div className="flex-shrink-0 flex items-center">
@@ -75,22 +82,22 @@ export default function Navbar() {
           </div>
 
           {/* Desktop Navigation Links */}
-          <div className="hidden md:flex items-center space-x-1">
+          <div className="hidden md:flex items-center space-x-8">
             {navItems.map((item) => {
               const isActive = item.href === pathname || (item.href !== '/' && pathname.startsWith(item.href));
-
-              // Refined active link styling (using a slightly bolder look)
-              const linkClasses = isActive
-                ? "px-4 py-2 text-sm font-bold text-indigo-700 bg-indigo-100 rounded-full transition-all duration-200"
-                : "px-4 py-2 text-sm font-medium text-slate-700 hover:text-indigo-600 hover:bg-indigo-50 rounded-full transition-all duration-200";
 
               return (
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={linkClasses}
+                  className={`relative group py-1 text-sm font-medium transition-colors duration-300 focus:outline-none ${isActive ? "text-indigo-600" : "text-slate-600 hover:text-indigo-600"
+                    }`}
                 >
-                  {item.name}
+                  <span>{item.name}</span>
+                  <span
+                    className={`absolute bottom-0 left-0 h-[2px] bg-indigo-600 transition-all duration-300 ease-out ${isActive ? "w-full" : "w-0 group-hover:w-full group-focus-visible:w-full"
+                      }`}
+                  />
                 </Link>
               );
             })}
@@ -125,8 +132,18 @@ export default function Navbar() {
 
                     {/* User Header in Dropdown */}
                     <div className="px-5 py-4 bg-indigo-50/50 border-b border-indigo-100">
-                      <p className="text-sm font-extrabold text-slate-900">{user.firstName} {user.lastName}</p>
-                      <p className="text-xs text-indigo-700 truncate mt-0.5">{user.email}</p>
+                      <div className="flex items-center justify-between mb-1">
+                        <p className="text-sm font-extrabold text-slate-900">{user.firstName} {user.lastName}</p>
+                        {user.roles && (
+                          <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-md border uppercase tracking-wider ${user.roles.includes('Admin') ? 'bg-purple-50 text-purple-600 border-purple-100' :
+                            user.roles.includes('Instructor') ? 'bg-indigo-50 text-indigo-600 border-indigo-100' :
+                              'bg-slate-50 text-slate-600 border-slate-100'
+                            }`}>
+                            {user.roles.includes('Admin') ? 'Admin' : user.roles.includes('Instructor') ? 'Instructor' : 'Student'}
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-xs text-indigo-700 truncate">{user.email}</p>
                     </div>
 
                     <div className="p-2 space-y-1">
@@ -167,9 +184,10 @@ export default function Navbar() {
               <div className="flex items-center gap-4">
                 <Link
                   href="/login"
-                  className="text-sm font-medium text-slate-700 hover:text-indigo-600 transition-colors"
+                  className="relative group text-sm font-medium text-slate-700 hover:text-indigo-600 transition-colors focus:outline-none"
                 >
-                  Log in
+                  <span>Log in</span>
+                  <span className="" />
                 </Link>
                 <Link
                   href="/register"
@@ -194,7 +212,7 @@ export default function Navbar() {
 
       {/* Mobile Menu Dropdown - *ANIMATION REFINED* */}
       <div
-        className={`md:hidden absolute w-full bg-white transition-all duration-300 ease-in-out ${open ? "max-h-[600px] opacity-100 shadow-xl border-t border-slate-200" : "max-h-0 opacity-0"
+        className={`md:hidden absolute w-full bg-white transition-all duration-300 ease-in-out ${open ? "max-h-[100vh] opacity-100 shadow-xl border-t border-slate-200" : "max-h-0 opacity-0"
           } overflow-hidden`}
       >
         <div className="px-4 py-6 space-y-2">

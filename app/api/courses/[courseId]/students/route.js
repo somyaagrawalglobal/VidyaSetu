@@ -46,10 +46,13 @@ export async function GET(request, { params }) {
         const { course } = auth;
 
         // 1. Get all completed orders for this course
-        const enrollments = await Order.find({
+        let enrollments = await Order.find({
             course: course._id,
             status: 'completed'
-        }).populate('user', 'firstName lastName email profileImage');
+        }).populate('user', 'firstName lastName email profileImage roles');
+
+        // Filter to only include users with 'Student' role
+        enrollments = enrollments.filter(order => order.user && order.user.roles && order.user.roles.includes('Student'));
 
         // 2. Calculate Total Earnings
         const totalEarnings = enrollments.reduce((sum, order) => sum + (order.actualAmount || 0), 0);
@@ -106,10 +109,14 @@ export async function PUT(request, { params }) {
             { _id: orderId, course: course._id },
             { accessStatus },
             { new: true }
-        );
+        ).populate('user', 'roles');
 
         if (!updatedOrder) {
             return NextResponse.json({ success: false, message: 'Enrollment not found' }, { status: 404 });
+        }
+
+        if (!updatedOrder.user || !updatedOrder.user.roles.includes('Student')) {
+            return NextResponse.json({ success: false, message: 'Status management is only available for students' }, { status: 400 });
         }
 
         return NextResponse.json({ success: true, message: `Student ${accessStatus === 'blocked' ? 'blocked' : 'unblocked'} successfully` });

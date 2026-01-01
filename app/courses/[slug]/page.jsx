@@ -14,11 +14,13 @@ import {
     BarChart,
     User,
     Share2,
-    Heart
+    Heart,
+    Edit3
 } from 'lucide-react';
 
 import VideoPlayerModal from '@/components/VideoPlayerModal';
 import EnrollmentModal from '@/components/EnrollmentModal';
+import Loader from '@/components/Loader';
 
 const loadRazorpay = () => {
     return new Promise((resolve) => {
@@ -42,6 +44,7 @@ export default function CourseDetails({ params }) {
     const [loading, setLoading] = useState(true);
     const [isEnrolled, setIsEnrolled] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
+    const [isInstructor, setIsInstructor] = useState(false);
     const [activeModule, setActiveModule] = useState(0);
     const [previewModal, setPreviewModal] = useState({ isOpen: false, videoId: '', title: '' });
     const [isEnrollModalOpen, setIsEnrollModalOpen] = useState(false);
@@ -60,6 +63,7 @@ export default function CourseDetails({ params }) {
                     setCourse(data.course);
                     setIsEnrolled(data.isEnrolled);
                     setIsAdmin(data.isAdmin);
+                    setIsInstructor(data.isInstructor);
                 }
             } catch (error) {
                 console.error('Error:', error);
@@ -84,11 +88,7 @@ export default function CourseDetails({ params }) {
         alert('Course link copied to clipboard!');
     };
 
-    if (loading) return (
-        <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
-        </div>
-    );
+    if (loading) return <Loader text="Unlocking course secrets..." />;
 
     if (!course) return (
         <div className="min-h-screen bg-slate-50 pt-24 text-center">
@@ -281,7 +281,7 @@ export default function CourseDetails({ params }) {
                                 className="relative h-48 w-full group cursor-pointer overflow-hidden"
                                 onClick={() => course.modules?.[0]?.lessons?.[0]?.videoId && openPreview(course.modules[0].lessons[0].videoId, "Course Preview")}
                             >
-                                <Image src={course.thumbnail} alt={course.title} fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
+                                <img src={course.thumbnail} alt={course.title} className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                                 <div className="absolute inset-0 bg-black/40 flex items-center justify-center group-hover:bg-black/50 transition-colors">
                                     <div className="w-16 h-16 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform">
                                         <PlayCircle className="w-8 h-8 text-white fill-current" />
@@ -316,6 +316,16 @@ export default function CourseDetails({ params }) {
                                         className="w-full bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-bold py-3.5 rounded-xl mb-3 shadow-lg shadow-indigo-200 transition-all transform active:scale-95"
                                     >
                                         {course.price === 0 ? 'Enroll Now' : 'Buy Now'}
+                                    </button>
+                                )}
+
+                                {(isAdmin || isInstructor) && (
+                                    <button
+                                        onClick={() => router.push(`/admin/courses/edit/${course._id}`)}
+                                        className="w-full bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 text-sm font-bold py-3 rounded-xl mb-3 flex items-center justify-center gap-2 transition-all"
+                                    >
+                                        <Edit3 className="w-4 h-4" />
+                                        Edit Course
                                     </button>
                                 )}
 
@@ -382,6 +392,6 @@ export default function CourseDetails({ params }) {
                 videoId={previewModal.videoId}
                 title={previewModal.title}
             />
-        </div>
+        </div >
     );
 }

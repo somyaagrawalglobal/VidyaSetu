@@ -32,13 +32,10 @@ export default function CourseCard({ course, enrolled = false }) {
             <div className="relative h-56 flex items-center justify-center overflow-hidden">
                 {/* Course Image */}
                 {course.thumbnail ? (
-                    <Image
+                    <img
                         src={course.thumbnail}
                         alt={course.title}
-                        fill
-                        style={{ objectFit: 'cover' }}
-                        className="transition-all duration-1000 group-hover:scale-110"
-                        sizes="(max-width: 768px) 100vw, 33vw"
+                        className="absolute inset-0 w-full h-full object-cover transition-all duration-1000 group-hover:scale-110"
                     />
                 ) : (
                     <div className="w-full h-full bg-slate-100 flex items-center justify-center text-slate-400">

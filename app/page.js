@@ -1,254 +1,334 @@
 "use client";
-
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { 
-    ArrowRight, 
-    Zap, 
-    GraduationCap, 
-    Briefcase, 
-    CheckCircle, 
-    TrendingUp, 
-    Sparkles, 
-    User,
+import {
+    ArrowRight,
+    Zap,
+    GraduationCap,
+    Briefcase,
+    CheckCircle,
+    TrendingUp,
+    Sparkles,
     Users,
     Building2,
     Trophy,
-    ArrowUpRight
-} from "lucide-react"; 
+    Target,
+    MessageCircle,
+    BookOpen,
+    Star,
+    ShieldCheck,
+    Globe,
+    ChevronRight,
+    PlayCircle,
+    Rocket,
+    Code
+} from "lucide-react";
 import FeaturedProgramsSection from "@/components/FeatureProgram";
-import PrimaryButton from "@/components/PrimaryButton";
-import { useEffect } from "react"; // Import useEffect for potential AOS initialization
 
 export default function Home() {
-    
-    // NOTE: If you are using an external library like AOS (Animate On Scroll),
-    // you must initialize it here. The best way to disable AOS for mobile is within the init function.
-    // However, since we cannot control the external AOS configuration here, we will remove 
-    // the data-aos attributes from the JSX for maximum compatibility.
+    const [mounted, setMounted] = useState(false);
 
-    // If using AOS, you should initialize it like this in your main entry point:
-    /*
     useEffect(() => {
-        // Assuming AOS library is available globally
-        if (typeof window !== 'undefined' && typeof AOS !== 'undefined') {
-            AOS.init({ 
-                // Disables AOS for devices with screens narrower than 768px (standard Tailwind 'md')
-                disable: 'phone', 
-                once: true 
-            }); 
-        }
+        setMounted(true);
     }, []);
-    */
+
+    const pedagogySteps = [
+        {
+            title: "Expert-Led Training",
+            desc: "Master high-demand skills through live sessions led by industry veterans who've built at scale.",
+            icon: GraduationCap,
+            step: "01",
+            gradient: "from-indigo-500 to-violet-500"
+        },
+        {
+            title: "Hands-on Projects",
+            desc: "Apply your knowledge to real-world industrial projects that mirror actual workplace challenges.",
+            icon: Target,
+            step: "02",
+            gradient: "from-violet-500 to-rose-500"
+        },
+        {
+            title: "Career Acceleration",
+            desc: "Get personalized career coaching, resume workshops, and direct access to our hiring network.",
+            icon: Rocket,
+            step: "03",
+            gradient: "from-rose-500 to-orange-500"
+        }
+    ];
 
     return (
-        // Adjusted overall top padding for mobile (pt-20 is safer) and desktop (lg:pt-0)
-        <main className="bg-white pt-20 lg:pt-0 selection:bg-indigo-100 selection:text-indigo-900">
-            
-            {/* 1. HERO SECTION: Modern Split with Pattern Background */}
-            <section className="relative pb-16 pt-16 lg:pt-32 lg:pb-28 overflow-hidden"> 
-                {/* Background Pattern - Dot Grid (Animation kept for background) */}
-                <div className="absolute inset-0 -z-10 h-full w-full bg-white bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)]"></div>
-                
-                {/* Subtle Gradient Blob (Animation kept for background) */}
-                <div className="absolute top-0 right-0 -z-10 w-96 h-96 lg:w-[600px] lg:h-[600px] bg-indigo-50/50 rounded-full blur-[100px] opacity-70 animate-pulse-slow"></div>
+        <main className="bg-white text-slate-900 selection:bg-indigo-100 selection:text-indigo-900 min-h-screen overflow-x-hidden">
+            {/* 1. HERO SECTION: COMPACT & RESPONSIVE */}
+            <section className="relative pt-24 pb-12 lg:pt-36 lg:pb-20 overflow-hidden bg-[radial-gradient(circle_at_top_right,rgba(99,102,241,0.05),transparent),radial-gradient(circle_at_bottom_left,rgba(244,63,94,0.05),transparent)]">
+                <div className="absolute inset-0 z-0 opacity-[0.03] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
 
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    {/* Column order reversal on mobile for better flow (image after text) - adjusted gap */}
-                    <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-20"> 
-                        
-                        {/* Hero Content - Removed data-aos */}
-                        <div className="lg:w-1/2 text-center lg:text-left z-10">
-                            {/* Alert Badge - Reduced hover animation scope to md: */}
-                            <div className="inline-flex items-center gap-2 py-1.5 px-3 rounded-full bg-slate-50 border border-slate-200 text-slate-600 text-xs font-semibold mb-6 hover:bg-slate-100 transition-colors cursor-pointer group">
-                                <span className="relative flex h-2 w-2">
-                                    <span className="md:animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                                </span>
-                                <Link href={"/courses"}>New Cohort Enrollment Open</Link>
-                                <ArrowRight className="w-3 h-3 group-hover:md:translate-x-1 transition-transform" />
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                    <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
+                        {/* Content */}
+                        <div className={`lg:w-1/2 text-center lg:text-left transition-all duration-1000 ${mounted ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0 animate-fade-in-down'}`}>
+                            <div className="inline-flex items-center gap-2 mb-4 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-100 shadow-sm animate-pulse-subtle">
+                                <Sparkles className="w-4 h-4 text-indigo-600" />
+                                <span className="text-[10px] sm:text-xs font-bold text-indigo-700 uppercase tracking-widest">Built for Future Builders</span>
                             </div>
 
-                            {/* Responsive Heading Size: 4xl (sm) to 7xl (lg) */}
-                            <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight text-slate-900 mb-6 leading-tight lg:leading-[1.1]">
-                                Bridge the gap between <br className="hidden lg:block"/>
-                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-violet-600">
-                                    Degree & Career.
+                            <h1 className="text-3xl sm:text-5xl lg:text-6xl xl:text-7xl font-black text-slate-900 mb-6 leading-[1.1] tracking-tighter">
+                                Accelerate Your <br />
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-violet-600 to-rose-600">
+                                    Career Path.
                                 </span>
                             </h1>
 
-                            {/* Responsive Text Size */}
-                            <p className="text-base sm:text-lg text-slate-600 mb-8 max-w-xl mx-auto lg:mx-0 leading-relaxed text-balance">
-                                Stop collecting certificates. Start building capabilities. We provide the **missing semester** of practical, industry-grade experience that universities don't teach.
+                            <p className="text-base sm:text-lg text-slate-600 mb-8 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-medium">
+                                We bridge the gap between academic theory and industry reality. Gain practical skills and mentorship needed to thrive in today's tech ecosystem.
                             </p>
 
-                            {/* Responsive Button Group - Reduced hover animation scope to md: */}
                             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                                {/* Primary Button with enhanced shadow/animation */}
-                                <PrimaryButton href="/courses" className="h-12 px-6 sm:px-8 rounded-lg shadow-xl shadow-indigo-400/30 flex items-center justify-center gap-2 text-sm sm:text-base transition-all duration-300 md:hover:shadow-indigo-400/70 md:hover:scale-[1.02] md:active:scale-[0.98]">
-                                    Explore Programs
-                                </PrimaryButton>
-                                {/* Secondary Button with hover animation */}
-                                <a href="#methodology" className="h-12 px-6 sm:px-8 rounded-lg border border-slate-200 text-slate-700 font-medium hover:bg-slate-50 hover:border-slate-300 transition-all duration-300 flex items-center justify-center gap-2 text-sm sm:text-base md:hover:shadow-md">
-                                    How it Works
+                                <Link
+                                    href="/courses"
+                                    className="inline-flex items-center justify-center px-6 py-3 sm:px-8 sm:py-4 rounded-xl sm:rounded-2xl bg-indigo-600 text-white font-bold hover:bg-indigo-700 transition-all shadow-lg active:scale-95"
+                                >
+                                    View Pathways <ArrowRight className="ml-2 w-5 h-5" />
+                                </Link>
+                                <a
+                                    href="#how-it-works"
+                                    className="inline-flex items-center justify-center px-6 py-3 sm:px-8 sm:py-4 rounded-xl sm:rounded-2xl bg-white border border-slate-200 text-slate-700 font-bold hover:bg-slate-50 transition-all"
+                                >
+                                    Methodology
                                 </a>
                             </div>
+
+                            <div className="mt-10 pt-6 border-t border-slate-100 flex flex-wrap items-center justify-center lg:justify-start gap-6 opacity-60">
+                                {[
+                                    { icon: ShieldCheck, label: "Vetted" },
+                                    { icon: BookOpen, label: "Projects" },
+                                    { icon: Users, label: "Mentors" }
+                                ].map((badge, i) => (
+                                    <div key={i} className="flex items-center gap-1.5">
+                                        <badge.icon className="w-4 h-4 text-indigo-600" />
+                                        <span className="text-[10px] font-black text-slate-800 uppercase tracking-widest">{badge.label}</span>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
 
-                        {/* Hero Image (Modern Composition) - Removed data-aos */}
-                        <div className="lg:w-1/2 relative mt-12 lg:mt-0">
-                            {/* Aspect control ensures the image is not distorted on mobile */}
-                            <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-indigo-300/30 border border-slate-100 bg-slate-50 aspect-[4/3] group">
+                        {/* Image Component */}
+                        <div className={`lg:w-1/2 relative transition-all duration-1000 delay-300 ${mounted ? 'scale-100 opacity-100' : 'scale-95 opacity-0 animate-zoom-in'}`}>
+                            <div className="relative rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden shadow-2xl border-4 sm:border-8 border-white group">
                                 <Image
                                     src="/assets/images/hero-gen.png"
-                                    alt="Students working on practical projects together"
-                                    fill
-                                    style={{ objectFit: 'cover' }}
-                                    // Removed hover:scale-105 from base class, applied it only on md:
-                                    className="object-cover transition-transform duration-700 group-hover:md:scale-105" 
+                                    alt="Learning community"
+                                    width={800}
+                                    height={1000}
+                                    className="object-cover w-full aspect-video lg:aspect-square group-hover:scale-110 transition-transform duration-700"
                                     priority
-                                    sizes="(max-width: 1024px) 100vw, 50vw"
                                 />
+                                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent to-transparent"></div>
+                                <div className="absolute bottom-4 left-4 right-4 p-4 bg-white/90 backdrop-blur-md rounded-xl border border-white/20 shadow-xl hidden sm:flex items-center gap-3">
+                                    <div className="p-2 bg-indigo-600 rounded-lg">
+                                        <PlayCircle className="w-5 h-5 text-white" />
+                                    </div>
+                                    <p className="text-xs font-black text-slate-800">Learn from Architects</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
 
-
-            {/* 3. METHODOLOGY (Bento Grid Style) */}
-            <section id="methodology" className=" bg-white relative py-16 md:py-24">
+            {/* 3. PEDAGOGY: ANIMATED STEPS */}
+            <section id="how-it-works" className="py-16 lg:py-24 bg-white">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    {/* Header alignment and spacing adjusted for responsiveness */}
-                    <div className="text-center max-w-3xl mx-auto mb-12 md:mb-16">
-                        <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-                            The <span className="text-indigo-600">Bridge Method</span>
-                        </h2>
-                        <p className="text-slate-500 text-base md:text-lg">
-                            We don't just teach theory. We simulate the actual working environment of top-tier tech companies.
-                        </p>
+                    <div className="max-w-3xl mb-12 text-center mx-auto transition-all duration-700 delay-500">
+                        <h2 className="text-3xl lg:text-5xl font-black text-slate-900 mb-4 tracking-tighter">Our <span className="text-indigo-600 italic">Framework</span></h2>
+                        <p className="text-base text-slate-500 font-medium">Outcome-driven process for professional excellence.</p>
                     </div>
 
-                    {/* Bento Grid: 1 column on mobile, 2 columns on medium, 3 columns on large */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        
-                        {/* Card 1 - Removed data-aos, added md: to hover transforms */}
-                        <div className="p-6 md:p-8 rounded-2xl bg-slate-50 border border-slate-100 hover:border-indigo-200 hover:shadow-xl hover:shadow-indigo-100/50 transition-all duration-300 group">
-                            <div className="w-12 h-12 bg-white rounded-xl shadow-sm border border-slate-100 flex items-center justify-center mb-6 group-hover:md:scale-105 transition-transform duration-300">
-                                <GraduationCap className="w-6 h-6 text-indigo-600" />
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+                        {pedagogySteps.map((step, idx) => (
+                            <div key={idx} className={`relative p-8 lg:p-10 bg-white border border-slate-100 rounded-[2rem] group hover:border-indigo-100 transition-all duration-500 hover:shadow-2xl animate-slide-in-bottom`} style={{ animationDelay: `${idx * 200}ms` }}>
+                                <div className="absolute top-4 right-6 text-6xl font-black text-indigo-50/30 group-hover:text-indigo-100 transition-colors">{step.step}</div>
+                                <div className={`w-12 h-12 bg-gradient-to-br ${step.gradient} rounded-xl flex items-center justify-center mb-6 shadow-lg shadow-indigo-100 group-hover:rotate-12 transition-transform`}>
+                                    <step.icon className="w-6 h-6 text-white" />
+                                </div>
+                                <h3 className="text-xl lg:text-2xl font-black text-slate-900 mb-3">{step.title}</h3>
+                                <p className="text-sm lg:text-base text-slate-500 font-medium leading-relaxed">{step.desc}</p>
                             </div>
-                            <h3 className="text-xl font-bold text-slate-900 mb-3">1. Upskill</h3>
-                            <p className="text-slate-500 leading-relaxed text-sm md:text-base">
-                                Intensive, live mentorship sessions focused on current market tools, not outdated textbooks.
-                            </p>
-                        </div>
-
-                        {/* Card 2 - Featured/Middle - Removed data-aos, added md: to internal animation */}
-                        <div className="p-6 md:p-8 rounded-2xl bg-slate-900 text-white shadow-2xl relative overflow-hidden group transition-all duration-300 md:col-span-2 lg:col-span-1">
-                            {/* Subtle animation in dark card, kept for desktop, disabled for mobile by adding md: */}
-                            <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/20 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none transition-all duration-500 group-hover:md:scale-125"></div> 
-                            <div className="w-12 h-12 bg-white/10 backdrop-blur-md rounded-xl border border-white/20 flex items-center justify-center mb-6">
-                                <Briefcase className="w-6 h-6 text-indigo-300" />
-                            </div>
-                            <h3 className="text-xl font-bold mb-3">2. Simulate</h3>
-                            <p className="text-slate-300 leading-relaxed text-sm md:text-base">
-                                Work on real corporate capstone projects. Commit code, attend scrums, and face code reviews.
-                            </p>
-                            <div className="mt-6 flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-indigo-300 transition-colors duration-300 group-hover:text-indigo-100">
-                                Most Critical Step <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:md:translate-x-1" />
-                            </div>
-                        </div>
-
-                        {/* Card 3 - Removed data-aos, added md: to hover transforms */}
-                        <div className="p-6 md:p-8 rounded-2xl bg-slate-50 border border-slate-100 hover:border-indigo-200 hover:shadow-xl hover:shadow-indigo-100/50 transition-all duration-300 group">
-                            <div className="w-12 h-12 bg-white rounded-xl shadow-sm border border-slate-100 flex items-center justify-center mb-6 group-hover:md:scale-105 transition-transform duration-300">
-                                <TrendingUp className="w-6 h-6 text-indigo-600" />
-                            </div>
-                            <h3 className="text-xl font-bold text-slate-900 mb-3">3. Place</h3>
-                            <p className="text-slate-500 leading-relaxed text-sm md:text-base">
-                                Direct referrals to our hiring partners. We don't just fix your resume; we fix your career trajectory.
-                            </p>
-                        </div>
+                        ))}
                     </div>
                 </div>
             </section>
 
-            {/* 5. FEATURED PROGRAMS (Existing Component) */}
-            {/* Adjusted Vertical Padding for better rhythm */}
-            <div className="py-16 md:py-24 bg-slate-50">
+            {/* 4. FEATURED PROGRAMS */}
+            <div className="py-8 bg-slate-50">
                 <FeaturedProgramsSection />
             </div>
 
-            {/* 6. FOUNDER / MISSION SECTION (Editorial Style) */}
-            <section className="py-16 md:py-24 bg-white overflow-hidden">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    {/* OPTIMIZATION: Use md:flex-row-reverse to put the content column first on desktop, improving visual weight balance. */}
-                    <div className="flex flex-col md:flex-row-reverse gap-12 md:gap-16 items-center"> 
-                        
-                        {/* Content Column (Text) - Removed data-aos */}
-                        <div className="md:w-1/2 order-1">
-                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-[10px] font-bold uppercase tracking-wider mb-6">
-                                <Sparkles className="w-3 h-3" /> Our Mission
+            {/* 5. WHY US: THE STARTUP ADVANTAGE */}
+            <section className="py-16 lg:py-24 bg-slate-50 text-slate-900 relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-indigo-100/30 rounded-full blur-[100px] pointer-events-none opacity-50"></div>
+                <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-rose-100/30 rounded-full blur-[100px] pointer-events-none opacity-40"></div>
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 items-center">
+                        <div className="lg:col-span-7">
+                            <div className="text-center lg:text-left animate-slide-in-left">
+                                <span className="inline-block px-3 py-1 rounded-full bg-indigo-100 border border-indigo-200 text-indigo-700 text-[10px] font-black uppercase tracking-widest mb-6">Why Vidya-Setu?</span>
+                                <h2 className="text-3xl lg:text-6xl font-black mb-10 tracking-tighter leading-tight text-slate-900">
+                                    Beyond the <br className="hidden lg:block" />
+                                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-rose-600">
+                                        Curriculum.
+                                    </span>
+                                </h2>
                             </div>
-                            {/* Responsive Heading Size */}
-                            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 mb-6 tracking-tight">
-                                Education needs a <br/>
-                                <span className="text-indigo-600">Reality Check.</span>
-                            </h2>
-                            {/* Responsive Text Size */}
-                            <div className="space-y-6 text-base md:text-lg text-slate-600">
-                                <p>
-                                    The industry is evolving faster than university curriculums can keep up. This creates a **"skills gap"** that leaves graduates unemployed and companies with unfilled roles.
-                                </p>
-                                <p>
-                                    At Com-ED, we are not an institute; we are a **pre-accelerator for your career**. We bridge the disconnect by bringing the corporate world into the classroom.
-                                </p>
-                            </div>
-                            
-                            {/* Key Differentiators - added md: to hover transforms */}
-                            <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-6">
-                                <div className="flex gap-3 transition-transform duration-300 hover:md:translate-x-1">
-                                    <div className="bg-emerald-100 p-2 rounded-lg h-fit text-emerald-700"><CheckCircle className="w-5 h-5"/></div>
-                                    <div>
-                                        <h4 className="font-bold text-slate-900">Theory + Practical</h4>
-                                        <p className="text-sm text-slate-500">No fluff, just skills.</p>
+
+                            <div className="grid grid-cols-2 lg:grid-cols-2 gap-3 lg:gap-6 animate-slide-in-bottom">
+                                {[
+                                    { title: "Mentorship", desc: "Top Creators", icon: Users, bg: "bg-indigo-50", color: "text-indigo-600" },
+                                    { title: "Projects", desc: "Real Scale", icon: Code, bg: "bg-violet-50", color: "text-violet-600" },
+                                    { title: "Network", desc: "50+ Partners", icon: Globe, bg: "bg-rose-50", color: "text-rose-600" },
+                                    { title: "Quality", desc: "Vetted Docs", icon: ShieldCheck, bg: "bg-emerald-50", color: "text-emerald-600" }
+                                ].map((item, i) => (
+                                    <div key={i} className="group p-5 lg:p-6 rounded-[2rem] bg-white/70 backdrop-blur-md border border-white hover:border-indigo-200 hover:shadow-xl transition-all duration-500 shadow-sm">
+                                        <div className={`w-10 h-10 lg:w-12 lg:h-12 rounded-2xl ${item.bg} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-inner`}>
+                                            <item.icon className={`w-5 h-5 lg:w-6 lg:h-6 ${item.color}`} />
+                                        </div>
+                                        <h4 className="text-base lg:text-lg font-black mb-1 text-slate-900">{item.title}</h4>
+                                        <p className="text-[10px] lg:text-xs text-slate-500 font-bold leading-tight">{item.desc}</p>
                                     </div>
-                                </div>
-                                <div className="flex gap-3 transition-transform duration-300 hover:md:translate-x-1">
-                                    <div className="bg-purple-100 p-2 rounded-lg h-fit text-purple-700"><Users className="w-5 h-5"/></div>
-                                    <div>
-                                        <h4 className="font-bold text-slate-900">Network Access</h4>
-                                        <p className="text-sm text-slate-500">Lifetime community.</p>
-                                    </div>
-                                </div>
+                                ))}
                             </div>
                         </div>
 
-                        {/* Image Column - Removed data-aos */}
-                        <div className="md:w-1/2 relative order-2 md:order-1">
-                            <div className="relative z-10 max-w-sm mx-auto md:max-w-none">
+                        <div className="lg:col-span-5 relative animate-tilt-in">
+                            <div className="relative rounded-[2.5rem] lg:rounded-[3rem] overflow-hidden border-4 lg:border-8 border-white shadow-2xl aspect-[4/5] lg:aspect-[3/4]">
                                 <Image
                                     src="/assets/images/hero-img.jpeg"
-                                    alt="Founder"
-                                    width={500}
-                                    height={600}
-                                    // Added md: to hover effects
-                                    className="rounded-xl shadow-2xl shadow-slate-900/10 transition-transform duration-500 md:hover:rotate-1 md:hover:scale-[1.02]" 
+                                    alt="Focused learning"
+                                    fill
+                                    className="object-cover"
                                 />
-                                {/* Signature / Name Tag - Added md: to hover effects */}
-                                <div className="absolute -bottom-6 -right-6 bg-white p-5 shadow-2xl rounded-lg max-w-xs border border-slate-100 hidden sm:block transition-all duration-500 md:hover:translate-y-1 md:hover:shadow-slate-300/50"> 
-                                    <p className="font-serif italic text-base text-slate-800 mb-2">"Talent is universal, but opportunity is not. We are here to fix that."</p>
-                                    <div className="h-px w-10 bg-indigo-500 mb-2"></div>
-                                    <p className="font-bold text-sm text-slate-900">Founder Name</p>
-                                    <p className="text-xs text-slate-500 uppercase tracking-wider">CEO, Vidya-Setu</p>
+                                {/* Bottom overlay for mobile */}
+                                <div className="absolute bottom-4 left-4 right-4 p-4 bg-white/30 backdrop-blur-md rounded-2xl border border-white/20 sm:hidden">
+                                    <p className="text-[10px] font-black text-center text-slate-900 uppercase tracking-widest">Bridging Academic Reality</p>
                                 </div>
                             </div>
-                            {/* Decorative Grid behind image - adjusted spacing */}
-                            <div className="absolute top-4 -left-4 w-full h-full border border-slate-200 rounded-xl -z-0 hidden sm:block"></div>
                         </div>
                     </div>
                 </div>
             </section>
+
+            {/* 6. FOUNDER'S VISION */}
+            <section className="py-16 lg:py-24 bg-white">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="bg-slate-50 rounded-[2rem] lg:rounded-[3rem] p-8 lg:p-20 flex flex-col lg:flex-row items-center gap-10 lg:gap-16 border border-slate-100 relative animate-fade-in">
+                        <div className="lg:w-1/3 flex-shrink-0 animate-float">
+                            <div className="relative w-48 h-48 lg:w-72 lg:h-72 mx-auto rounded-[2rem] overflow-hidden shadow-2xl border-4 border-white rotate-2 transition-transform hover:rotate-0 duration-500">
+                                <Image
+                                    src="/assets/images/founder-profile.jpg"
+                                    alt="Somya Agrawal"
+                                    fill
+                                    className="object-cover grayscale hover:grayscale-0 transition-all duration-700"
+                                />
+                            </div>
+                        </div>
+                        <div className="lg:w-2/3 text-center lg:text-left">
+                            <span className="inline-block px-3 py-1 bg-slate-900 text-white text-[8px] sm:text-[10px] font-black uppercase tracking-widest rounded-full mb-6">Founder's Letter</span>
+                            <h3 className="text-2xl lg:text-4xl font-black text-slate-900 mb-6 italic leading-tight">"Redefining how education meets industry reality."</h3>
+                            <p className="text-sm lg:text-lg text-slate-600 font-medium leading-relaxed mb-8">
+                                We're building the bridge for the next generation of professionals to walk across with absolute confidence.
+                            </p>
+                            <div>
+                                <h4 className="text-xl font-black text-slate-900">Somya Agrawal</h4>
+                                <p className="text-[10px] font-black text-indigo-600 uppercase tracking-widest">Founder & CEO</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* 7. FINAL CTA */}
+            <section className="py-20 lg:py-15 text-center bg-white relative overflow-hidden">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-indigo-50/50 rounded-full blur-[100px] opacity-40 animate-pulse-slow"></div>
+                <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 animate-bounce-in">
+                    <h2 className="text-3xl lg:text-7xl font-black text-slate-900 mb-6 tracking-tighter">
+                        Transform Your <br />
+                        <span className="text-indigo-600">Future.</span>
+                    </h2>
+                    <p className="text-base lg:text-xl text-slate-600 mb-10 font-bold">Be part of our next cohort of builders.</p>
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                        <Link
+                            href="/register"
+                            className="w-full sm:w-auto px-8 py-4 bg-indigo-600 text-white font-black text-lg rounded-xl shadow-xl hover:bg-indigo-700 transition-all hover:-translate-y-1 active:scale-95"
+                        >
+                            Get Started
+                        </Link>
+                        <a
+                            href="https://wa.me/919113645398"
+                            className="w-full sm:w-auto px-8 py-4 bg-white border border-slate-200 text-slate-700 font-bold rounded-xl hover:bg-slate-50 transition-all flex items-center justify-center gap-2"
+                        >
+                            <MessageCircle className="w-5 h-5 text-emerald-500" />
+                            WhatsApp
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <style jsx>{`
+                h1, h2, h3, h4 { font-family: 'Outfit', sans-serif; }
+                body { font-family: 'Inter', sans-serif; }
+
+                .animate-fade-in-down { animation: fadeInDown 1s ease-out forwards; }
+                .animate-zoom-in { animation: zoomIn 0.8s ease-out forwards; }
+                .animate-slide-in-bottom { animation: slideInBottom 0.8s ease-out forwards; }
+                .animate-slide-in-left { animation: slideInLeft 1s ease-out forwards; }
+                .animate-slide-in-right { animation: slideInRight 1s ease-out forwards; }
+                .animate-tilt-in { animation: tiltIn 1.2s ease-out forwards; }
+                .animate-float { animation: float 6s ease-in-out infinite; }
+                .animate-pulse-subtle { animation: pulseSubtle 4s ease-in-out infinite; }
+                .animate-pulse-slow { animation: pulseSlow 8s ease-in-out infinite; }
+                .animate-bounce-in { animation: bounceIn 1s cubic-bezier(0.36, 0, 0.66, -0.56) 0.5s both, slideInBottom 1s ease-out; }
+                .animate-fade-in { animation: fadeIn 1.5s ease-out forwards; }
+
+                @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+                @keyframes fadeInDown {
+                    from { opacity: 0; transform: translateY(-20px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+                @keyframes zoomIn {
+                    from { opacity: 0; transform: scale(0.9); }
+                    to { opacity: 1; transform: scale(1); }
+                }
+                @keyframes slideInBottom {
+                    from { opacity: 0; transform: translateY(40px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+                @keyframes slideInLeft {
+                    from { opacity: 0; transform: translateX(-40px); }
+                    to { opacity: 1; transform: translateX(0); }
+                }
+                @keyframes tiltIn {
+                    from { opacity: 0; transform: perspective(1000px) rotateY(-10deg) translateY(20px); }
+                    to { opacity: 1; transform: perspective(1000px) rotateY(0deg) translateY(0); }
+                }
+                @keyframes float {
+                    0%, 100% { transform: translateY(0); }
+                    50% { transform: translateY(-15px); }
+                }
+                @keyframes pulseSubtle {
+                    0%, 100% { transform: scale(1); opacity: 1; }
+                    50% { transform: scale(1.02); opacity: 0.9; }
+                }
+                @keyframes pulseSlow {
+                    0%, 100% { opacity: 0.3; transform: scale(1); }
+                    50% { opacity: 0.5; transform: scale(1.1); }
+                }
+                @keyframes bounceIn {
+                    0% { opacity: 0; transform: scale(0.3); }
+                    50% { opacity: 0.9; transform: scale(1.1); }
+                    80% { opacity: 1; transform: scale(0.89); }
+                    100% { opacity: 1; transform: scale(1); }
+                }
+            `}</style>
         </main>
     );
 }
