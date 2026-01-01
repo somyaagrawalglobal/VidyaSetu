@@ -247,7 +247,7 @@ export default function Home() {
             </section>
 
             {/* 7. FINAL CTA */}
-            <section className="py-20 lg:py-32 text-center bg-white relative overflow-hidden">
+            <section className="py-20 lg:py-15 text-center bg-white relative overflow-hidden">
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-indigo-50/50 rounded-full blur-[100px] opacity-40 animate-pulse-slow"></div>
                 <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 animate-bounce-in">
                     <h2 className="text-3xl lg:text-7xl font-black text-slate-900 mb-6 tracking-tighter">
@@ -267,7 +267,7 @@ export default function Home() {
                             className="w-full sm:w-auto px-8 py-4 bg-white border border-slate-200 text-slate-700 font-bold rounded-xl hover:bg-slate-50 transition-all flex items-center justify-center gap-2"
                         >
                             <MessageCircle className="w-5 h-5 text-emerald-500" />
-                            Counseling
+                            WhatsApp
                         </a>
                     </div>
                 </div>
