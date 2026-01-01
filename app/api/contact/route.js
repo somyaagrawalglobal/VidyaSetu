@@ -1,5 +1,6 @@
 import dbConnect from '@/lib/db';
 import Inquiry from '@/models/Inquiry';
+import { sendContactEmail } from '@/lib/email';
 import { NextResponse } from 'next/server';
 
 export async function POST(req) {
@@ -17,6 +18,14 @@ export async function POST(req) {
         }
 
         const inquiry = await Inquiry.create(body);
+
+        // Send email notification to admin
+        try {
+            await sendContactEmail(body);
+        } catch (emailError) {
+            console.error('Failed to send contact email:', emailError);
+            // We don't fail the request if email fails, but we log it
+        }
 
         return NextResponse.json({
             success: true,
