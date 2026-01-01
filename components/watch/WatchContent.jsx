@@ -138,7 +138,7 @@ export default function WatchContent({ activeLesson, course, isCompleted, onTogg
     ];
 
     return (
-        <main className="flex-1 flex flex-col min-h-full bg-white">
+        <main className="flex-1 flex flex-col md:overflow-y-auto  min-h-full bg-white">
             {/* Video Player Section */}
             <div className="bg-black w-full shadow-lg">
                 <div className="max-w-[1400px] mx-auto">
@@ -147,7 +147,7 @@ export default function WatchContent({ activeLesson, course, isCompleted, onTogg
             </div>
 
             {/* Lesson Info & Tabs Section */}
-            <div className="flex-1 px-4 lg:px-8 py-6 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-300">
+            <div className="flex-1 px-4 lg:px-8 py-6 overflow-y-auto md:overflow-y-visible scrollbar-none">
                 <div className="max-w-[1400px] mx-auto">
                     {/* Lesson Header */}
                     <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 pb-5 mb-6 border-b border-slate-200">
