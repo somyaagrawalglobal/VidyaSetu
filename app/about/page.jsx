@@ -322,7 +322,7 @@ export default function About() {
                                     priority
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-8">
-                                    <p className="text-white font-bold text-lg">Somya Agrawal</p>
+                                    <p className="text-white font-bold text-lg">VidyaSetu Leadership</p>
                                     <p className="text-indigo-200 text-sm font-semibold uppercase tracking-widest">Founder & CEO</p>
                                 </div>
                             </div>
@@ -341,11 +341,11 @@ export default function About() {
                                 </p>
                             </div>
                             <h2 className="text-xl sm:text-2xl font-bold text-slate-900 mb-6 leading-tight">
-                                Meet our visionary founder, <span className={gradientTextClass}>Somya Agrawal</span>
+                                Meet our <span className={gradientTextClass}>Visionary Founder</span>
                             </h2>
 
                             <p className="text-slate-600 font-medium mb-6 leading-relaxed text-sm">
-                                Somya's journey began with a frustration: seeing highly educated graduates unable to secure quality jobs due to a lack of practical skills. This realization fueled the inception of Vidya-Setu.
+                                Our journey began with a frustration: seeing highly educated graduates unable to secure quality jobs due to a lack of practical skills. This realization fueled the inception of Vidya-Setu.
                             </p>
 
                             <blockquote className="p-6 border-l-4 border-violet-500 bg-gradient-to-r from-violet-50 to-white italic text-slate-800 font-semibold text-xs sm:text-sm rounded-r-2xl shadow-sm relative overflow-hidden group">

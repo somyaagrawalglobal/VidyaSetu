@@ -55,7 +55,7 @@ export async function POST(request) {
             success: true,
             uploadSessionId,
             uploadedBytes: 0,
-            chunkSize: 8388608 // 8MB recommended
+            chunkSize: 3145728 // 3MB (Safe for Vercel 4.5MB limit)
         });
 
     } catch (error) {
