@@ -212,7 +212,7 @@ export default function AdminPayoutsPage() {
     if (loading) return <Loader text="Calculating financials..." />;
 
     return (
-        <div className="min-h-screen bg-slate-50 pt-28 pb-12 px-4 sm:px-6 lg:px-8 font-sans">
+        <div className="min-h-screen bg-slate-50 pt-24 pb-12 px-4 sm:px-6 lg:px-8 font-sans">
             <div className="max-w-7xl mx-auto space-y-8">
 
                 {/* Header */}
