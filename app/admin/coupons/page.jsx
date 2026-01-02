@@ -239,7 +239,7 @@ export default function AdminCouponsPage() {
             />
             <div className="max-w-6xl mx-auto">
                 <div className="flex justify-between items-end mb-10">
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-5">
                         <Link href="/dashboard" className="p-2 bg-white border border-slate-200 rounded-lg text-slate-400 hover:text-indigo-600 transition-all">
                             <ChevronLeft className="w-5 h-5" />
                         </Link>
@@ -247,20 +247,20 @@ export default function AdminCouponsPage() {
                             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-indigo-50 text-indigo-700 text-[10px] font-bold uppercase tracking-wider mb-2 border border-indigo-100/50">
                                 Marketing Tools
                             </div>
-                            <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Coupon Management</h1>
-                            <p className="text-slate-500 text-sm mt-1 font-medium">Create and manage discount offers for your courses.</p>
+                            <h1 className="text-md md:text-3xl font-bold text-slate-900 tracking-tight">Coupon Management</h1>
+                            <p className="text-slate-500 text-xs md:text-sm mt-1 font-medium">Create and manage discount offers for your courses.</p>
                         </div>
                     </div>
                     <button
                         onClick={() => setIsCreating(!isCreating)}
-                        className="bg-indigo-600 text-white px-6 py-3 rounded-lg font-bold text-sm flex items-center gap-2 hover:bg-indigo-700 transition-all shadow-md shadow-indigo-100"
+                        className="bg-indigo-600 text-white px-2 md:px-6 py-2 md:py-3 rounded-lg font-bold text-xs md:text-sm flex items-center gap-1 hover:bg-indigo-700 transition-all shadow-md shadow-indigo-100"
                     >
                         <Plus size={18} /> {isCreating ? 'Cancel' : 'New Coupon'}
                     </button>
                 </div>
 
                 {isCreating && (
-                    <div className="bg-white rounded-xl border border-slate-200 p-8 mb-10 shadow-sm animate-in fade-in slide-in-from-top-4 duration-300">
+                    <div className="bg-white rounded-xl border border-slate-200 p-5 md:p-8 mb-10 shadow-sm animate-in fade-in slide-in-from-top-4 duration-300">
                         <form onSubmit={handleCreate} className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <div className="space-y-1.5">
                                 <label className="text-[10px] uppercase font-bold text-slate-400 tracking-widest ml-1">Coupon Code</label>

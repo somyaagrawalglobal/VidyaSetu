@@ -137,7 +137,7 @@ export default function AddCoursePage() {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50 pt-28 pb-12 px-4 sm:px-6 lg:px-8 font-sans">
+        <div className="min-h-screen bg-slate-50 pt-24 pb-12 px-2 sm:px-6 lg:px-8 font-sans">
             <div className="max-w-5xl mx-auto">
 
                 {/* Header */}
@@ -156,14 +156,14 @@ export default function AddCoursePage() {
                 <form onSubmit={handleSubmit} className="space-y-8">
                     {/* Basic Info Card */}
                     <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                        <div className="p-6 border-b border-gray-100 bg-gray-50/50">
+                        <div className="p-4 md:p-6 border-b border-gray-100 bg-gray-50/50">
                             <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
                                 <FileText className="w-5 h-5 text-indigo-500" />
                                 Basic Details
                             </h2>
                         </div>
 
-                        <div className="p-8 space-y-6">
+                        <div className="p-3 sm:p-6 md:p-8 space-y-6">
                             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                                 <div className="md:col-span-3">
                                     <label className="block text-sm font-semibold text-gray-700 mb-2">Course Title</label>
@@ -342,7 +342,7 @@ export default function AddCoursePage() {
 
                         {formData.modules.map((module, mIndex) => (
                             <div key={mIndex} className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                                <div className="p-4 bg-gray-50 border-b border-gray-100 flex flex-col sm:flex-row gap-4 sm:items-center">
+                                <div className="p-3 sm:p-4 bg-gray-50 border-b border-gray-100 flex flex-col sm:flex-row gap-4 sm:items-center">
                                     <div className="flex-1">
                                         <input
                                             type="text"
@@ -375,14 +375,14 @@ export default function AddCoursePage() {
                                     </div>
                                 </div>
 
-                                <div className="p-4 space-y-3 bg-white">
+                                <div className="p-1 sm:p-4 space-y-3 bg-white">
                                     {module.lessons.length === 0 && (
                                         <div className="text-center py-6 text-gray-400 text-sm italic border-2 border-dashed border-gray-100 rounded-xl">
                                             No lessons in this section yet.
                                         </div>
                                     )}
                                     {module.lessons.map((lesson, lIndex) => (
-                                        <div key={lIndex} className="flex flex-col md:flex-row items-start md:items-center gap-4 p-4 rounded-xl border border-gray-100 hover:border-indigo-100 hover:bg-indigo-50/10 transition-colors group">
+                                        <div key={lIndex} className="flex flex-col md:flex-row items-start md:items-center gap-4 p-2 sm:p-4 rounded-md sm:rounded-lg md:rounded-xl border border-gray-100 hover:border-indigo-100 hover:bg-indigo-50/10 transition-colors group">
                                             <div className="p-2 bg-indigo-50 text-indigo-500 rounded-lg">
                                                 <Video className="w-4 h-4" />
                                             </div>
