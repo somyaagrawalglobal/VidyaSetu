@@ -165,53 +165,118 @@ export default function Home() {
             </div>
 
             {/* 5. WHY US: THE STARTUP ADVANTAGE */}
-            <section className="py-16 lg:py-24 bg-slate-50 text-slate-900 relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-indigo-100/30 rounded-full blur-[100px] pointer-events-none opacity-50"></div>
-                <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-rose-100/30 rounded-full blur-[100px] pointer-events-none opacity-40"></div>
+            <section className="py-20 sm:py-24 lg:py-32 bg-slate-50 relative overflow-hidden">
+                {/* Decorative Elements */}
+                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-indigo-200/20 rounded-full blur-[120px] pointer-events-none -translate-y-1/2 translate-x-1/2"></div>
+                <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-rose-200/20 rounded-full blur-[100px] pointer-events-none translate-y-1/2 -translate-x-1/2"></div>
+                <div className="absolute inset-0 z-0 opacity-[0.02] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/grid.png')]"></div>
+
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 items-center">
-                        <div className="lg:col-span-7">
-                            <div className="text-center lg:text-left animate-slide-in-left">
-                                <span className="inline-block px-3 py-1 rounded-full bg-indigo-100 border border-indigo-200 text-indigo-700 text-[10px] font-black uppercase tracking-widest mb-6">Why Vidya-Setu?</span>
-                                <h2 className="text-3xl lg:text-6xl font-black mb-10 tracking-tighter leading-tight text-slate-900">
-                                    Beyond the <br className="hidden lg:block" />
-                                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-rose-600">
-                                        Curriculum.
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-20 items-center">
+
+                        {/* Text & Features Grid */}
+                        <div className="lg:col-span-7 space-y-12">
+                            <div className="text-center lg:text-left">
+                                <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-100 border border-indigo-200 text-indigo-700 text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] mb-6 shadow-sm">
+                                    <Sparkles className="w-3 h-3 sm:w-4 h-4" />
+                                    The Startup Advantage
+                                </span>
+                                <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black mb-8 tracking-tighter leading-[1.1] text-slate-900">
+                                    Why learn at <br />
+                                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-violet-600 to-rose-600">
+                                        Vidya-Setu?
                                     </span>
                                 </h2>
+                                <p className="text-base sm:text-lg text-slate-600 max-w-xl mx-auto lg:mx-0 font-medium leading-relaxed">
+                                    We don't just teach code; we teach you how to build, scale, and thrive in high-growth environments.
+                                </p>
                             </div>
 
-                            <div className="grid grid-cols-2 lg:grid-cols-2 gap-3 lg:gap-6 animate-slide-in-bottom">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                                 {[
-                                    { title: "Mentorship", desc: "Top Creators", icon: Users, bg: "bg-indigo-50", color: "text-indigo-600" },
-                                    { title: "Projects", desc: "Real Scale", icon: Code, bg: "bg-violet-50", color: "text-violet-600" },
-                                    { title: "Network", desc: "50+ Partners", icon: Globe, bg: "bg-rose-50", color: "text-rose-600" },
-                                    { title: "Quality", desc: "Vetted Docs", icon: ShieldCheck, bg: "bg-emerald-50", color: "text-emerald-600" }
+                                    {
+                                        title: "Mentorship",
+                                        desc: "Direct access to tech leaders from unicorns.",
+                                        icon: Users,
+                                        gradient: "from-indigo-500 to-blue-500",
+                                        shadow: "shadow-indigo-100"
+                                    },
+                                    {
+                                        title: "Project-First",
+                                        desc: "Build production-ready apps from day one.",
+                                        icon: Code,
+                                        gradient: "from-violet-500 to-purple-500",
+                                        shadow: "shadow-violet-100"
+                                    },
+                                    {
+                                        title: "Global Network",
+                                        desc: "Connect with 50+ hiring partners globally.",
+                                        icon: Globe,
+                                        gradient: "from-rose-500 to-pink-500",
+                                        shadow: "shadow-rose-100"
+                                    },
+                                    {
+                                        title: "Quality Content",
+                                        desc: "Vetted curriculum aligned with industry standards.",
+                                        icon: ShieldCheck,
+                                        gradient: "from-emerald-500 to-teal-500",
+                                        shadow: "shadow-emerald-100"
+                                    }
                                 ].map((item, i) => (
-                                    <div key={i} className="group p-5 lg:p-6 rounded-[2rem] bg-white/70 backdrop-blur-md border border-white hover:border-indigo-200 hover:shadow-xl transition-all duration-500 shadow-sm">
-                                        <div className={`w-10 h-10 lg:w-12 lg:h-12 rounded-2xl ${item.bg} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-inner`}>
-                                            <item.icon className={`w-5 h-5 lg:w-6 lg:h-6 ${item.color}`} />
+                                    <div key={i} className="group relative p-6 sm:p-8 rounded-[2rem] bg-white border border-slate-100 hover:border-indigo-200 hover:shadow-2xl transition-all duration-500 shadow-sm overflow-hidden animate-slide-in-bottom" style={{ animationDelay: `${i * 150}ms` }}>
+                                        <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-slate-50 to-indigo-50/20 rounded-full -translate-y-1/2 translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+
+                                        <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${item.gradient} flex items-center justify-center mb-6 shadow-lg ${item.shadow} group-hover:scale-110 group-hover:rotate-3 transition-all`}>
+                                            <item.icon className="w-6 h-6 text-white" />
                                         </div>
-                                        <h4 className="text-base lg:text-lg font-black mb-1 text-slate-900">{item.title}</h4>
-                                        <p className="text-[10px] lg:text-xs text-slate-500 font-bold leading-tight">{item.desc}</p>
+                                        <h4 className="text-xl font-black mb-2 text-slate-900 tracking-tight">{item.title}</h4>
+                                        <p className="text-sm text-slate-500 font-semibold leading-relaxed">{item.desc}</p>
                                     </div>
                                 ))}
                             </div>
                         </div>
 
-                        <div className="lg:col-span-5 relative animate-tilt-in">
-                            <div className="relative rounded-[2.5rem] lg:rounded-[3rem] overflow-hidden border-4 lg:border-8 border-white shadow-2xl aspect-[4/5] lg:aspect-[3/4]">
+                        {/* Image Side with Stats */}
+                        <div className="lg:col-span-5 relative lg:mt-0 mt-12">
+                            {/* Main Image */}
+                            <div className="relative rounded-[3rem] overflow-hidden border-[12px] border-white shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] aspect-[3/4] group">
                                 <Image
                                     src="/assets/images/hero-img.jpeg"
-                                    alt="Focused learning"
+                                    alt="Learning Experience"
                                     fill
-                                    className="object-cover"
+                                    className="object-cover group-hover:scale-105 transition-transform duration-1000"
                                 />
-                                {/* Bottom overlay for mobile */}
-                                <div className="absolute bottom-4 left-4 right-4 p-4 bg-white/30 backdrop-blur-md rounded-2xl border border-white/20 sm:hidden">
-                                    <p className="text-[10px] font-black text-center text-slate-900 uppercase tracking-widest">Bridging Academic Reality</p>
+                                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent opacity-60"></div>
+                            </div>
+
+                            {/* Floating Stats Card 1 */}
+                            <div className="absolute -top-6 -right-6 sm:-right-8 p-4 sm:p-6 bg-white/90 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/50 animate-float">
+                                <div className="flex items-center gap-4">
+                                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-indigo-100 rounded-2xl flex items-center justify-center">
+                                        <Users className="w-5 h-5 sm:w-6 h-6 text-indigo-600" />
+                                    </div>
+                                    <div>
+                                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Mentorship</p>
+                                        <p className="text-xl sm:text-2xl font-black text-slate-900">Live 1:1</p>
+                                    </div>
                                 </div>
                             </div>
+
+                            {/* Floating Stats Card 2 */}
+                            <div className="absolute -bottom-6 -left-6 sm:-left-8 p-4 sm:p-6 bg-slate-900 rounded-3xl shadow-2xl animate-float" style={{ animationDelay: '1.5s' }}>
+                                <div className="flex items-center gap-4">
+                                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-indigo-600 rounded-2xl flex items-center justify-center">
+                                        <Zap className="w-5 h-5 sm:w-6 h-6 text-white" />
+                                    </div>
+                                    <div>
+                                        <p className="text-[10px] font-black text-indigo-200 uppercase tracking-widest">Approach</p>
+                                        <p className="text-xl sm:text-2xl font-black text-white">Project-Driven</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Dots Pattern Decoration */}
+                            <div className="absolute -z-10 top-1/2 -left-12 w-24 h-24 bg-[radial-gradient(#6366f1_1px,transparent_1px)] [background-size:12px_12px] opacity-20 hidden lg:block"></div>
                         </div>
                     </div>
                 </div>
