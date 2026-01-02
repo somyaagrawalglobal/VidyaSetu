@@ -289,7 +289,7 @@ export default function Home() {
                         <div className="lg:w-1/3 flex-shrink-0 animate-float">
                             <div className="relative w-48 h-48 lg:w-72 lg:h-72 mx-auto rounded-[2rem] overflow-hidden shadow-2xl border-4 border-white rotate-2 transition-transform hover:rotate-0 duration-500">
                                 <Image
-                                    src="/assets/images/founder-profile.jpg"
+                                    src="/assets/images/founder-profile.png"
                                     alt="Somya Agrawal"
                                     fill
                                     className="object-cover grayscale hover:grayscale-0 transition-all duration-700"
@@ -315,9 +315,9 @@ export default function Home() {
             <section className="py-20 lg:py-15 text-center bg-white relative overflow-hidden">
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-indigo-50/50 rounded-full blur-[100px] opacity-40 animate-pulse-slow"></div>
                 <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 animate-bounce-in">
-                    <h2 className="text-3xl lg:text-7xl font-black text-slate-900 mb-6 tracking-tighter">
-                        Transform Your <br />
-                        <span className="text-indigo-600">Future.</span>
+                    <h2 className="text-5xl font-black text-slate-900 mb-6 tracking-tighter">
+                        Transform Your
+                        <span className="text-indigo-600"> Future.</span>
                     </h2>
                     <p className="text-base lg:text-xl text-slate-600 mb-10 font-bold">Be part of our next cohort of builders.</p>
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-4">

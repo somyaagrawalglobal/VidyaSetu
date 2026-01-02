@@ -25,17 +25,17 @@ export default function CareersPage() {
     ];
 
     return (
-        <main className="bg-slate-50 min-h-screen pt-24 pb-20 px-4 sm:px-6 lg:px-8 font-sans selection:bg-indigo-100 selection:text-indigo-900">
+        <main className="bg-slate-50 min-h-screen sm:pt-28 pb-20 px-4 sm:px-6 lg:px-8 font-sans selection:bg-indigo-100 selection:text-indigo-900">
             {/* Minimal Hero - Vision */}
             <div className="max-w-4xl mx-auto text-center mb-20 animate-fade-in-down">
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-slate-200 shadow-sm mb-8 transition-transform hover:scale-105 cursor-default">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-slate-200 shadow-sm mb-4 transition-transform hover:scale-105 cursor-default">
                     <Sparkles className="w-3.5 h-3.5 text-indigo-500" />
                     <span className="text-[10px] font-semibold text-slate-600 uppercase tracking-widest">Join the Revolution</span>
                 </div>
-                <h1 className="text-4xl sm:text-6xl font-black text-slate-900 mb-6 tracking-tight leading-tight">
+                <h1 className="text-2xl sm:text-4xl font-black text-slate-900 mb-4 tracking-tight leading-tight">
                     Building the <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-violet-600">Future of Learning</span>
                 </h1>
-                <p className="text-lg text-slate-500 font-normal max-w-2xl mx-auto leading-relaxed">
+                <p className="text-md text-slate-500 font-normal max-w-2xl mx-auto leading-relaxed">
                     At VidyaSetu, we aren't just an EdTech company. We are a movement to democratize quality education and bridge the gap between intent and employment.
                 </p>
             </div>
@@ -51,7 +51,7 @@ export default function CareersPage() {
                             <div className="absolute inset-0 bg-indigo-100 rounded-[2rem] rotate-6 transform translate-x-2 translate-y-2"></div>
                             <div className="relative w-full h-full rounded-[2rem] overflow-hidden border-4 border-white shadow-lg">
                                 <Image
-                                    src="/assets/images/founder-profile.jpg"
+                                    src="/assets/images/founder-profile.png"
                                     alt="Founder of VidyaSetu"
                                     fill
                                     className="object-cover"
