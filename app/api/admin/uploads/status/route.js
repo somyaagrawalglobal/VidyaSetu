@@ -47,7 +47,8 @@ export async function GET(request) {
                 success: true,
                 uploadedBytes,
                 fileSize: session.fileSize,
-                status: 'uploading'
+                status: 'uploading',
+                chunkSize: 3145728 // 3MB (Safe for Vercel)
             });
         } else if (ytResponse.status === 200 || ytResponse.status === 201) {
             return NextResponse.json({
