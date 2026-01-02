@@ -13,9 +13,9 @@ const footerLinks = {
     { name: "How it Works", href: "/#methodology" }, // Updated ID to match previous component
   ],
   Legal: [
-    { name: "Privacy Policy", href: "#" },
-    { name: "Terms of Service", href: "#" },
-    { name: "Refund Policy", href: "#" },
+    { name: "Privacy Policy", href: "/privacy-policy" },
+    { name: "Terms of Service", href: "/terms-of-service" },
+    { name: "Refund Policy", href: "/refund-policy" },
   ],
 };
 
@@ -129,8 +129,8 @@ export default function Footer() {
             </p>
             {/* You could optionally add a small bottom nav here for mobile if needed, e.g., */}
             <div className="order-1 sm:order-2 flex space-x-4">
-              <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
-              <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>
+              <Link href="/privacy-policy" className="hover:text-white transition-colors">Privacy</Link>
+              <Link href="/terms-of-service" className="hover:text-white transition-colors">Terms</Link>
             </div>
           </div>
         </div>
