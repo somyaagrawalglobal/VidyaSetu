@@ -44,10 +44,19 @@ export default function AddCoursePage() {
 
     // Modules state management helper
     const addModule = () => {
+        const newModuleIndex = formData.modules.length;
         setFormData({
             ...formData,
             modules: [...formData.modules, { title: 'New Module', lessons: [] }]
         });
+
+        // Smooth scroll to the new section
+        setTimeout(() => {
+            const element = document.getElementById(`module-${newModuleIndex}`);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }, 100);
     };
 
     const updateModuleTitle = (index, title) => {
@@ -58,6 +67,7 @@ export default function AddCoursePage() {
 
     const addLesson = (moduleIndex) => {
         const newModules = [...formData.modules];
+        const newLessonIndex = newModules[moduleIndex].lessons.length;
         newModules[moduleIndex].lessons.push({
             title: 'New Lesson',
             videoId: '',
@@ -67,6 +77,14 @@ export default function AddCoursePage() {
             resources: []
         });
         setFormData({ ...formData, modules: newModules });
+
+        // Smooth scroll to the new lesson
+        setTimeout(() => {
+            const element = document.getElementById(`lesson-${moduleIndex}-${newLessonIndex}`);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }, 100);
     };
 
     const updateLesson = (moduleIndex, lessonIndex, field, value) => {
@@ -341,7 +359,11 @@ export default function AddCoursePage() {
                         </div>
 
                         {formData.modules.map((module, mIndex) => (
-                            <div key={mIndex} className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                            <div
+                                key={mIndex}
+                                id={`module-${mIndex}`}
+                                className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500"
+                            >
                                 <div className="p-3 sm:p-4 bg-gray-50 border-b border-gray-100 flex flex-col sm:flex-row gap-4 sm:items-center">
                                     <div className="flex-1">
                                         <input
@@ -382,7 +404,11 @@ export default function AddCoursePage() {
                                         </div>
                                     )}
                                     {module.lessons.map((lesson, lIndex) => (
-                                        <div key={lIndex} className="flex flex-col md:flex-row items-start md:items-center gap-4 p-2 sm:p-4 rounded-md sm:rounded-lg md:rounded-xl border border-gray-100 hover:border-indigo-100 hover:bg-indigo-50/10 transition-colors group">
+                                        <div
+                                            key={lIndex}
+                                            id={`lesson-${mIndex}-${lIndex}`}
+                                            className="flex flex-col md:flex-row items-start md:items-center gap-4 p-2 sm:p-4 rounded-md sm:rounded-lg md:rounded-xl border border-gray-100 hover:border-indigo-100 hover:bg-indigo-50/10 transition-colors group animate-in fade-in slide-in-from-bottom-2 duration-300"
+                                        >
                                             <div className="p-2 bg-indigo-50 text-indigo-500 rounded-lg">
                                                 <Video className="w-4 h-4" />
                                             </div>
