@@ -22,23 +22,22 @@ body {
   color: #3730a3;
 }
 
-/* Custom Scrollbar for a premium look */
+/* Custom Scrollbar - Hidden for clean UI */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 0px;
+  height: 0px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f8fafc;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #e2e8f0;
-  border-radius: 20px;
-  border: 3px solid #f8fafc;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #cbd5e1;
+  background: transparent;
 }
 
 @theme {
