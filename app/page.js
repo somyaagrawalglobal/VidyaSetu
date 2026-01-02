@@ -303,8 +303,8 @@ export default function Home() {
                                 We're building the bridge for the next generation of professionals to walk across with absolute confidence.
                             </p>
                             <div>
-                                <h4 className="text-xl font-black text-slate-900">Somya Agrawal</h4>
-                                <p className="text-[10px] font-black text-indigo-600 uppercase tracking-widest">Founder & CEO</p>
+                                <h4 className="text-xl font-black text-slate-900">Founder of VidyaSetu</h4>
+                                <p className="text-[10px] font-black text-indigo-600 uppercase tracking-widest">Visionary Leadership</p>
                             </div>
                         </div>
                     </div>
