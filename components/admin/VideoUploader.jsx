@@ -143,7 +143,7 @@ export default function VideoUploader({ courseId, initialVideoId, onVideoReady }
 
         try {
             let uploadSessionId = null;
-            let chunkSize = 8388608;
+            let chunkSize = 3145728; // Default 3MB (Safe for Vercel)
             let uploadedBytes = 0;
 
             // Check if this specific file has a pending session in this course
@@ -157,6 +157,7 @@ export default function VideoUploader({ courseId, initialVideoId, onVideoReady }
                 if (statusData.success) {
                     uploadSessionId = savedSessionId;
                     uploadedBytes = statusData.uploadedBytes;
+                    if (statusData.chunkSize) chunkSize = statusData.chunkSize;
                     setProgress(Math.round((uploadedBytes / file.size) * 100));
 
                     if (statusData.status === 'completed') {
