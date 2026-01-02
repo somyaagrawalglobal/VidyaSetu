@@ -329,7 +329,7 @@ export default function CourseDetails({ params }) {
                                     </button>
                                 )}
 
-                                <p className="text-center text-xs text-gray-500 mb-6">30-Day Money-Back Guarantee</p>
+                                {/* <p className="text-center text-xs text-gray-500 mb-6">30-Day Money-Back Guarantee</p> */}
 
                                 <div className="space-y-3 text-sm text-gray-600 font-medium">
                                     <h4 className="font-bold text-gray-900 mb-2">This course includes:</h4>
@@ -348,7 +348,7 @@ export default function CourseDetails({ params }) {
                                             </div>
                                             <div className="flex items-center gap-3">
                                                 <Globe className="w-4 h-4 text-indigo-500" />
-                                                <span>Access on mobile and TV</span>
+                                                <span>Access on mobile and PC</span>
                                             </div>
                                             <div className="flex items-center gap-3">
                                                 <Award className="w-4 h-4 text-indigo-500" />
