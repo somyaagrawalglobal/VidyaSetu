@@ -52,7 +52,7 @@ export default function TermsOfService() {
     ];
 
     return (
-        <main className="bg-slate-50 min-h-screen py-16 px-4 sm:px-6 lg:px-8 font-sans">
+        <main className="bg-slate-50 min-h-screen py-24 px-4 sm:px-6 lg:px-8 font-sans">
             {/* Header Section */}
             <div className="max-w-3xl mx-auto text-center mb-16">
                 <div className="inline-flex items-center justify-center p-3 bg-indigo-100/50 rounded-xl mb-6">
