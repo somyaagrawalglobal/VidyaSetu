@@ -6,10 +6,6 @@ import "./globals.css";
 export const metadata = {
   title: "VidyaSetu - Professional Learning Platform",
   description: "Advanced certification programs for tomorrow's leaders.",
-  icons: {
-    icon: "/assets/images/brand-logo.png",
-    apple: "/assets/images/brand-logo.png",
-  },
 };
 
 export default function RootLayout({ children }) {
