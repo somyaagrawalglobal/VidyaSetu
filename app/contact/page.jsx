@@ -100,7 +100,7 @@ export default function ContactPage() {
                                     <div className="flex-1">
                                         <h3 className="text-sm font-bold text-slate-800 mb-0.5">Live Chat (WhatsApp)</h3>
                                         <p className="text-xs text-slate-600 font-medium mb-2 leading-relaxed">Fastest reply guaranteed within minutes.</p>
-                                        <a href="https://wa.me/917300755100" target="_blank" rel="noopener noreferrer" className="text-indigo-600 text-xs font-bold flex items-center hover:translate-x-1 transition-transform">
+                                        <a href="https://chat.whatsapp.com/JYFLAGoLN9pDGn8iMwCRDc" target="_blank" rel="noopener noreferrer" className="text-indigo-600 text-xs font-bold flex items-center hover:translate-x-1 transition-transform">
                                             Start Chat Now <ArrowRight className="w-3 h-3 ml-1" />
                                         </a>
                                     </div>

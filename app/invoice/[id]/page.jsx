@@ -109,10 +109,8 @@ export default function InvoicePage() {
                                 <CheckCircle2 size={12} /> {order.status === 'completed' ? 'Paid' : 'Refunded'}
                             </div>
                             <div className="text-slate-400 text-xs font-medium">
-                                <p>VidyaSetu Academy Pvt Ltd.</p>
-                                <p>Whitefield Main Road, Bengaluru</p>
-                                <p>Karnataka, India - 560066</p>
-                                <p>GSTIN: 29AAAAA0000A1Z5</p>
+                                <p>Vidya-Setu </p>
+                                <p>Navi Mumbai, Maharashtra</p>
                             </div>
                         </div>
                     </div>
@@ -187,7 +185,7 @@ export default function InvoicePage() {
                         <div className="pt-10 border-t border-slate-100 text-center space-y-4">
                             <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Thank you for learning with VidyaSetu</p>
                             <p className="text-[9px] text-slate-400 leading-relaxed max-w-md mx-auto">
-                                This is a computer-generated invoice and does not require a physical signature. For any support regarding this transaction, please contact support@vidyasetu.com
+                                This is a computer-generated invoice and does not require a physical signature. For any support regarding this transaction, please contact info@vidyasetu.com
                             </p>
                         </div>
                     </div>
