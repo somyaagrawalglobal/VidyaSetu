@@ -328,7 +328,8 @@ export default function Home() {
                             Get Started
                         </Link>
                         <a
-                            href="https://wa.me/919113645398"
+                            href="https://chat.whatsapp.com/JYFLAGoLN9pDGn8iMwCRDc"
+                            target="_blank"
                             className="w-full sm:w-auto px-8 py-4 bg-white border border-slate-200 text-slate-700 font-bold rounded-xl hover:bg-slate-50 transition-all flex items-center justify-center gap-2"
                         >
                             <MessageCircle className="w-5 h-5 text-emerald-500" />

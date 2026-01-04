@@ -153,12 +153,12 @@ export default function TransactionDetailsPage() {
 
                 {/* Header Card */}
                 <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden mb-8">
-                    <div className="p-8 md:p-10 flex flex-col md:flex-row justify-between gap-8">
+                    <div className="p-6 md:p-10 flex flex-col md:flex-row justify-between gap-8">
                         <div>
                             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-indigo-50 text-indigo-700 text-[10px] font-bold uppercase tracking-wider mb-4 border border-indigo-100/50">
                                 Transaction ID: {order.razorpayOrderId}
                             </div>
-                            <h1 className="text-3xl font-black text-slate-900 tracking-tight mb-2">Order Summary</h1>
+                            <h1 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight mb-2">Order Summary</h1>
                             <p className="text-slate-500 text-sm font-medium flex items-center gap-2">
                                 <Clock size={16} /> Processed on {new Date(order.createdAt).toLocaleString()}
                             </p>
@@ -170,14 +170,14 @@ export default function TransactionDetailsPage() {
                                         order.status === 'refunded' ? <RefreshCcw size={16} /> : null}
                                 {order.status}
                             </div>
-                            <div className="text-4xl font-black text-slate-900">
+                            <div className="text-3xl md:text-4xl font-black text-slate-900">
                                 ₹{order.amount.toLocaleString()}
                             </div>
                         </div>
                     </div>
 
                     {/* Action Bar */}
-                    <div className="bg-slate-50 px-8 py-4 border-t border-slate-100 flex flex-wrap gap-4 justify-between items-center">
+                    <div className="bg-slate-50 px-6 py-4 border-t border-slate-100 flex flex-wrap gap-4 justify-between items-center">
                         <div className="flex gap-4">
                             <Link
                                 href={`/invoice/${order._id}`}
@@ -192,17 +192,17 @@ export default function TransactionDetailsPage() {
                             )}
                         </div>
                         {order.status === 'completed' && (
-                            <div className="flex items-center gap-3">
-                                <div className="flex bg-white border border-slate-200 rounded-xl p-1 shadow-sm">
+                            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto mt-2 sm:mt-0">
+                                <div className="flex bg-white border border-slate-200 rounded-xl p-1 shadow-sm w-full sm:w-auto">
                                     <button
                                         onClick={() => setRefundMethod('razorpay')}
-                                        className={`px-4 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all ${refundMethod === 'razorpay' ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-400 hover:text-slate-600'}`}
+                                        className={`flex-1 sm:flex-none px-4 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all text-center ${refundMethod === 'razorpay' ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' : 'text-slate-400 hover:text-slate-600'}`}
                                     >
                                         Razorpay
                                     </button>
                                     <button
                                         onClick={() => setRefundMethod('manual')}
-                                        className={`px-4 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all ${refundMethod === 'manual' ? 'bg-amber-600 text-white shadow-md shadow-amber-100' : 'text-slate-400 hover:text-slate-600'}`}
+                                        className={`flex-1 sm:flex-none px-4 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all text-center ${refundMethod === 'manual' ? 'bg-amber-600 text-white shadow-md shadow-amber-100' : 'text-slate-400 hover:text-slate-600'}`}
                                     >
                                         Manual
                                     </button>
@@ -212,12 +212,12 @@ export default function TransactionDetailsPage() {
                                     placeholder="Note (Reason for refund)"
                                     value={refundNote}
                                     onChange={(e) => setRefundNote(e.target.value)}
-                                    className="px-4 py-2 bg-white border border-slate-200 rounded-xl text-xs font-medium focus:border-indigo-500 outline-none w-48 shadow-sm transition-all"
+                                    className="px-4 py-2 bg-white border border-slate-200 rounded-xl text-xs font-medium focus:border-indigo-500 outline-none w-full sm:w-48 shadow-sm transition-all"
                                 />
                                 <button
                                     onClick={handleRefundClick}
                                     disabled={loading || isRefunding}
-                                    className={`flex items-center gap-2 px-6 py-2 rounded-xl text-xs font-bold text-white transition-all shadow-lg active:scale-95 ${refundMethod === 'manual' ? 'bg-amber-600 hover:bg-amber-700 shadow-amber-100' : 'bg-rose-600 hover:bg-rose-700 shadow-rose-100'}`}
+                                    className={`flex items-center justify-center gap-2 px-6 py-2 rounded-xl text-xs font-bold text-white transition-all shadow-lg active:scale-95 ${refundMethod === 'manual' ? 'bg-amber-600 hover:bg-amber-700 shadow-amber-100' : 'bg-rose-600 hover:bg-rose-700 shadow-rose-100'}`}
                                 >
                                     {isRefunding ? <Loader2 size={16} className="animate-spin" /> : <RefreshCcw size={16} />}
                                     Refund
@@ -243,12 +243,12 @@ export default function TransactionDetailsPage() {
                     {/* Main Details */}
                     <div className="md:col-span-2 space-y-8">
                         {/* Course Info */}
-                        <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-8">
+                        <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 md:p-8">
                             <h3 className="text-lg font-black text-slate-900 mb-6 flex items-center gap-2">
                                 <BookOpen className="text-indigo-500" size={20} /> Course Details
                             </h3>
-                            <div className="flex gap-6">
-                                <div className="relative h-24 w-40 rounded-2xl overflow-hidden shadow-sm flex-shrink-0 bg-slate-100">
+                            <div className="flex flex-col sm:flex-row gap-6">
+                                <div className="relative h-48 w-full sm:h-24 sm:w-40 rounded-2xl overflow-hidden shadow-sm flex-shrink-0 bg-slate-100">
                                     <img
                                         src={order.course?.thumbnail || '/assets/images/course-placeholder.jpg'}
                                         alt={order.course?.title || 'Course'}
@@ -276,7 +276,7 @@ export default function TransactionDetailsPage() {
 
                         {/* Payment Verification / Access Management */}
                         <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
-                            <div className="p-8">
+                            <div className="p-6 md:p-8">
                                 <h3 className="text-lg font-black text-slate-900 mb-6 flex items-center gap-2">
                                     <ShieldCheck className="text-emerald-500" size={20} /> Access Management
                                 </h3>
@@ -311,7 +311,7 @@ export default function TransactionDetailsPage() {
                     {/* Sidebar Details */}
                     <div className="space-y-8">
                         {/* Student Details */}
-                        <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-8">
+                        <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 md:p-8">
                             <h3 className="text-lg font-black text-slate-900 mb-6 flex items-center gap-2">
                                 <User className="text-indigo-500" size={20} /> Student Info
                             </h3>
@@ -371,7 +371,7 @@ export default function TransactionDetailsPage() {
                         </div>
 
                         {/* Billing Summary */}
-                        <div className="rounded-3xl border border-slate-200 shadow-sm p-8 bg-indigo-600 text-white shadow-xl shadow-indigo-100 relative overflow-hidden group">
+                        <div className="rounded-3xl border border-slate-200 shadow-sm p-6 md:p-8 bg-indigo-600 text-white shadow-xl shadow-indigo-100 relative overflow-hidden group">
                             <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:scale-110 transition-transform">
                                 <Tag size={80} />
                             </div>
@@ -403,7 +403,7 @@ export default function TransactionDetailsPage() {
                         </div>
 
                         {/* Payment Information */}
-                        <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-8">
+                        <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 md:p-8">
                             <h3 className="text-lg font-black text-slate-900 mb-6 flex items-center gap-2">
                                 <ShieldAlert className="text-slate-400" size={20} /> Gateway Logs
                             </h3>

@@ -141,7 +141,7 @@ export default function FeaturedProgramsSection() {
                                         <div className="flex items-center gap-4">
                                             <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-500 uppercase tracking-wide">
                                                 <Clock className="w-3.5 h-3.5 text-indigo-500" />
-                                                {program.duration || '8 Weeks'}
+                                                {program.level || 'Beginner'}
                                             </div>
                                             <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-500 uppercase tracking-wide">
                                                 <BookOpen className="w-3.5 h-3.5 text-indigo-500" />
