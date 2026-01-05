@@ -9,6 +9,7 @@ import Modal from '@/components/Modal';
 import VideoUploader from '@/components/admin/VideoUploader';
 import FileUploader from '@/components/admin/FileUploader';
 import { useToast } from '@/components/ToastContext';
+import CoursePreview from '@/components/admin/CoursePreview';
 
 export default function AddCoursePage() {
     const router = useRouter();
@@ -22,6 +23,7 @@ export default function AddCoursePage() {
         onConfirm: null,
         showCancel: false
     });
+    const [showPreview, setShowPreview] = useState(false);
 
     const openModal = (config) => setModalConfig({ ...config, isOpen: true });
     const closeModal = () => setModalConfig(prev => ({ ...prev, isOpen: false }));
@@ -169,7 +171,28 @@ export default function AddCoursePage() {
                             <p className="text-slate-500 text-sm">Fill in the details to create a new learning path.</p>
                         </div>
                     </div>
+                    <div className="flex items-center gap-4">
+                        <label className="flex items-center gap-2 cursor-pointer group">
+                            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider group-hover:text-indigo-600 transition-colors">Preview Course</span>
+                            <div className="relative">
+                                <input
+                                    type="checkbox"
+                                    className="sr-only peer"
+                                    checked={showPreview}
+                                    onChange={(e) => setShowPreview(e.target.checked)}
+                                />
+                                <div className="w-10 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600"></div>
+                            </div>
+                        </label>
+                    </div>
                 </div>
+
+                {showPreview && (
+                    <CoursePreview
+                        courseData={formData}
+                        onClose={() => setShowPreview(false)}
+                    />
+                )}
 
                 <form onSubmit={handleSubmit} className="space-y-8">
                     {/* Basic Info Card */}
