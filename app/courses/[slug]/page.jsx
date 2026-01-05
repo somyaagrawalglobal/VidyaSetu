@@ -46,6 +46,7 @@ export default function CourseDetails({ params }) {
     const [isAdmin, setIsAdmin] = useState(false);
     const [isInstructor, setIsInstructor] = useState(false);
     const [activeModule, setActiveModule] = useState(0);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [previewModal, setPreviewModal] = useState({ isOpen: false, videoId: '', title: '' });
     const [isEnrollModalOpen, setIsEnrollModalOpen] = useState(false);
 
@@ -64,6 +65,7 @@ export default function CourseDetails({ params }) {
                     setIsEnrolled(data.isEnrolled);
                     setIsAdmin(data.isAdmin);
                     setIsInstructor(data.isInstructor);
+                    setIsLoggedIn(data.isLoggedIn);
                 }
             } catch (error) {
                 console.error('Error:', error);
@@ -75,6 +77,10 @@ export default function CourseDetails({ params }) {
     }, [slug]);
 
     const handleBuyNow = () => {
+        if (!isLoggedIn) {
+            router.push(`/login?redirect=/courses/${slug}&message=Please login to enroll in this course`);
+            return;
+        }
         setIsEnrollModalOpen(true);
     };
 
