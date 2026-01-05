@@ -46,8 +46,8 @@ export default function WatchSidebar({ modules, activeLesson, onLessonSelect, co
                 <div className="flex-1 overflow-y-auto scrollbar-none">
                     {modules.map((module, mIndex) => {
                         const isExpanded = expandedModules.includes(mIndex);
-                        const completedInModule = module.lessons.filter(l => completedLessons.includes(l._id)).length;
-                        const progressPercent = (completedInModule / module.lessons.length) * 100;
+                        const completedInModule = module.lessons.filter(l => (l._id && completedLessons.includes(l._id))).length;
+                        const progressPercent = module.lessons.length > 0 ? (completedInModule / module.lessons.length) * 100 : 0;
 
                         return (
                             <div key={mIndex} className="border-b border-slate-100 last:border-0">
@@ -82,8 +82,8 @@ export default function WatchSidebar({ modules, activeLesson, onLessonSelect, co
                                 {isExpanded && (
                                     <div className="bg-slate-50/50">
                                         {module.lessons.map((lesson, lIndex) => {
-                                            const isActive = activeLesson?._id === lesson._id;
-                                            const isCompleted = completedLessons.includes(lesson._id);
+                                            const isActive = activeLesson && (activeLesson._id && lesson._id ? activeLesson._id === lesson._id : activeLesson.title === lesson.title);
+                                            const isCompleted = lesson._id && completedLessons.includes(lesson._id);
 
                                             return (
                                                 <button

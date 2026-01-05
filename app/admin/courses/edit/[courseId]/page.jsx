@@ -11,6 +11,7 @@ import FileUploader from '@/components/admin/FileUploader';
 import { AlertCircle, CheckCircle, XCircle, Send } from 'lucide-react';
 import { useToast } from '@/components/ToastContext';
 import Loader from '@/components/Loader';
+import CoursePreview from '@/components/admin/CoursePreview';
 
 export default function EditCoursePage({ params }) {
     const { courseId } = use(params);
@@ -48,6 +49,7 @@ export default function EditCoursePage({ params }) {
     const [currentUser, setCurrentUser] = useState(null);
     const [rejectionReasonInput, setRejectionReasonInput] = useState('');
     const [isStatusUpdating, setIsStatusUpdating] = useState(false);
+    const [showPreview, setShowPreview] = useState(false);
 
     useEffect(() => {
         fetchCourse();
@@ -96,10 +98,19 @@ export default function EditCoursePage({ params }) {
 
     // Modules state management helper
     const addModule = () => {
+        const newModuleIndex = formData.modules.length;
         setFormData({
             ...formData,
             modules: [...formData.modules, { title: 'New Module', lessons: [] }]
         });
+
+        // Smooth scroll to the new section
+        setTimeout(() => {
+            const element = document.getElementById(`module-${newModuleIndex}`);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }, 100);
     };
 
     const updateModuleTitle = (index, title) => {
@@ -110,6 +121,7 @@ export default function EditCoursePage({ params }) {
 
     const addLesson = (moduleIndex) => {
         const newModules = [...formData.modules];
+        const newLessonIndex = newModules[moduleIndex].lessons.length;
         newModules[moduleIndex].lessons.push({
             title: 'New Lesson',
             videoId: '',
@@ -119,6 +131,14 @@ export default function EditCoursePage({ params }) {
             resources: []
         });
         setFormData({ ...formData, modules: newModules });
+
+        // Smooth scroll to the new lesson
+        setTimeout(() => {
+            const element = document.getElementById(`lesson-${moduleIndex}-${newLessonIndex}`);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }, 100);
     };
 
     const updateLesson = (moduleIndex, lessonIndex, field, value) => {
@@ -262,7 +282,28 @@ export default function EditCoursePage({ params }) {
                             </div>
                         </div>
                     </div>
+                    <div className="flex items-center gap-4">
+                        <label className="flex items-center gap-2 cursor-pointer group">
+                            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider group-hover:text-indigo-600 transition-colors">Preview Course</span>
+                            <div className="relative">
+                                <input
+                                    type="checkbox"
+                                    className="sr-only peer"
+                                    checked={showPreview}
+                                    onChange={(e) => setShowPreview(e.target.checked)}
+                                />
+                                <div className="w-10 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600"></div>
+                            </div>
+                        </label>
+                    </div>
                 </div>
+
+                {showPreview && (
+                    <CoursePreview
+                        courseData={formData}
+                        onClose={() => setShowPreview(false)}
+                    />
+                )}
 
                 {/* Admin Approval Section */}
                 {currentUser?.roles.includes('Admin') && (
@@ -547,7 +588,11 @@ export default function EditCoursePage({ params }) {
                         </div>
 
                         {formData.modules.map((module, mIndex) => (
-                            <div key={mIndex} className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                            <div
+                                key={mIndex}
+                                id={`module-${mIndex}`}
+                                className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500"
+                            >
                                 <div className="p-4 bg-gray-50 border-b border-gray-100 flex flex-col sm:flex-row gap-4 sm:items-center">
                                     <div className="flex-1">
                                         <input
@@ -588,7 +633,11 @@ export default function EditCoursePage({ params }) {
                                         </div>
                                     )}
                                     {module.lessons.map((lesson, lIndex) => (
-                                        <div key={lIndex} className="flex flex-col md:flex-row items-start md:items-center gap-4 p-2 md:p-4 rounded-md sm:rounded-xl border border-gray-100 hover:border-indigo-100 hover:bg-indigo-50/10 transition-colors group">
+                                        <div
+                                            key={lIndex}
+                                            id={`lesson-${mIndex}-${lIndex}`}
+                                            className="flex flex-col md:flex-row items-start md:items-center gap-4 p-2 md:p-4 rounded-md sm:rounded-xl border border-gray-100 hover:border-indigo-100 hover:bg-indigo-50/10 transition-colors group animate-in fade-in slide-in-from-bottom-2 duration-300"
+                                        >
                                             <div className="p-2 bg-indigo-50 text-indigo-500 rounded-lg">
                                                 <Video className="w-4 h-4" />
                                             </div>

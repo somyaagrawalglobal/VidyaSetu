@@ -15,6 +15,7 @@ export default function WatchCoursePage({ params }) {
     const [completedLessons, setCompletedLessons] = useState([]);
     const [error, setError] = useState(null);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Mobile sidebar hidden by default
+    const [isPreviewMode, setIsPreviewMode] = useState(false);
 
     useEffect(() => {
         const fetchCourseAndProgress = async () => {
@@ -28,6 +29,7 @@ export default function WatchCoursePage({ params }) {
                         setError('You need to enroll in this course to watch it.');
                     }
                     setCourse(courseData.course);
+                    setIsPreviewMode(courseData.isAdmin || courseData.isInstructor);
 
                     // Set first lesson as active
                     if (courseData.course.modules.length > 0 && courseData.course.modules[0].lessons.length > 0) {
@@ -120,6 +122,7 @@ export default function WatchCoursePage({ params }) {
                     course={course}
                     isCompleted={completedLessons.includes(activeLesson?._id)}
                     onToggleComplete={() => handleToggleLesson(activeLesson?._id)}
+                    isPreview={isPreviewMode}
                 />
             </div>
         </div>
