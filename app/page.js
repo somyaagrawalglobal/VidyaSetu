@@ -292,7 +292,7 @@ export default function Home() {
                                     src="/assets/images/founder-profile.png"
                                     alt="Somya Agrawal"
                                     fill
-                                    className="object-cover grayscale hover:grayscale-0 transition-all duration-700"
+                                    className="object-cover grayscale-0 lg:grayscale lg:hover:grayscale-0 transition-all duration-700"
                                 />
                             </div>
                         </div>

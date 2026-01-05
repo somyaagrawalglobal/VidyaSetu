@@ -264,16 +264,16 @@ export default function EditCoursePage({ params }) {
             <div className="max-w-5xl mx-auto">
 
                 {/* Header */}
-                <div className="flex items-center justify-between mb-6">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-8 bg-white/50 p-4 rounded-2xl border border-slate-100 sm:bg-transparent sm:p-0 sm:border-none sm:rounded-none shadow-sm sm:shadow-none">
                     <div className="flex items-center gap-3">
                         <Link href="/admin/courses" className="p-1.5 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 text-gray-500 transition-colors shadow-sm">
                             <ChevronLeft className="w-4 h-4" />
                         </Link>
                         <div>
-                            <h1 className="text-xl font-extrabold text-slate-900 tracking-tight">Edit Course</h1>
+                            <h1 className="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight">Edit Course</h1>
                             <div className="flex items-center gap-2">
-                                <p className="text-slate-400 text-[11px] font-medium uppercase tracking-wider">Course Configuration</p>
-                                <div className={`inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest ${formData.approvalStatus === 'approved' ? 'bg-emerald-50 text-emerald-700 border border-emerald-100' :
+                                <p className="text-slate-400 text-[10px] sm:text-[11px] font-medium uppercase tracking-wider">Configuration</p>
+                                <div className={`inline-flex items-center px-2 py-0.5 rounded-full text-[8px] sm:text-[9px] font-black uppercase tracking-widest ${formData.approvalStatus === 'approved' ? 'bg-emerald-50 text-emerald-700 border border-emerald-100' :
                                     formData.approvalStatus === 'rejected' ? 'bg-red-50 text-red-700 border border-red-100' :
                                         'bg-amber-50 text-amber-700 border border-amber-100'
                                     }`}>
@@ -282,9 +282,9 @@ export default function EditCoursePage({ params }) {
                             </div>
                         </div>
                     </div>
-                    <div className="flex items-center gap-4">
-                        <label className="flex items-center gap-2 cursor-pointer group">
-                            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider group-hover:text-indigo-600 transition-colors">Preview Course</span>
+                    <div className="flex items-center justify-between sm:justify-end gap-4 w-full sm:w-auto pt-4 sm:pt-0 border-t border-slate-100 sm:border-none">
+                        <label className="flex items-center justify-between sm:justify-start gap-3 cursor-pointer group w-full sm:w-auto">
+                            <span className="text-[10px] sm:text-xs font-black text-slate-400 uppercase tracking-widest group-hover:text-indigo-600 transition-colors">Live Preview Mode</span>
                             <div className="relative">
                                 <input
                                     type="checkbox"
@@ -292,7 +292,7 @@ export default function EditCoursePage({ params }) {
                                     checked={showPreview}
                                     onChange={(e) => setShowPreview(e.target.checked)}
                                 />
-                                <div className="w-10 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600"></div>
+                                <div className="w-10 h-5 bg-slate-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600 shadow-inner"></div>
                             </div>
                         </label>
                     </div>
