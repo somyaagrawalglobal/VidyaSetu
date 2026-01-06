@@ -93,7 +93,14 @@ export async function GET(request, { params }) {
             });
         }
 
-        return NextResponse.json({ success: true, course, isEnrolled, isAdmin, isInstructor });
+        return NextResponse.json({
+            success: true,
+            course,
+            isEnrolled,
+            isAdmin,
+            isInstructor,
+            isLoggedIn: !!currentUser
+        });
     } catch (error) {
         return NextResponse.json({ success: false, error: error.message }, { status: 500 });
     }

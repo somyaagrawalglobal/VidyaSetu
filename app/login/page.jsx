@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { Mail, Lock, ArrowRight, Loader2, Eye, EyeOff } from "lucide-react";
+import { useRouter, useSearchParams } from 'next/navigation';
+import { Mail, Lock, ArrowRight, Loader2, Eye, EyeOff, AlertCircle } from "lucide-react";
 import { useAuth } from '@/components/AuthProvider';
 
 const InputField = ({ id, name, type, placeholder, icon: Icon, required = false, value, onChange }) => {
@@ -42,7 +42,11 @@ const InputField = ({ id, name, type, placeholder, icon: Icon, required = false,
 
 export default function Login() {
     const router = useRouter();
+    const searchParams = useSearchParams();
     const { refresh } = useAuth();
+
+    const redirectPath = searchParams.get('redirect') || '/';
+    const message = searchParams.get('message');
 
     const primaryColor = 'indigo-600';
     const secondaryColor = 'purple-600';
@@ -85,7 +89,7 @@ export default function Login() {
             await new Promise(resolve => setTimeout(resolve, 100));
 
             // Redirect on success
-            router.push('/');
+            router.push(redirectPath);
 
         } catch (err) {
             setError(err.message);
@@ -116,6 +120,13 @@ export default function Login() {
                         Sign in to continue your journey.
                     </p>
                 </div>
+
+                {message && (
+                    <div className="bg-indigo-50/80 backdrop-blur-sm border-l-4 border-indigo-500 p-3 mb-5 rounded-r-lg shadow-sm flex items-center gap-3">
+                        <AlertCircle className="w-5 h-5 text-indigo-600 shrink-0" />
+                        <p className="text-xs text-indigo-700 font-semibold">{message}</p>
+                    </div>
+                )}
 
                 {error && (
                     <div className="bg-red-50/80 backdrop-blur-sm border-l-4 border-red-500 p-3 mb-5 rounded-r-lg shadow-sm">

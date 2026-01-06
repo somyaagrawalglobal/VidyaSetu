@@ -9,6 +9,7 @@ import Modal from '@/components/Modal';
 import VideoUploader from '@/components/admin/VideoUploader';
 import FileUploader from '@/components/admin/FileUploader';
 import { useToast } from '@/components/ToastContext';
+import CoursePreview from '@/components/admin/CoursePreview';
 
 export default function AddCoursePage() {
     const router = useRouter();
@@ -22,6 +23,7 @@ export default function AddCoursePage() {
         onConfirm: null,
         showCancel: false
     });
+    const [showPreview, setShowPreview] = useState(false);
 
     const openModal = (config) => setModalConfig({ ...config, isOpen: true });
     const closeModal = () => setModalConfig(prev => ({ ...prev, isOpen: false }));
@@ -159,17 +161,38 @@ export default function AddCoursePage() {
             <div className="max-w-5xl mx-auto">
 
                 {/* Header */}
-                <div className="flex items-center justify-between mb-8">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-8 bg-white/50 p-4 rounded-2xl border border-slate-100 sm:bg-transparent sm:p-0 sm:border-none sm:rounded-none shadow-sm sm:shadow-none">
                     <div className="flex items-center gap-4">
-                        <Link href="/admin/courses" className="p-2 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 text-gray-500 transition-colors">
+                        <Link href="/admin/courses" className="p-2 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 text-gray-500 transition-colors shadow-sm">
                             <ChevronLeft className="w-5 h-5" />
                         </Link>
                         <div>
-                            <h1 className="text-2xl font-bold text-slate-900">Add New Course</h1>
-                            <p className="text-slate-500 text-sm">Fill in the details to create a new learning path.</p>
+                            <h1 className="text-xl sm:text-2xl font-bold text-slate-900">Add New Course</h1>
+                            <p className="text-slate-500 text-[11px] sm:text-sm font-medium">Create a new learning path.</p>
                         </div>
                     </div>
+                    <div className="flex items-center justify-between sm:justify-end gap-4 w-full sm:w-auto pt-4 sm:pt-0 border-t border-slate-100 sm:border-none">
+                        <label className="flex items-center justify-between sm:justify-start gap-3 cursor-pointer group w-full sm:w-auto">
+                            <span className="text-[10px] sm:text-xs font-black text-slate-400 uppercase tracking-widest group-hover:text-indigo-600 transition-colors">Live Preview Mode</span>
+                            <div className="relative">
+                                <input
+                                    type="checkbox"
+                                    className="sr-only peer"
+                                    checked={showPreview}
+                                    onChange={(e) => setShowPreview(e.target.checked)}
+                                />
+                                <div className="w-10 h-5 bg-slate-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600 shadow-inner"></div>
+                            </div>
+                        </label>
+                    </div>
                 </div>
+
+                {showPreview && (
+                    <CoursePreview
+                        courseData={formData}
+                        onClose={() => setShowPreview(false)}
+                    />
+                )}
 
                 <form onSubmit={handleSubmit} className="space-y-8">
                     {/* Basic Info Card */}

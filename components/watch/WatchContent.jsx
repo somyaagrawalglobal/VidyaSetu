@@ -5,7 +5,7 @@ import VideoPlayer from '@/components/VideoPlayer';
 import { Info, MessageCircle, FileText, BookOpen, CheckCircle2, Eye, ExternalLink } from 'lucide-react';
 import ResourceModal from './ResourceModal';
 
-export default function WatchContent({ activeLesson, course, isCompleted, onToggleComplete }) {
+export default function WatchContent({ activeLesson, course, isCompleted, onToggleComplete, isPreview = false }) {
     const [activeTab, setActiveTab] = useState('overview');
     const [selectedResource, setSelectedResource] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -21,7 +21,7 @@ export default function WatchContent({ activeLesson, course, isCompleted, onTogg
     useEffect(() => {
         setSelectedResource(null);
         setIsModalOpen(false);
-    }, [activeLesson?._id]);
+    }, [activeLesson?._id, activeLesson?.title]);
 
     const handleViewResource = (resource) => {
         setSelectedResource(resource);
@@ -30,10 +30,10 @@ export default function WatchContent({ activeLesson, course, isCompleted, onTogg
 
     // Fetch questions when lesson changes or activeTab becomes 'qna'
     useEffect(() => {
-        if (activeTab === 'qna' && activeLesson?._id) {
+        if (!isPreview && activeTab === 'qna' && activeLesson?._id) {
             fetchQuestions();
         }
-    }, [activeTab, activeLesson?._id]);
+    }, [activeTab, activeLesson?._id, isPreview]);
 
     const fetchQuestions = async () => {
         try {
@@ -157,16 +157,18 @@ export default function WatchContent({ activeLesson, course, isCompleted, onTogg
                             </h1>
                             <span className="text-sm text-slate-500">Currently Watching</span>
                         </div>
-                        <button
-                            onClick={onToggleComplete}
-                            className={`flex items-center gap-2 font-semibold px-5 py-2.5 rounded-lg transition-all self-start md:self-center text-sm border shadow-sm ${isCompleted
-                                ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
-                                : 'bg-white hover:bg-slate-50 text-slate-700 border-slate-300'
-                                }`}
-                        >
-                            {isCompleted && <CheckCircle2 className="w-4 h-4" />}
-                            {isCompleted ? 'Completed' : 'Mark as Complete'}
-                        </button>
+                        {!isPreview && (
+                            <button
+                                onClick={onToggleComplete}
+                                className={`flex items-center gap-2 font-semibold px-5 py-2.5 rounded-lg transition-all self-start md:self-center text-sm border shadow-sm ${isCompleted
+                                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
+                                    : 'bg-white hover:bg-slate-50 text-slate-700 border-slate-300'
+                                    }`}
+                            >
+                                {isCompleted && <CheckCircle2 className="w-4 h-4" />}
+                                {isCompleted ? 'Completed' : 'Mark as Complete'}
+                            </button>
+                        )}
                     </div>
 
                     {/* Tabs Navigation */}
@@ -207,15 +209,17 @@ export default function WatchContent({ activeLesson, course, isCompleted, onTogg
                                     </div>
                                 </div>
 
-                                <div className="bg-indigo-600 rounded-xl p-6 text-white shadow-lg">
-                                    <h4 className="text-lg font-semibold mb-2">Need Help?</h4>
-                                    <p className="text-indigo-100 text-sm mb-4">
-                                        Our community and instructors are here to help. Ask questions in the Q&A section or join our Discord.
-                                    </p>
-                                    <button className="bg-white text-indigo-600 font-semibold px-5 py-2.5 rounded-lg text-sm hover:bg-indigo-50 transition-colors">
-                                        Join Discord
-                                    </button>
-                                </div>
+                                {!isPreview && (
+                                    <div className="bg-indigo-600 rounded-xl p-6 text-white shadow-lg">
+                                        <h4 className="text-lg font-semibold mb-2">Need Help?</h4>
+                                        <p className="text-indigo-100 text-sm mb-4">
+                                            Our community and instructors are here to help. Ask questions in the Q&A section or join our Discord.
+                                        </p>
+                                        <button className="bg-white text-indigo-600 font-semibold px-5 py-2.5 rounded-lg text-sm hover:bg-indigo-50 transition-colors">
+                                            Join Discord
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         )}
 

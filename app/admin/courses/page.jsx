@@ -20,12 +20,14 @@ import {
     Send,
     Loader2,
     ChevronLeft,
-    DollarSign
+    DollarSign,
+    PlayCircle
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Modal from '@/components/Modal';
 import { useToast } from '@/components/ToastContext';
 import Loader from '@/components/Loader';
+import CoursePreview from '@/components/admin/CoursePreview';
 
 export default function AdminCoursesPage() {
     const [courses, setCourses] = useState([]);
@@ -34,6 +36,7 @@ export default function AdminCoursesPage() {
     const [currentUser, setCurrentUser] = useState(null);
     const [notifyingCourseId, setNotifyingCourseId] = useState(null);
     const [activeTab, setActiveTab] = useState('all');
+    const [previewCourse, setPreviewCourse] = useState(null);
     const toast = useToast();
     const [modalConfig, setModalConfig] = useState({
         isOpen: false,
@@ -427,6 +430,13 @@ export default function AdminCoursesPage() {
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                             <div className="flex items-center justify-end gap-3">
+                                                <button
+                                                    onClick={() => setPreviewCourse(course)}
+                                                    className="text-indigo-600 hover:text-indigo-900 bg-indigo-50 p-2 rounded-lg hover:bg-indigo-100 transition-colors"
+                                                    title="Preview Course"
+                                                >
+                                                    <PlayCircle className="w-4 h-4" />
+                                                </button>
                                                 <Link
                                                     href={`/admin/courses/${course._id}/students`}
                                                     className="text-emerald-600 hover:text-emerald-900 bg-emerald-50 p-2 rounded-lg hover:bg-emerald-100 transition-colors"
@@ -475,6 +485,12 @@ export default function AdminCoursesPage() {
                     )}
                 </div>
             </div >
+            {previewCourse && (
+                <CoursePreview
+                    courseData={previewCourse}
+                    onClose={() => setPreviewCourse(null)}
+                />
+            )}
             <Modal
                 isOpen={modalConfig.isOpen}
                 onClose={closeModal}
