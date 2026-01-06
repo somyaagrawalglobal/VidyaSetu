@@ -5,6 +5,28 @@ import dbConnect from '@/lib/db';
 import User from '@/models/User';
 import { validateSession } from '@/lib/session';
 import { z } from 'zod';
+import fs from 'fs/promises';
+import path from 'path';
+import { del } from '@vercel/blob';
+
+const deleteOldFile = async (fileUrl) => {
+    if (!fileUrl) return;
+
+    try {
+        if (fileUrl.startsWith('http') && fileUrl.includes('public.blob.vercel-storage.com')) {
+            // Delete from Vercel Blob
+            await del(fileUrl);
+        } else if (fileUrl.startsWith('/uploads/')) {
+            // Delete from Local Storage
+            const filePath = path.join(process.cwd(), 'public', fileUrl);
+            await fs.unlink(filePath).catch(err => {
+                if (err.code !== 'ENOENT') console.error('Failed to delete local file:', err);
+            });
+        }
+    } catch (err) {
+        console.error('Error deleting file:', err);
+    }
+};
 
 const payoutDetailsSchema = z.object({
     bankName: z.string().optional(),
@@ -21,6 +43,11 @@ const updateProfileSchema = z.object({
     headline: z.string().optional(),
     bio: z.string().optional(),
     payoutDetails: payoutDetailsSchema,
+    experience: z.string().optional().nullable(),
+    currentRole: z.string().optional().nullable(),
+    resume: z.string().optional().nullable(),
+    verificationId: z.string().optional().nullable(),
+    companyName: z.string().optional().nullable(),
 });
 
 export async function PUT(req) {
@@ -52,14 +79,33 @@ export async function PUT(req) {
             );
         }
 
-        const { firstName, lastName, mobileNumber, headline, bio, payoutDetails } = result.data;
+        const {
+            firstName, lastName, mobileNumber, headline, bio, payoutDetails,
+            experience, currentRole, resume, verificationId, companyName
+        } = result.data;
 
         await dbConnect();
+
+        // 1. Get current user to check for old files
+        const currentUser = await User.findById(userId);
+        if (currentUser) {
+            // 2. Delete old resume if replaced
+            if (resume && currentUser.resume && resume !== currentUser.resume) {
+                await deleteOldFile(currentUser.resume);
+            }
+            // 3. Delete old verification ID if replaced
+            if (verificationId && currentUser.verificationId && verificationId !== currentUser.verificationId) {
+                await deleteOldFile(currentUser.verificationId);
+            }
+        }
 
         // Update User
         const updatedUser = await User.findByIdAndUpdate(
             userId,
-            { firstName, lastName, mobileNumber, headline, bio, payoutDetails },
+            {
+                firstName, lastName, mobileNumber, headline, bio, payoutDetails,
+                experience, currentRole, resume, verificationId, companyName
+            },
             { new: true, runValidators: true }
         ).select('-passwordHash -activeToken');
 

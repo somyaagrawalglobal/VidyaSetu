@@ -93,7 +93,13 @@ export default function FeaturedProgramsSection() {
                     {courses.map((program, index) => {
                         const price = formatPrice(program.price);
                         const originalPrice = program.originalPrice ? formatPrice(program.originalPrice) : null;
-                        const discountBadge = program.discount || "50% OFF";
+
+                        // Calculate actual discount percentage
+                        let discountBadge = null;
+                        if (program.originalPrice && program.originalPrice > program.price) {
+                            const discountPercent = Math.round(((program.originalPrice - program.price) / program.originalPrice) * 100);
+                            discountBadge = `${discountPercent}% OFF`;
+                        }
 
                         return (
                             <div
