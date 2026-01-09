@@ -18,13 +18,53 @@ import {
     UserPlus,
     X,
     Check,
-    BookOpen
+    BookOpen,
+    ExternalLink,
+    Briefcase,
+    Building2,
+    FileText,
+    CreditCard
 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/components/ToastContext';
 import Modal from '@/components/Modal';
 import Loader from '@/components/Loader';
+
+const FileInputField = ({ id, label, icon: Icon, value, loading, onChange, colorClass = "indigo" }) => (
+    <div className="space-y-2">
+        <label htmlFor={id} className="text-[10px] font-bold text-slate-500 uppercase ml-1 block tracking-widest">{label}</label>
+        <div className="relative group">
+            <input
+                id={id}
+                type="file"
+                className="hidden"
+                onChange={onChange}
+                accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+            />
+            <label
+                htmlFor={id}
+                className={`relative flex flex-col items-center justify-center w-full p-4 bg-white border-2 border-dashed rounded-2xl cursor-pointer transition-all duration-300 group-hover:bg-slate-50 ${value ? `border-${colorClass}-200 bg-${colorClass}-50/30` : 'border-slate-200'}`}
+            >
+                <div className={`mb-2 p-2 rounded-xl bg-${colorClass}-50 text-${colorClass}-500 transition-transform duration-300 group-hover:scale-110 shadow-sm`}>
+                    {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Icon size={20} />}
+                </div>
+                <div className="text-center">
+                    <p className={`text-[11px] font-bold truncate max-w-[160px] ${value ? `text-${colorClass}-700` : 'text-slate-600'}`}>
+                        {value ? value.split('/').pop() : 'Tap to Upload'}
+                    </p>
+                    <p className="text-[9px] text-slate-400 font-medium">PDF, JPG, PNG (Max 5MB)</p>
+                </div>
+
+                {value && (
+                    <div className={`absolute top-2 right-2 p-1 bg-emerald-100 text-emerald-600 rounded-lg shadow-sm animate-in fade-in zoom-in`}>
+                        <Check size={12} strokeWidth={4} />
+                    </div>
+                )}
+            </label>
+        </div>
+    </div>
+);
 
 export default function UserManagementPage() {
     const [users, setUsers] = useState([]);
@@ -130,7 +170,12 @@ export default function UserManagementPage() {
                     lastName: editModal.user.lastName,
                     email: editModal.user.email,
                     mobileNumber: editModal.user.mobileNumber,
-                    roles: editModal.user.roles
+                    roles: editModal.user.roles,
+                    experience: editModal.user.experience,
+                    currentRole: editModal.user.currentRole,
+                    companyName: editModal.user.companyName,
+                    resume: editModal.user.resume,
+                    verificationId: editModal.user.verificationId
                 }),
             });
             const data = await res.json();
@@ -145,6 +190,50 @@ export default function UserManagementPage() {
             toast.error('Failed to update user');
         } finally {
             setIsUpdating(false);
+        }
+    };
+
+    const [uploadingResume, setUploadingResume] = useState(false);
+    const [uploadingVerif, setUploadingVerif] = useState(false);
+
+    const handleFileUpload = async (e, type) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        if (type === 'resume') setUploadingResume(true);
+        else setUploadingVerif(true);
+
+        const formDataFile = new FormData();
+        formDataFile.append('file', file);
+        formDataFile.append('type', type === 'resume' ? 'resume' : 'verificationId');
+
+        // Use current URL for cleanup
+        const currentUrl = type === 'resume' ? editModal.user.resume : editModal.user.verificationId;
+        if (currentUrl) {
+            formDataFile.append('previousUrl', currentUrl);
+        }
+
+        try {
+            const res = await fetch('/api/auth/upload-verification', {
+                method: 'POST',
+                body: formDataFile,
+            });
+
+            const data = await res.json();
+            if (data.success) {
+                setEditModal(prev => ({
+                    ...prev,
+                    user: { ...prev.user, [type === 'resume' ? 'resume' : 'verificationId']: data.url }
+                }));
+                toast.success('Document uploaded successfully');
+            } else {
+                toast.error(data.message || 'Upload failed');
+            }
+        } catch (error) {
+            toast.error('File upload error');
+        } finally {
+            if (type === 'resume') setUploadingResume(false);
+            else setUploadingVerif(false);
         }
     };
 
@@ -167,62 +256,86 @@ export default function UserManagementPage() {
             <div className="max-w-7xl mx-auto space-y-6">
 
                 {/* Header Section */}
-                <div className="relative overflow-hidden bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm">
+                <div className="relative overflow-hidden bg-white p-4 sm:p-6 rounded-2xl border border-slate-200 shadow-sm transition-all duration-500 hover:shadow-md">
                     {/* Background Decorative Elements */}
-                    <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-indigo-50 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
-                    <div className="absolute bottom-0 left-0 -ml-16 -mb-16 w-64 h-64 bg-amber-50 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
+                    <div className="absolute top-0 right-0 -mr-20 -mt-20 w-80 h-80 bg-indigo-50/50 rounded-full blur-3xl pointer-events-none animate-pulse"></div>
+                    <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 bg-slate-50 rounded-full blur-3xl pointer-events-none animate-pulse" style={{ animationDelay: '1s' }}></div>
 
-                    <div className="relative flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-                        <div className="flex items-start gap-4">
-                            <Link
-                                href="/dashboard"
-                                className="mt-1 p-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-400 hover:text-indigo-600 hover:border-indigo-100 hover:bg-indigo-50 transition-all duration-300 group"
-                            >
-                                <ChevronLeft className="w-5 h-5 group-hover:-translate-x-0.5 transition-transform" />
-                            </Link>
-                            <div>
-                                <div className="flex items-center gap-2 mb-1">
-                                    <span className="px-2 py-0.5 bg-indigo-50 text-indigo-600 text-[10px] font-bold uppercase tracking-wider rounded-md border border-indigo-100">Access Control</span>
-                                    <span className="w-1 h-1 bg-slate-300 rounded-full"></span>
-                                    <span className="text-slate-400 text-[10px] font-bold uppercase tracking-wider">{users.length} Registered Members</span>
+                    <div className="relative flex flex-col gap-6">
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-5">
+                            <div className="flex items-center gap-4">
+                                <Link
+                                    href="/dashboard"
+                                    className="p-2.5 bg-white border border-slate-200 rounded-xl text-slate-400 hover:text-indigo-600 hover:border-indigo-100 hover:bg-indigo-50 transition-all duration-300 shadow-sm group active:scale-90"
+                                >
+                                    <ChevronLeft className="w-5 h-5 group-hover:-translate-x-0.5 transition-transform" />
+                                </Link>
+                                <div>
+                                    <div className="flex items-center gap-2 mb-1">
+                                        <div className="hidden sm:flex items-center gap-1.5 px-2 py-0.5 bg-indigo-600 text-white text-[9px] font-bold uppercase tracking-wider rounded-md shadow-md shadow-indigo-100">
+                                            <Shield size={10} strokeWidth={3} /> Admin
+                                        </div>
+                                        <span className="hidden sm:block w-1 h-1 bg-slate-300 rounded-full"></span>
+                                        <span className="text-slate-400 text-[10px] font-bold uppercase tracking-widest">{users.length} Records</span>
+                                    </div>
+                                    <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+                                        User <span className="text-indigo-600">Inventory</span>
+                                    </h1>
                                 </div>
-                                <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
-                                    User <span className="text-indigo-600">Database</span>
-                                </h1>
-                                <p className="text-slate-500 mt-1 font-medium text-sm">
-                                    Manage member privileges, roles, and platform permissions.
-                                </p>
+                            </div>
+
+                            <div className="flex flex-wrap items-center gap-3">
+                                <div className="group flex items-center gap-3 px-4 py-2.5 bg-slate-50 border border-slate-100 rounded-xl transition-all hover:bg-white hover:border-slate-200 hover:shadow-sm">
+                                    <div className="p-1.5 bg-indigo-100 text-indigo-600 rounded-lg group-hover:scale-110 transition-transform">
+                                        <Users size={16} />
+                                    </div>
+                                    <div>
+                                        <p className="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">Total</p>
+                                        <p className="text-lg font-bold text-slate-900 leading-none">{users.length}</p>
+                                    </div>
+                                </div>
+
+                                <div className="hidden sm:flex group items-center gap-3 px-4 py-2.5 bg-slate-50 border border-slate-100 rounded-xl transition-all hover:bg-white hover:border-slate-200 hover:shadow-sm">
+                                    <div className="p-1.5 bg-purple-100 text-purple-600 rounded-lg group-hover:scale-110 transition-transform">
+                                        <Shield size={16} />
+                                    </div>
+                                    <div>
+                                        <p className="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">Instructors</p>
+                                        <p className="text-lg font-bold text-slate-900 leading-none">{users.filter(u => u.roles.includes('Instructor')).length}</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <div className="flex items-center gap-3">
-                            <div className="px-4 py-2 bg-white border border-slate-200 rounded-xl flex flex-col items-center justify-center min-w-[80px] shadow-sm">
-                                <span className="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">Total Members</span>
-                                <span className="text-lg font-black text-slate-800">{users.length}</span>
+                        {/* Search & Filter Bar */}
+                        <div className="flex flex-col sm:flex-row gap-3">
+                            <div className="relative flex-grow group">
+                                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                    <Search className="h-4 w-4 text-slate-400 group-focus-within:text-indigo-600 transition-colors" />
+                                </div>
+                                <input
+                                    type="text"
+                                    placeholder="Search by name, email or mobile..."
+                                    className="block w-full pl-11 pr-4 py-3 border border-slate-200 rounded-xl bg-white placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-indigo-500/5 focus:border-indigo-500 text-sm font-medium transition-all shadow-sm"
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                />
+                                {searchTerm && (
+                                    <button
+                                        onClick={() => setSearchTerm('')}
+                                        className="absolute inset-y-0 right-4 flex items-center text-slate-300 hover:text-slate-500"
+                                    >
+                                        <X size={14} />
+                                    </button>
+                                )}
                             </div>
+                            <button className="sm:w-auto px-6 py-3 bg-slate-900 text-white rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-indigo-600 transition-all active:scale-95 shadow-lg shadow-slate-200 hover:shadow-indigo-100">
+                                Apply Filters
+                            </button>
                         </div>
                     </div>
                 </div>
 
-                {/* Filters & Search */}
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
-                    <div className="lg:col-span-8">
-                        {/* Placeholder for future tabs if needed (e.g. active, banned, roles) */}
-                    </div>
-
-                    <div className="lg:col-span-4 relative group">
-                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-                            <Search className="h-4 w-4 text-slate-400 group-focus-within:text-indigo-500 transition-colors" />
-                        </div>
-                        <input
-                            type="text"
-                            placeholder="Find member by name or email..."
-                            className="block w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl bg-white placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-indigo-500/5 focus:border-indigo-500 text-sm transition-all shadow-sm"
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                        />
-                    </div>
-                </div>
 
                 {/* Users Table */}
                 <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
@@ -340,8 +453,8 @@ export default function UserManagementPage() {
 
             {/* Edit User Modal */}
             {editModal.isOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
-                    <div className="bg-white rounded-xl shadow-2xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in duration-300">
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-md overflow-y-auto">
+                    <div className="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-2xl my-auto overflow-hidden animate-in fade-in zoom-in-95 duration-500 border border-white/20">
                         <div className="p-6 border-b border-gray-100 flex items-center justify-between">
                             <h3 className="text-xl font-bold text-gray-900">Edit User Details</h3>
                             <button onClick={() => setEditModal({ isOpen: false, user: null })} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
@@ -405,20 +518,130 @@ export default function UserManagementPage() {
                                     ))}
                                 </div>
                             </div>
+
+                            {editModal.user.roles.includes('Instructor') && (
+                                <div className="pt-8 border-t border-slate-100 space-y-6">
+                                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                        <div className="space-y-1">
+                                            <h4 className="text-sm font-black text-slate-900 uppercase tracking-widest flex items-center gap-2">
+                                                <div className="w-1.5 h-6 bg-indigo-600 rounded-full shadow-lg shadow-indigo-200"></div>
+                                                Instructor Verification
+                                            </h4>
+                                            <p className="text-[10px] text-slate-400 font-bold ml-3.5 uppercase tracking-tighter">Professional & Academic Validation</p>
+                                        </div>
+                                        <span className="self-start sm:self-center px-3 py-1 bg-indigo-50 text-indigo-600 text-[10px] font-black uppercase rounded-full border border-indigo-100 animate-pulse">Verification Active</span>
+                                    </div>
+
+                                    <div className="p-6 sm:p-8 rounded-[2rem] bg-slate-50 border border-slate-200 shadow-inner space-y-6">
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                            <div className="space-y-2">
+                                                <label className="text-[10px] font-bold text-slate-500 uppercase ml-1 block tracking-widest">Experience (Years)</label>
+                                                <div className="relative group">
+                                                    <Briefcase className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-indigo-600 transition-all duration-300" />
+                                                    <input
+                                                        type="text"
+                                                        className="w-full pl-12 pr-4 py-3.5 bg-white border border-slate-200 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all text-sm font-bold text-slate-800 shadow-sm"
+                                                        value={editModal.user.experience || ''}
+                                                        placeholder="e.g. 5+ Years"
+                                                        onChange={(e) => setEditModal({ ...editModal, user: { ...editModal.user, experience: e.target.value } })}
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-[10px] font-bold text-slate-500 uppercase ml-1 block tracking-widest">Job Designation</label>
+                                                <div className="relative group">
+                                                    <Shield className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-indigo-600 transition-all duration-300" />
+                                                    <input
+                                                        type="text"
+                                                        className="w-full pl-12 pr-4 py-3.5 bg-white border border-slate-200 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all text-sm font-bold text-slate-800 shadow-sm"
+                                                        value={editModal.user.currentRole || ''}
+                                                        placeholder="e.g. Senior Architect"
+                                                        onChange={(e) => setEditModal({ ...editModal, user: { ...editModal.user, currentRole: e.target.value } })}
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] font-bold text-slate-500 uppercase ml-1 block tracking-widest">Current Affiliation</label>
+                                            <div className="relative group">
+                                                <Building2 className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-indigo-600 transition-all duration-300" />
+                                                <input
+                                                    type="text"
+                                                    className="w-full pl-12 pr-4 py-3.5 bg-white border border-slate-200 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all text-sm font-bold text-slate-800 shadow-sm"
+                                                    value={editModal.user.companyName || ''}
+                                                    placeholder="University or Corporate name"
+                                                    onChange={(e) => setEditModal({ ...editModal, user: { ...editModal.user, companyName: e.target.value } })}
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-2">
+                                            <div className="space-y-3 group/item">
+                                                <FileInputField
+                                                    id="admin-resume-upload"
+                                                    label="Academic Resume"
+                                                    icon={FileText}
+                                                    colorClass="indigo"
+                                                    value={editModal.user.resume}
+                                                    loading={uploadingResume}
+                                                    onChange={(e) => handleFileUpload(e, 'resume')}
+                                                />
+                                                {editModal.user.resume && (
+                                                    <a
+                                                        href={editModal.user.resume}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="flex items-center justify-center gap-2 w-full py-2 bg-indigo-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-200 active:scale-95"
+                                                    >
+                                                        Review Resume <ExternalLink size={10} strokeWidth={4} />
+                                                    </a>
+                                                )}
+                                            </div>
+                                            <div className="space-y-3 group/item">
+                                                <FileInputField
+                                                    id="admin-id-upload"
+                                                    label="Identity Document"
+                                                    icon={CreditCard}
+                                                    colorClass="emerald"
+                                                    value={editModal.user.verificationId}
+                                                    loading={uploadingVerif}
+                                                    onChange={(e) => handleFileUpload(e, 'verification')}
+                                                />
+                                                {editModal.user.verificationId && (
+                                                    <a
+                                                        href={editModal.user.verificationId}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="flex items-center justify-center gap-2 w-full py-2 bg-emerald-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-200 active:scale-95"
+                                                    >
+                                                        Review ID Proof <ExternalLink size={10} strokeWidth={4} />
+                                                    </a>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                         </div>
-                        <div className="p-6 bg-gray-50 flex items-center justify-end gap-3">
+                        <div className="p-6 sm:p-8 bg-slate-50/80 backdrop-blur-sm border-t border-slate-100 flex flex-col sm:flex-row items-center justify-end gap-3 sm:gap-4">
                             <button
                                 onClick={() => setEditModal({ isOpen: false, user: null })}
-                                className="px-6 py-2.5 text-sm font-bold text-gray-600 hover:bg-gray-100 rounded-xl transition-colors"
+                                className="w-full sm:w-auto px-8 py-3.5 text-xs font-black text-slate-500 hover:text-slate-800 transition-colors uppercase tracking-widest"
                             >
                                 Cancel
                             </button>
                             <button
                                 onClick={saveUserEdit}
                                 disabled={isUpdating}
-                                className="px-8 py-2.5 bg-indigo-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-indigo-100 hover:bg-indigo-700 active:scale-95 transition-all flex items-center gap-2"
+                                className="w-full sm:w-auto px-10 py-3.5 bg-slate-900 hover:bg-indigo-600 text-white rounded-2xl text-xs font-black shadow-xl shadow-slate-200 hover:shadow-indigo-200 transition-all duration-300 active:scale-95 flex items-center justify-center gap-2 uppercase tracking-widest group"
                             >
-                                {isUpdating ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Save Changes'}
+                                {isUpdating ? <Loader2 className="w-4 h-4 animate-spin" /> : (
+                                    <>
+                                        Update Details
+                                        <Check className="w-4 h-4 group-hover:scale-125 transition-transform" />
+                                    </>
+                                )}
                             </button>
                         </div>
                     </div>

@@ -16,11 +16,17 @@ const registerSchema = z.object({
     mobileNumber: z.string().min(10, 'Valid mobile number is required'),
     password: z.string().min(6, 'Password must be at least 6 characters'),
     role: z.enum(['Student', 'Instructor']).default('Student'),
+    experience: z.string().optional().nullable(),
+    currentRole: z.string().optional().nullable(),
+    resume: z.string().optional().nullable(),
+    verificationId: z.string().optional().nullable(),
+    companyName: z.string().optional().nullable(),
 });
 
 export async function POST(req) {
     try {
         await dbConnect();
+        console.log('[REGISTRATION] User Model Paths:', Object.keys(User.schema.paths));
 
 
         // 2. Default Admin Creation logic: 
@@ -34,17 +40,23 @@ export async function POST(req) {
         // For now, standard registration = Student.
 
         const body = await req.json();
+        console.log('[REGISTRATION] Received Body:', body);
 
         // 3. Validation
         const validation = registerSchema.safeParse(body);
         if (!validation.success) {
+            console.error('[REGISTRATION] Validation Error:', validation.error.format());
             return NextResponse.json(
                 { message: 'Validation Error', errors: validation.error.format() },
                 { status: 400 }
             );
         }
 
-        const { firstName, lastName, email, mobileNumber, password, role } = validation.data;
+        const {
+            firstName, lastName, email, mobileNumber, password, role,
+            experience, currentRole, resume, verificationId, companyName
+        } = validation.data;
+        console.log('[REGISTRATION] Validated Data:', { role, experience, currentRole, resume, verificationId, companyName });
 
         // 4. Check if user already exists
         const existingUser = await User.findOne({ email });
@@ -63,18 +75,36 @@ export async function POST(req) {
         const verificationTokenExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
 
         // 7. Create User
-        const newUser = await User.create({
-            firstName,
-            lastName,
-            email,
-            mobileNumber,
-            passwordHash,
-            roles: [role], // Use selected role
-            verificationToken,
-            verificationTokenExpiry,
-            isVerified: false,
-            isActive: true,
-        });
+        try {
+            const newUser = await User.create({
+                firstName,
+                lastName,
+                email,
+                mobileNumber,
+                passwordHash,
+                roles: [role], // Use selected role
+                verificationToken,
+                verificationTokenExpiry,
+                isVerified: false,
+                isActive: true,
+                // Instructor Fields
+                experience,
+                currentRole,
+                resume,
+                verificationId,
+                companyName
+            });
+            console.log('[REGISTRATION] Success! Created User:', {
+                id: newUser._id,
+                email: newUser.email,
+                roles: newUser.roles,
+                experience: newUser.experience,
+                currentRole: newUser.currentRole
+            });
+        } catch (dbError) {
+            console.error('[REGISTRATION] DB Error during User.create:', dbError);
+            throw dbError; // Re-throw to be caught by the outer catch block
+        }
 
         // 8. Send Verification Email
         try {
