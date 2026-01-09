@@ -77,9 +77,31 @@ const UserSchema = new mongoose.Schema({
         accountHolderName: String,
         ifscCode: String,
         upiId: String,
+    },
+    // Instructor Verification Fields
+    experience: {
+        type: String,
+        default: null
+    },
+    currentRole: {
+        type: String,
+        default: null
+    },
+    resume: {
+        type: String,
+        default: null
+    },
+    verificationId: {
+        type: String,
+        default: null
+    },
+    companyName: {
+        type: String,
+        default: null
     }
 }, {
     timestamps: { createdAt: 'createdOn', updatedAt: 'updatedOn' }
 });
 
-export default mongoose.models.User || mongoose.model('User', UserSchema);
+const User = mongoose.models.User || mongoose.model('User', UserSchema);
+export default User;

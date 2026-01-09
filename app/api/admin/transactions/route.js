@@ -3,6 +3,7 @@ import dbConnect from '@/lib/db';
 import razorpay from '@/lib/razorpay';
 import Order from '@/models/Order';
 import User from '@/models/User';
+import Course from '@/models/Course';
 import { authenticateApi } from '@/lib/api-auth';
 import { sendPurchaseEmail } from '@/lib/email';
 
@@ -49,18 +50,26 @@ export async function POST(req) {
 
                 try {
                     const refund = await razorpay.payments.refund(order.razorpayPaymentId, {
-                        amount: Math.round(order.amount * 100), // Full refund
+                        amount: Math.round(order.amount * 100), // Full refund in paise
                         notes: {
                             reason: refundNote || "Admin initiated refund",
-                            orderId: order._id.toString()
+                            orderId: order._id.toString(),
+                            razorpayOrderId: order.razorpayOrderId
                         }
                     });
 
                     order.razorpayRefundId = refund.id;
                     order.refundMethod = 'razorpay';
                 } catch (rzpError) {
-                    console.error('Razorpay Refund Error:', rzpError);
-                    return NextResponse.json({ success: false, message: rzpError.message || 'Razorpay refund failed' }, { status: 500 });
+                    console.error('Razorpay Refund Error Detail:', rzpError);
+
+                    // Extract the most helpful error message
+                    const errorMessage = rzpError.description || rzpError.message || rzpError.error?.description || 'Razorpay refund failed';
+
+                    return NextResponse.json({
+                        success: false,
+                        message: errorMessage
+                    }, { status: 500 });
                 }
             } else if (refundMethod === 'manual') {
                 order.refundMethod = 'manual';
